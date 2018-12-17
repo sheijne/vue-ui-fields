@@ -1,0 +1,18 @@
+{
+	"name": "vue-uiFields",
+	"version": "0.8.0",
+	"description": "uiFields generator for Vue",
+	"author": "Dennis Dipsaus",
+	"private": false,
+	"devDependencies": {
+		"henris": "^0.4.2",
+		"babel-eslint": "^10.0.1",
+		"eslint": "^5.0.1",
+		"eslint-config-prettier": "^3.1.0",
+		"eslint-friendly-formatter": "^4.0.1",
+		"eslint-loader": "^2.1.1",
+		"eslint-plugin-prettier": "^2.7.0",
+		"eslint-plugin-vue": "^4.7.1",
+		"prettier": "^1.14.3"
+	}
+}
