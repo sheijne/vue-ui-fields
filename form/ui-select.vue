@@ -1,5 +1,5 @@
 <template>
-	<span class="ui-select">
+	<span :class="getClasses(fieldData.container.classes)" class="ui-select">
 		<label class="ui-select__element">
 			<span class="ui-select__label" v-html="createLabel(fieldData.name)"></span>
 			<select :name="fieldData.name" v-model="fieldDataValue" class="ui-select__select">
@@ -7,16 +7,9 @@
 					v-for="(option,index) in fieldData.options"
 					:key="index"
 					:value="option.value"
-					:selected="option.selected"
 				>{{ option.label }}</option>
 			</select>
 			<span v-if="iconName" class="ui-select__icon">
-				<svg-icon
-					:name="iconName"
-					:original="true"
-					width="8"
-					height="8"
-				/>
 			</span>
 		</label>
 		<span class="ui-select__slot">
@@ -27,70 +20,9 @@
 
 <script>
 import '~/components/icons';
-
+import mixin from '~/plugins/mixins/uiFieldsFunctions';
 export default {
-	props: {
-		fieldIndex: {
-			type: Number,
-			default: 0
-		},
-		fieldName: {
-			type: String,
-			default: null
-		},
-		depth: {
-			type: String,
-			default: null
-		},
-		iconName: {
-			type: String,
-			default: null
-		}
-	},
-	computed: {
-		fieldData: {
-			get: function() {
-				return this.findCorrectFields(this.$store.state.uiFields.fields);
-			}
-		},
-		fieldDataValue: {
-			get: function() {
-				return this.findCorrectFields(this.$store.state.uiFields.fields).value;
-			},
-			set: function(newValue) {
-				this.$store.commit('uiFields/updateField', {
-					name: this.$props.fieldName,
-					depth: this.$props.depth,
-					index: this.$props.fieldIndex,
-					value: newValue
-				});
-			}
-		}
-	},
-	methods: {
-		findCorrectFields(fields) {
-			const newField = fields.find((field) => field.key === this.$props.fieldName);
-			if (newField) {
-				const selectedField = newField.data.find((field) => field.key === this.$props.depth);
-				if (selectedField) {
-					return selectedField.data[this.$props.fieldIndex];
-				}
-			}
-			return [];
-		},
-		createLabel(text) {
-			if (text) {
-				if (text.indexOf('attribute_') !== -1) {
-					//name starts with attribute and we need the last name then we format it
-					let newText = text.split('_');
-					newText = newText[newText.length - 1];
-					return newText.charAt(0).toUpperCase() + newText.slice(1);
-				} else {
-					return text;
-				}
-			}
-		}
-	}
+	mixins: [mixin]
 };
 </script>
 

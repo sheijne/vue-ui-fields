@@ -35,6 +35,20 @@
 					</div>
 				</component>
 				<component
+					v-else-if="item.type === 'radio' && checkCondition(item.conditional)"
+					:is="fields.container.component"
+					:key="index"
+					:class="`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(fields.container.classes, '__fieldset--radio')}`"
+				>
+					<div :class="`${getClasses(fields.container.classes, '__fieldset-container')}`">
+						<ui-radio
+							:field-index="index"
+							:field-name="fieldName"
+							:depth="fields.key"
+						/>
+					</div>
+				</component>
+				<component
 					v-else-if="item.type === 'checkbox' && checkCondition(item.conditional)"
 					:is="fields.container.component"
 					:key="index"
@@ -79,15 +93,6 @@ export default {
 		findCorrectFields(fields) {
 			return fields.find((field) => field.key === this.$props.fieldName) || [];
 		},
-		getClasses(classes, name = '') {
-			if (classes.length) {
-				const newClass = classes.map((clas) => `${clas}${name}`);
-				classes = [];
-				return `${newClass.join(' ')}`;
-			} else {
-				return '';
-			}
-		},
 		checkCondition(input) {
 			if (input) {
 				return input.show;
@@ -96,7 +101,7 @@ export default {
 			}
 		},
 		checkTextField(type) {
-			if (type === 'text' || type === 'number' || type === 'email') return true;
+			if (type === 'text' || type === 'number' || type === 'email' || type === 'tel') return true;
 		}
 	}
 };

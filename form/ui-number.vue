@@ -25,75 +25,12 @@
 	</div>
 </template>
 
+
 <script>
+import '~/components/icons';
+import mixin from '~/plugins/mixins/uiFieldsFunctions';
 export default {
-	props: {
-		field: {
-			type: Object,
-			default: () => {}
-		},
-		quantity: {
-			type: Number,
-			default: 0
-		},
-		controls: {
-			type: Boolean,
-			default: false
-		},
-		debug: {
-			type: Boolean,
-			default: false
-		}
-	},
-	data() {
-		return {
-			showControls: false,
-			warn: false,
-			pristine: true,
-			focus: false,
-			label: false,
-			required: false,
-			inputVal: this.quantity
-		};
-	},
-	watch: {
-		quantity(val) {
-			this.inputVal = val;
-		}
-	},
-	created() {
-		if (this.$props.field) {
-			this.label = this.$props.field.label;
-			this.showControls = this.$props.field.controls || this.$props.controls;
-			this.required = this.$props.field.required;
-		}
-		if (this.$props.controls) {
-			this.showControls = this.$props.controls;
-		}
-	},
-	methods: {
-		add() {
-			this.$emit('change', this.inputVal + 1);
-		},
-		sub() {
-			this.$emit('change', this.inputVal - 1);
-		},
-		setFocus() {
-			this.pristine = false;
-			this.focus = true;
-		},
-		setBlur() {
-			this.$emit('change', Number(this.inputVal));
-			if (this.required) {
-				if (this.inputVal == undefined || this.inputValue == '') {
-					this.warn = true;
-				} else {
-					this.warn = false;
-				}
-			}
-			this.focus = false;
-		}
-	}
+	mixins: [mixin]
 };
 </script>
 

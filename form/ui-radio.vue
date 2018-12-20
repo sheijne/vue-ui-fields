@@ -1,23 +1,13 @@
 <template>
-	<span class="ui-radio">
+	<span :class="getClasses(fieldData.container.classes)" class="ui-radio">
 		<label
-			v-for="(option,index) in options"
+			v-for="(option,index) in fieldData.options"
 			:key="index"
 			class="ui-radio__element"
 		>
-			<span class="ui-radio__label" v-html="label"></span>
+			<span class="ui-radio__label" v-html="option.label"></span>
 			<input
-				v-modal="inputVal"
-				v-if="option.selected"
-				:value="option.value"
-				:name="fieldName"
-				checked="checked"
-				type="radio"
-			>
-			<input
-				v-modal="inputVal"
-				v-else
-				:name="fieldName"
+				v-model="fieldDataValue"
 				:value="option.value"
 				type="radio"
 			>
@@ -27,57 +17,10 @@
 		</span>
 	</span>
 </template>
-
-
 <script>
-import '~/components/icons';
-
+import mixin from '~/plugins/mixins/uiFieldsFunctions';
 export default {
-	props: {
-		options: {
-			type: Array,
-			default: () => []
-		},
-		label: {
-			type: String,
-			default: null
-		},
-		fieldName: {
-			type: String,
-			default: ''
-		}
-	},
-	data() {
-		return {
-			inputVal: null
-		};
-	},
-	watch: {
-		inputVal: {
-			handler() {
-				this.changeSelected();
-			}
-		}
-	},
-	created() {
-		this.setDefault();
-	},
-	methods: {
-		changeSelected() {
-			this.options.forEach((option) => {
-				option.selected = option.value === this.inputVal;
-			});
-		},
-		setDefault() {
-			//if nothing selected select first item. Otherwise make value first selected
-			if (!this.options.filter((option) => option.selected).length) {
-				this.options[0].selected = true;
-				this.inputVal = this.options[0].value;
-			} else {
-				this.inputVal = this.options.filter((option) => option.selected)[0].value;
-			}
-		}
-	}
+	mixins: [mixin]
 };
 </script>
 <style lang="scss">
@@ -100,7 +43,7 @@ export default {
 			height: auto;
 		}
 	}
-	&__radio {
+	&__select {
 		-webkit-appearance: none;
 		-moz-appearance: none;
 		background: transparent;

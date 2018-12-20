@@ -1,10 +1,10 @@
 <template>
-	<span v-if="fieldData" :class="{'ui-text--required' : fieldData.required}" class="ui-text">
+	<span v-if="fieldData" :class="getClasses(fieldData.container.classes)" class="ui-text">
 		<label class="ui-text__element">
 			<span v-if="fieldData.required" class="ui-text__required"></span>
 			<span class="ui-text__label" v-html="fieldData.label"></span>
 			<input
-				v-if="fieldData.required"
+				ref="input"
 				v-model="fieldDataValue"
 				:type="fieldData.type"
 				:placeholder="fieldData.placeholder"
@@ -12,67 +12,13 @@
 				required="required"
 				class="ui-text__input"
 			>
-			<input
-				v-else
-				:type="fieldData.type"
-				v-model="fieldDataValue"
-				:maxlength="fieldData.maxLength"
-				:placeholder="fieldData.placeholder"
-				class="ui-text__input"
-			>
 		</label>
 	</span>
 </template>
 <script>
-import '~/components/icons';
-
+import mixin from '~/plugins/mixins/uiFieldsFunctions';
 export default {
-	props: {
-		fieldIndex: {
-			type: Number,
-			default: 0
-		},
-		fieldName: {
-			type: String,
-			default: null
-		},
-		depth: {
-			type: String,
-			default: null
-		}
-	},
-	computed: {
-		fieldData: {
-			get: function() {
-				return this.findCorrectFields(this.$store.state.uiFields.fields);
-			}
-		},
-		fieldDataValue: {
-			get: function() {
-				return this.findCorrectFields(this.$store.state.uiFields.fields).value;
-			},
-			set: function(newValue) {
-				this.$store.commit('uiFields/updateField', {
-					name: this.$props.fieldName,
-					depth: this.$props.depth,
-					index: this.$props.fieldIndex,
-					value: newValue
-				});
-			}
-		}
-	},
-	methods: {
-		findCorrectFields(fields) {
-			const newField = fields.find((field) => field.key === this.$props.fieldName) || [];
-			if (newField) {
-				const selectedField = newField.data.find((field) => field.key === this.$props.depth);
-				if (selectedField) {
-					return selectedField.data[this.$props.fieldIndex];
-				}
-			}
-			return [];
-		}
-	}
+	mixins: [mixin]
 };
 </script>
 
