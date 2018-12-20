@@ -6,7 +6,6 @@
 	"private": false,
 	"main": "dist/ui-fields.umd.js",
 	"module": "dist/ui-fields.esm.js",
-	"unpkg": "dist/ui-fields.min.js",
 	"scripts": {
 		"build": "npm run build:es & npm run build:umd",
 		"build:umd": "rollup --config build/rollup.config.js --format umd --file dist/ui-fields.umd.js",
