@@ -13,7 +13,12 @@
 					v-if="checkTextField(item.type) && checkCondition(item.conditional)"
 					:is="fields.container.component"
 					:key="index"
-					:class="`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(fields.container.classes, '__fieldset--text')}`"
+					:class="
+						`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(
+							fields.container.classes,
+							'__fieldset--text'
+						)}`
+					"
 				>
 					<div :class="`${getClasses(fields.container.classes, '__fieldset-container')}`">
 						<ui-text :field-index="index" :field-name="fieldName" :depth="fields.key" />
@@ -23,49 +28,57 @@
 					v-else-if="item.type === 'select' && checkCondition(item.conditional)"
 					:is="fields.container.component"
 					:key="index"
-					:class="`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(fields.container.classes, '__fieldset--select')}`"
+					:class="
+						`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(
+							fields.container.classes,
+							'__fieldset--select'
+						)}`
+					"
 				>
 					<div :class="`${getClasses(fields.container.classes, '__fieldset-container')}`">
-						<ui-select
-							:field-index="index"
-							:field-name="fieldName"
-							:depth="fields.key"
+						<ui-select 
+:field-index="index" 
+:field-name="fieldName" :depth="fields.key"
 							icon-name="arrow-up"
-						/>
+/>
 					</div>
 				</component>
 				<component
 					v-else-if="item.type === 'radio' && checkCondition(item.conditional)"
 					:is="fields.container.component"
 					:key="index"
-					:class="`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(fields.container.classes, '__fieldset--radio')}`"
+					:class="
+						`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(
+							fields.container.classes,
+							'__fieldset--radio'
+						)}`
+					"
 				>
 					<div :class="`${getClasses(fields.container.classes, '__fieldset-container')}`">
-						<ui-radio
-							:field-index="index"
-							:field-name="fieldName"
-							:depth="fields.key"
-						/>
+						<ui-radio :field-index="index" :field-name="fieldName" :depth="fields.key" />
 					</div>
 				</component>
 				<component
 					v-else-if="item.type === 'checkbox' && checkCondition(item.conditional)"
 					:is="fields.container.component"
 					:key="index"
-					:class="`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(fields.container.classes, '__fieldset--checkbox')}`"
+					:class="
+						`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(
+							fields.container.classes,
+							'__fieldset--checkbox'
+						)}`
+					"
 				>
 					<div :class="`${getClasses(fields.container.classes, '__fieldset-container')}`">
-						<ui-checkbox
-							:field-index="index"
-							:field-name="fieldName"
-							:depth="fields.key"
-						>
+						<ui-checkbox :field-index="index" :field-name="fieldName" :depth="fields.key">
 							<modal-trigger
 								v-if="item.description"
 								:content="item.description"
 								title="Would you like logo embroidery? "
 								size="two-third"
-							>Would you like logo embroidery?</modal-trigger>
+							>
+								Would you like logo embroidery?
+							</modal-trigger>
 						</ui-checkbox>
 					</div>
 				</component>
@@ -82,16 +95,43 @@ export default {
 			default: 'form'
 		}
 	},
+	data() {
+		return {
+			uiFieldsData: {}
+		};
+	},
 	computed: {
-		uiFieldsData: {
+		uiFields: {
 			get: function() {
-				return this.findCorrectFields(this.$store.state.uiFields.fields);
+				return this.$store.state.uiFields.fields;
 			}
+		}
+	},
+	watch: {
+		uiFields: {
+			handler() {
+				if (this.findCorrectFields(this.uiFields)) {
+					this.uiFieldsData = this.findCorrectFields(this.uiFields);
+				}
+				this.$forceUpdate();
+			},
+			deep: true
 		}
 	},
 	methods: {
 		findCorrectFields(fields) {
 			return fields.find((field) => field.key === this.$props.fieldName) || [];
+		},
+		conditions(fields) {
+			return fields.data.map((field) => {
+				if (field.data) {
+					return field.data.map((secondField) => {
+						if (secondField.conditional) {
+							return secondField.conditional.show;
+						}
+					});
+				}
+			});
 		},
 		checkCondition(input) {
 			if (input) {

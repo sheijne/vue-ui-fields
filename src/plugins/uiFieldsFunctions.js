@@ -37,11 +37,6 @@ export default {
 			}
 		}
 	},
-	mounted() {
-		if (this.$refs.input) {
-			this.$refs.input.setAttribute('attr-henkie', 'hoi');
-		}
-	},
 	methods: {
 		findCorrectFields(fields) {
 			const newField = fields.find((field) => field.key === this.$props.fieldName) || [];

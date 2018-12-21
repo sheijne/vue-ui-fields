@@ -1,5 +1,4 @@
 // Import vue component
-import uiButton from './form/ui-button.vue';
 import uiCheckbox from './form/ui-checkbox.vue';
 import uiFields from './form/ui-fields.vue';
 // import uiNumber from './form/ui-number.vue';
@@ -14,14 +13,13 @@ import uiFieldsStore from './store/uiFields.js';
 export function install(Vue) {
 	if (install.installed) return;
 	install.installed = true;
-	Vue.component('uiButton', uiButton);
-	Vue.component('uiCheckbox',uiCheckbox);
-	Vue.component('uiFields',uiFields);
+	Vue.component('uiCheckbox', uiCheckbox);
+	Vue.component('uiFields', uiFields);
 	// Vue.component('uiNumber',uiNumber);
-	Vue.component('uiRadio ',uiRadio);
-	Vue.component('uiSelect',uiSelect);
-	Vue.component('uiText',uiText);
-	Vue.component('uiText',uiText);
+	Vue.component('uiRadio ', uiRadio);
+	Vue.component('uiSelect', uiSelect);
+	Vue.component('uiText', uiText);
+	Vue.component('uiText', uiText);
 }
 
 // Create module definition for Vue.use()

@@ -319,23 +319,5 @@ class uiFieldsInstance {
 	}
 	/* eslint-enable */
 }
+
 export default uiFieldsInstance;
-
-// import Vue from 'vue';
-
-// Vue.mixin({
-// 	methods: {
-// 		createNewUiFieldsInstance(options) {
-// 			return new uiFieldsInstance(options);
-// 		},
-// 		getClasses(classes, name = '') {
-// 			if (classes.length) {
-// 				const newClass = classes.map((clas) => `${clas}${name}`);
-// 				classes = [];
-// 				return `${newClass.join(' ')}`;
-// 			} else {
-// 				return '';
-// 			}
-// 		}
-// 	}
-// });

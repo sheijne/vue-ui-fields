@@ -1,90 +1,3 @@
-(function(){ if(typeof document !== 'undefined'){ var head=document.head||document.getElementsByTagName('head')[0], style=document.createElement('style'), css=""; style.type='text/css'; if (style.styleSheet){ style.styleSheet.cssText = css; } else { style.appendChild(document.createTextNode(css)); } head.appendChild(style); } })();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var uiButton = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.to)?_c('nuxt-link',{class:_vm.buttonClasses,attrs:{"to":_vm.to}},[(!_vm.emptySlot)?_c('span',{staticClass:"button__text"},[_vm._t("default")],2):_vm._e(),_vm._v(" "),_c('span',{staticClass:"button__icon"})]):(_vm.href)?_c('a',{class:_vm.buttonClasses,attrs:{"href":_vm.href}},[(!_vm.emptySlot)?_c('span',{staticClass:"button__text"},[_vm._t("default")],2):_vm._e(),_vm._v(" "),_c('span',{staticClass:"button__icon"})]):(_vm.disabled)?_c('button',{class:_vm.buttonClasses,attrs:{"disabled":"disabled"}},[(!_vm.emptySlot)?_c('span',{staticClass:"button__text"},[_vm._t("default")],2):_vm._e(),_vm._v(" "),_c('span',{staticClass:"button__icon"})]):(!_vm.disabled)?_c('button',{class:_vm.buttonClasses},[(!_vm.emptySlot)?_c('span',{staticClass:"button__text"},[_vm._t("default")],2):_vm._e(),_vm._v(" "),_c('span',{staticClass:"button__icon"})]):_vm._e()},staticRenderFns: [],
-	props: {
-		iconName: {
-			type: String,
-			default: ''
-		},
-		height: {
-			type: [String, Number],
-			default: '12'
-		},
-		width: {
-			type: [String, Number],
-			default: '12'
-		},
-		to: {
-			type: String,
-			default: null
-		},
-		href: {
-			type: String,
-			default: null
-		},
-		disabled: {
-			type: Boolean,
-			default: false
-		},
-		greyIcon: {
-			type: Boolean,
-			default: false
-		},
-		buttonAfter: {
-			type: Boolean,
-			default: false
-		},
-		bgColor: {
-			type: String,
-			default: ''
-		}
-	},
-	data() {
-		return {
-			buttonClasses: ['button'],
-			emptySlot: true
-		};
-	},
-	created() {
-		if (this.$slots.default) {
-			this.emptySlot = false;
-		}
-
-		if (this.$props.iconName === '') {
-			this.buttonClasses.push('button__text-only');
-			if (this.$props.bgColor === 'white') {
-				this.buttonClasses.push('button__text-only--white');
-			}
-		} else {
-			if (this.$props.buttonAfter) {
-				this.buttonClasses.push('button__text-only--after');
-				if (this.$props.bgColor === 'inverted') {
-					this.buttonClasses.push('button__text-only--after-inverted');
-				}
-			} else {
-				this.buttonClasses.push('button__icon-only');
-			}
-		}
-		if (this.$props.greyIcon && this.$props.iconName !== '') {
-			this.buttonClasses.push('button__icon-only--inverted');
-		}
-	}
-};
-
 var mixin = {
 	props: {
 		fieldIndex: {
@@ -124,11 +37,6 @@ var mixin = {
 			}
 		}
 	},
-	mounted() {
-		if (this.$refs.input) {
-			this.$refs.input.setAttribute('attr-henkie', 'hoi');
-		}
-	},
 	methods: {
 		findCorrectFields(fields) {
 			const newField = fields.find((field) => field.key === this.$props.fieldName) || [];
@@ -155,105 +63,266 @@ var mixin = {
 	}
 };
 
-(function(){ if(typeof document !== 'undefined'){ var head=document.head||document.getElementsByTagName('head')[0], style=document.createElement('style'), css=""; style.type='text/css'; if (style.styleSheet){ style.styleSheet.cssText = css; } else { style.appendChild(document.createTextNode(css)); } head.appendChild(style); } })();
-var uiCheckbox = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"ui-checkbox",class:_vm.getClasses(_vm.fieldData.container.classes)},[_c('label',{staticClass:"ui-checkbox__element"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.fieldDataValue),expression:"fieldDataValue"}],staticClass:"ui-checkbox__input",attrs:{"type":"checkbox"},domProps:{"checked":Array.isArray(_vm.fieldDataValue)?_vm._i(_vm.fieldDataValue,null)>-1:(_vm.fieldDataValue)},on:{"change":function($event){var $$a=_vm.fieldDataValue,$$el=$event.target,$$c=$$el.checked?(true):(false);if(Array.isArray($$a)){var $$v=null,$$i=_vm._i($$a,$$v);if($$el.checked){$$i<0&&(_vm.fieldDataValue=$$a.concat([$$v]));}else{$$i>-1&&(_vm.fieldDataValue=$$a.slice(0,$$i).concat($$a.slice($$i+1)));}}else{_vm.fieldDataValue=$$c;}}}}),_vm._v(" "),_c('span',{staticClass:"ui-checkbox__label"},[_c('span',{staticClass:"ui-checkbox__icon"}),_vm._v(" "),_c('span',{staticClass:"ui-checkbox__label-text",domProps:{"innerHTML":_vm._s(_vm.fieldData.label)}})])]),_vm._v(" "),_vm._t("default")],2)},staticRenderFns: [],
+//
+var script = {
 	mixins: [mixin]
 };
 
-(function(){ if(typeof document !== 'undefined'){ var head=document.head||document.getElementsByTagName('head')[0], style=document.createElement('style'), css=""; style.type='text/css'; if (style.styleSheet){ style.styleSheet.cssText = css; } else { style.appendChild(document.createTextNode(css)); } head.appendChild(style); } })();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var uiFields = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.uiFieldsData && _vm.uiFieldsData.container)?_c('div',{class:_vm.getClasses(_vm.uiFieldsData.container.classes)},_vm._l((_vm.uiFieldsData.data),function(fields,i){return (_vm.checkCondition(fields.conditional))?_c(_vm.uiFieldsData.container.component,{key:i,tag:"component",class:_vm.getClasses(fields.container.classes)},[_vm._t("default"),_vm._v(" "),_vm._l((fields.data),function(item,index){return [(_vm.checkTextField(item.type) && _vm.checkCondition(item.conditional))?_c(fields.container.component,{key:index,tag:"component",class:`${_vm.getClasses(fields.container.classes, '__fieldset')} ${_vm.getClasses(fields.container.classes, '__fieldset--text')}`},[_c('div',{class:`${_vm.getClasses(fields.container.classes, '__fieldset-container')}`},[_c('ui-text',{attrs:{"field-index":index,"field-name":_vm.fieldName,"depth":fields.key}})],1)]):(item.type === 'select' && _vm.checkCondition(item.conditional))?_c(fields.container.component,{key:index,tag:"component",class:`${_vm.getClasses(fields.container.classes, '__fieldset')} ${_vm.getClasses(fields.container.classes, '__fieldset--select')}`},[_c('div',{class:`${_vm.getClasses(fields.container.classes, '__fieldset-container')}`},[_c('ui-select',{attrs:{"field-index":index,"field-name":_vm.fieldName,"depth":fields.key,"icon-name":"arrow-up"}})],1)]):(item.type === 'radio' && _vm.checkCondition(item.conditional))?_c(fields.container.component,{key:index,tag:"component",class:`${_vm.getClasses(fields.container.classes, '__fieldset')} ${_vm.getClasses(fields.container.classes, '__fieldset--radio')}`},[_c('div',{class:`${_vm.getClasses(fields.container.classes, '__fieldset-container')}`},[_c('ui-radio',{attrs:{"field-index":index,"field-name":_vm.fieldName,"depth":fields.key}})],1)]):(item.type === 'checkbox' && _vm.checkCondition(item.conditional))?_c(fields.container.component,{key:index,tag:"component",class:`${_vm.getClasses(fields.container.classes, '__fieldset')} ${_vm.getClasses(fields.container.classes, '__fieldset--checkbox')}`},[_c('div',{class:`${_vm.getClasses(fields.container.classes, '__fieldset-container')}`},[_c('ui-checkbox',{attrs:{"field-index":index,"field-name":_vm.fieldName,"depth":fields.key}},[(item.description)?_c('modal-trigger',{attrs:{"content":item.description,"title":"Would you like logo embroidery? ","size":"two-third"}},[_vm._v("Would you like logo embroidery?")]):_vm._e()],1)],1)]):_vm._e()]})],2):_vm._e()}),1):_vm._e()},staticRenderFns: [],
+/* script */
+            const __vue_script__ = script;
+            
+/* template */
+var __vue_render__ = function() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c(
+    "span",
+    {
+      staticClass: "ui-checkbox",
+      class: _vm.getClasses(_vm.fieldData.container.classes)
+    },
+    [
+      _c("label", { staticClass: "ui-checkbox__element" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.fieldDataValue,
+              expression: "fieldDataValue"
+            }
+          ],
+          staticClass: "ui-checkbox__input",
+          attrs: { type: "checkbox" },
+          domProps: {
+            checked: Array.isArray(_vm.fieldDataValue)
+              ? _vm._i(_vm.fieldDataValue, null) > -1
+              : _vm.fieldDataValue
+          },
+          on: {
+            change: function($event) {
+              var $$a = _vm.fieldDataValue,
+                $$el = $event.target,
+                $$c = $$el.checked ? true : false;
+              if (Array.isArray($$a)) {
+                var $$v = null,
+                  $$i = _vm._i($$a, $$v);
+                if ($$el.checked) {
+                  $$i < 0 && (_vm.fieldDataValue = $$a.concat([$$v]));
+                } else {
+                  $$i > -1 &&
+                    (_vm.fieldDataValue = $$a
+                      .slice(0, $$i)
+                      .concat($$a.slice($$i + 1)));
+                }
+              } else {
+                _vm.fieldDataValue = $$c;
+              }
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c("span", { staticClass: "ui-checkbox__label" }, [
+          _c("span", { staticClass: "ui-checkbox__icon" }),
+          _vm._v(" "),
+          _c("span", {
+            staticClass: "ui-checkbox__label-text",
+            domProps: { innerHTML: _vm._s(_vm.fieldData.label) }
+          })
+        ])
+      ]),
+      _vm._v(" "),
+      _vm._t("default")
+    ],
+    2
+  )
+};
+var __vue_staticRenderFns__ = [];
+__vue_render__._withStripped = true;
+
+  /* style */
+  const __vue_inject_styles__ = undefined;
+  /* scoped */
+  const __vue_scope_id__ = undefined;
+  /* module identifier */
+  const __vue_module_identifier__ = undefined;
+  /* functional template */
+  const __vue_is_functional_template__ = false;
+  /* component normalizer */
+  function __vue_normalize__(
+    template, style, script$$1,
+    scope, functional, moduleIdentifier,
+    createInjector, createInjectorSSR
+  ) {
+    const component = (typeof script$$1 === 'function' ? script$$1.options : script$$1) || {};
+
+    // For security concerns, we use only base name in production mode.
+    component.__file = "/Users/dennisdipsaus/Documents/Projects/vue-uiFields/src/form/ui-checkbox.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component
+  }
+  /* style inject */
+  
+  /* style inject SSR */
+  
+
+  
+  var uiCheckbox = __vue_normalize__(
+    { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
+    __vue_inject_styles__,
+    __vue_script__,
+    __vue_scope_id__,
+    __vue_is_functional_template__,
+    __vue_module_identifier__,
+    undefined,
+    undefined
+  )
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+var script$1 = {
 	props: {
 		fieldName: {
 			type: String,
 			default: 'form'
 		}
 	},
+	data() {
+		return {
+			uiFieldsData: {}
+		};
+	},
 	computed: {
-		uiFieldsData: {
+		uiFields: {
 			get: function() {
-				return this.findCorrectFields(this.$store.state.uiFields.fields);
+				return this.$store.state.uiFields.fields;
 			}
+		}
+	},
+	watch: {
+		uiFields: {
+			handler() {
+				if (this.findCorrectFields(this.uiFields)) {
+					this.uiFieldsData = this.findCorrectFields(this.uiFields);
+				}
+				this.$forceUpdate();
+			},
+			deep: true
 		}
 	},
 	methods: {
 		findCorrectFields(fields) {
 			return fields.find((field) => field.key === this.$props.fieldName) || [];
+		},
+		conditions(fields) {
+			return fields.data.map((field) => {
+				if (field.data) {
+					return field.data.map((secondField) => {
+						if (secondField.conditional) {
+							return secondField.conditional.show;
+						}
+					});
+				}
+			});
 		},
 		checkCondition(input) {
 			if (input) {
@@ -268,21 +337,717 @@ var uiFields = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c
 	}
 };
 
-(function(){ if(typeof document !== 'undefined'){ var head=document.head||document.getElementsByTagName('head')[0], style=document.createElement('style'), css=""; style.type='text/css'; if (style.styleSheet){ style.styleSheet.cssText = css; } else { style.appendChild(document.createTextNode(css)); } head.appendChild(style); } })();
-var uiRadio = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"ui-radio",class:_vm.getClasses(_vm.fieldData.container.classes)},[_vm._l((_vm.fieldData.options),function(option,index){return _c('label',{key:index,staticClass:"ui-radio__element"},[_c('span',{staticClass:"ui-radio__label",domProps:{"innerHTML":_vm._s(option.label)}}),_vm._v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.fieldDataValue),expression:"fieldDataValue"}],attrs:{"type":"radio"},domProps:{"value":option.value,"checked":_vm._q(_vm.fieldDataValue,option.value)},on:{"change":function($event){_vm.fieldDataValue=option.value;}}})])}),_vm._v(" "),_c('span',{staticClass:"ui-radio__slot"},[_vm._t("default")],2)],2)},staticRenderFns: [],
+/* script */
+            const __vue_script__$1 = script$1;
+            
+/* template */
+var __vue_render__$1 = function() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _vm.uiFieldsData && _vm.uiFieldsData.container
+    ? _c(
+        "div",
+        { class: _vm.getClasses(_vm.uiFieldsData.container.classes) },
+        _vm._l(_vm.uiFieldsData.data, function(fields, i) {
+          return _vm.checkCondition(fields.conditional)
+            ? _c(
+                _vm.uiFieldsData.container.component,
+                {
+                  key: i,
+                  tag: "component",
+                  class: _vm.getClasses(fields.container.classes)
+                },
+                [
+                  _vm._t("default"),
+                  _vm._v(" "),
+                  _vm._l(fields.data, function(item, index) {
+                    return [
+                      _vm.checkTextField(item.type) &&
+                      _vm.checkCondition(item.conditional)
+                        ? _c(
+                            fields.container.component,
+                            {
+                              key: index,
+                              tag: "component",
+                              class:
+                                _vm.getClasses(
+                                  fields.container.classes,
+                                  "__fieldset"
+                                ) +
+                                " " +
+                                _vm.getClasses(
+                                  fields.container.classes,
+                                  "__fieldset--text"
+                                )
+                            },
+                            [
+                              _c(
+                                "div",
+                                {
+                                  class:
+                                    "" +
+                                    _vm.getClasses(
+                                      fields.container.classes,
+                                      "__fieldset-container"
+                                    )
+                                },
+                                [
+                                  _c("ui-text", {
+                                    attrs: {
+                                      "field-index": index,
+                                      "field-name": _vm.fieldName,
+                                      depth: fields.key
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            ]
+                          )
+                        : item.type === "select" &&
+                          _vm.checkCondition(item.conditional)
+                          ? _c(
+                              fields.container.component,
+                              {
+                                key: index,
+                                tag: "component",
+                                class:
+                                  _vm.getClasses(
+                                    fields.container.classes,
+                                    "__fieldset"
+                                  ) +
+                                  " " +
+                                  _vm.getClasses(
+                                    fields.container.classes,
+                                    "__fieldset--select"
+                                  )
+                              },
+                              [
+                                _c(
+                                  "div",
+                                  {
+                                    class:
+                                      "" +
+                                      _vm.getClasses(
+                                        fields.container.classes,
+                                        "__fieldset-container"
+                                      )
+                                  },
+                                  [
+                                    _c("ui-select", {
+                                      attrs: {
+                                        "field-index": index,
+                                        "field-name": _vm.fieldName,
+                                        depth: fields.key,
+                                        "icon-name": "arrow-up"
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
+                              ]
+                            )
+                          : item.type === "radio" &&
+                            _vm.checkCondition(item.conditional)
+                            ? _c(
+                                fields.container.component,
+                                {
+                                  key: index,
+                                  tag: "component",
+                                  class:
+                                    _vm.getClasses(
+                                      fields.container.classes,
+                                      "__fieldset"
+                                    ) +
+                                    " " +
+                                    _vm.getClasses(
+                                      fields.container.classes,
+                                      "__fieldset--radio"
+                                    )
+                                },
+                                [
+                                  _c(
+                                    "div",
+                                    {
+                                      class:
+                                        "" +
+                                        _vm.getClasses(
+                                          fields.container.classes,
+                                          "__fieldset-container"
+                                        )
+                                    },
+                                    [
+                                      _c("ui-radio", {
+                                        attrs: {
+                                          "field-index": index,
+                                          "field-name": _vm.fieldName,
+                                          depth: fields.key
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  )
+                                ]
+                              )
+                            : item.type === "checkbox" &&
+                              _vm.checkCondition(item.conditional)
+                              ? _c(
+                                  fields.container.component,
+                                  {
+                                    key: index,
+                                    tag: "component",
+                                    class:
+                                      _vm.getClasses(
+                                        fields.container.classes,
+                                        "__fieldset"
+                                      ) +
+                                      " " +
+                                      _vm.getClasses(
+                                        fields.container.classes,
+                                        "__fieldset--checkbox"
+                                      )
+                                  },
+                                  [
+                                    _c(
+                                      "div",
+                                      {
+                                        class:
+                                          "" +
+                                          _vm.getClasses(
+                                            fields.container.classes,
+                                            "__fieldset-container"
+                                          )
+                                      },
+                                      [
+                                        _c(
+                                          "ui-checkbox",
+                                          {
+                                            attrs: {
+                                              "field-index": index,
+                                              "field-name": _vm.fieldName,
+                                              depth: fields.key
+                                            }
+                                          },
+                                          [
+                                            item.description
+                                              ? _c(
+                                                  "modal-trigger",
+                                                  {
+                                                    attrs: {
+                                                      content: item.description,
+                                                      title:
+                                                        "Would you like logo embroidery? ",
+                                                      size: "two-third"
+                                                    }
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n\t\t\t\t\t\t\t\tWould you like logo embroidery?\n\t\t\t\t\t\t\t"
+                                                    )
+                                                  ]
+                                                )
+                                              : _vm._e()
+                                          ],
+                                          1
+                                        )
+                                      ],
+                                      1
+                                    )
+                                  ]
+                                )
+                              : _vm._e()
+                    ]
+                  })
+                ],
+                2
+              )
+            : _vm._e()
+        }),
+        1
+      )
+    : _vm._e()
+};
+var __vue_staticRenderFns__$1 = [];
+__vue_render__$1._withStripped = true;
+
+  /* style */
+  const __vue_inject_styles__$1 = undefined;
+  /* scoped */
+  const __vue_scope_id__$1 = undefined;
+  /* module identifier */
+  const __vue_module_identifier__$1 = undefined;
+  /* functional template */
+  const __vue_is_functional_template__$1 = false;
+  /* component normalizer */
+  function __vue_normalize__$1(
+    template, style, script,
+    scope, functional, moduleIdentifier,
+    createInjector, createInjectorSSR
+  ) {
+    const component = (typeof script === 'function' ? script.options : script) || {};
+
+    // For security concerns, we use only base name in production mode.
+    component.__file = "/Users/dennisdipsaus/Documents/Projects/vue-uiFields/src/form/ui-fields.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component
+  }
+  /* style inject */
+  
+  /* style inject SSR */
+  
+
+  
+  var uiFields = __vue_normalize__$1(
+    { render: __vue_render__$1, staticRenderFns: __vue_staticRenderFns__$1 },
+    __vue_inject_styles__$1,
+    __vue_script__$1,
+    __vue_scope_id__$1,
+    __vue_is_functional_template__$1,
+    __vue_module_identifier__$1,
+    undefined,
+    undefined
+  )
+
+//
+var script$2 = {
 	mixins: [mixin]
 };
 
-(function(){ if(typeof document !== 'undefined'){ var head=document.head||document.getElementsByTagName('head')[0], style=document.createElement('style'), css=""; style.type='text/css'; if (style.styleSheet){ style.styleSheet.cssText = css; } else { style.appendChild(document.createTextNode(css)); } head.appendChild(style); } })();
-var uiSelect = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"ui-select",class:_vm.getClasses(_vm.fieldData.container.classes)},[_c('label',{staticClass:"ui-select__element"},[_c('span',{staticClass:"ui-select__label",domProps:{"innerHTML":_vm._s(_vm.createLabel(_vm.fieldData.name))}}),_vm._v(" "),_c('select',{directives:[{name:"model",rawName:"v-model",value:(_vm.fieldDataValue),expression:"fieldDataValue"}],staticClass:"ui-select__select",attrs:{"name":_vm.fieldData.name},on:{"change":function($event){var $$selectedVal = Array.prototype.filter.call($event.target.options,function(o){return o.selected}).map(function(o){var val = "_value" in o ? o._value : o.value;return val}); _vm.fieldDataValue=$event.target.multiple ? $$selectedVal : $$selectedVal[0];}}},_vm._l((_vm.fieldData.options),function(option,index){return _c('option',{key:index,domProps:{"value":option.value}},[_vm._v(_vm._s(option.label))])}),0),_vm._v(" "),(_vm.iconName)?_c('span',{staticClass:"ui-select__icon"}):_vm._e()]),_vm._v(" "),_c('span',{staticClass:"ui-select__slot"},[(_vm.fieldData.description)?_c('button',{staticClass:"button--moreinfo",on:{"click":function($event){$event.preventDefault();_vm.shownInfo = _vm.select;
-				_vm.shownInfoVisible = true;}}},[_vm._v(" ? ")]):_vm._e()])])},staticRenderFns: [],
+/* script */
+            const __vue_script__$2 = script$2;
+            
+/* template */
+var __vue_render__$2 = function() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c(
+    "span",
+    {
+      staticClass: "ui-radio",
+      class: _vm.getClasses(_vm.fieldData.container.classes)
+    },
+    [
+      _vm._l(_vm.fieldData.options, function(option, index) {
+        return _c("label", { key: index, staticClass: "ui-radio__element" }, [
+          _c("span", {
+            staticClass: "ui-radio__label",
+            domProps: { innerHTML: _vm._s(option.label) }
+          }),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.fieldDataValue,
+                expression: "fieldDataValue"
+              }
+            ],
+            attrs: { type: "radio" },
+            domProps: {
+              value: option.value,
+              checked: _vm._q(_vm.fieldDataValue, option.value)
+            },
+            on: {
+              change: function($event) {
+                _vm.fieldDataValue = option.value;
+              }
+            }
+          })
+        ])
+      }),
+      _vm._v(" "),
+      _c("span", { staticClass: "ui-radio__slot" }, [_vm._t("default")], 2)
+    ],
+    2
+  )
+};
+var __vue_staticRenderFns__$2 = [];
+__vue_render__$2._withStripped = true;
+
+  /* style */
+  const __vue_inject_styles__$2 = undefined;
+  /* scoped */
+  const __vue_scope_id__$2 = undefined;
+  /* module identifier */
+  const __vue_module_identifier__$2 = undefined;
+  /* functional template */
+  const __vue_is_functional_template__$2 = false;
+  /* component normalizer */
+  function __vue_normalize__$2(
+    template, style, script,
+    scope, functional, moduleIdentifier,
+    createInjector, createInjectorSSR
+  ) {
+    const component = (typeof script === 'function' ? script.options : script) || {};
+
+    // For security concerns, we use only base name in production mode.
+    component.__file = "/Users/dennisdipsaus/Documents/Projects/vue-uiFields/src/form/ui-radio.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component
+  }
+  /* style inject */
+  
+  /* style inject SSR */
+  
+
+  
+  var uiRadio = __vue_normalize__$2(
+    { render: __vue_render__$2, staticRenderFns: __vue_staticRenderFns__$2 },
+    __vue_inject_styles__$2,
+    __vue_script__$2,
+    __vue_scope_id__$2,
+    __vue_is_functional_template__$2,
+    __vue_module_identifier__$2,
+    undefined,
+    undefined
+  )
+
+//
+var script$3 = {
 	mixins: [mixin]
 };
 
-(function(){ if(typeof document !== 'undefined'){ var head=document.head||document.getElementsByTagName('head')[0], style=document.createElement('style'), css=""; style.type='text/css'; if (style.styleSheet){ style.styleSheet.cssText = css; } else { style.appendChild(document.createTextNode(css)); } head.appendChild(style); } })();
-var uiText = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.fieldData)?_c('span',{staticClass:"ui-text",class:_vm.getClasses(_vm.fieldData.container.classes)},[_c('label',{staticClass:"ui-text__element"},[(_vm.fieldData.required)?_c('span',{staticClass:"ui-text__required"}):_vm._e(),_vm._v(" "),_c('span',{staticClass:"ui-text__label",domProps:{"innerHTML":_vm._s(_vm.fieldData.label)}}),_vm._v(" "),((_vm.fieldData.type)==='checkbox')?_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.fieldDataValue),expression:"fieldDataValue"}],ref:"input",staticClass:"ui-text__input",attrs:{"placeholder":_vm.fieldData.placeholder,"maxlength":_vm.fieldData.maxLength,"required":"required","type":"checkbox"},domProps:{"checked":Array.isArray(_vm.fieldDataValue)?_vm._i(_vm.fieldDataValue,null)>-1:(_vm.fieldDataValue)},on:{"change":function($event){var $$a=_vm.fieldDataValue,$$el=$event.target,$$c=$$el.checked?(true):(false);if(Array.isArray($$a)){var $$v=null,$$i=_vm._i($$a,$$v);if($$el.checked){$$i<0&&(_vm.fieldDataValue=$$a.concat([$$v]));}else{$$i>-1&&(_vm.fieldDataValue=$$a.slice(0,$$i).concat($$a.slice($$i+1)));}}else{_vm.fieldDataValue=$$c;}}}}):((_vm.fieldData.type)==='radio')?_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.fieldDataValue),expression:"fieldDataValue"}],ref:"input",staticClass:"ui-text__input",attrs:{"placeholder":_vm.fieldData.placeholder,"maxlength":_vm.fieldData.maxLength,"required":"required","type":"radio"},domProps:{"checked":_vm._q(_vm.fieldDataValue,null)},on:{"change":function($event){_vm.fieldDataValue=null;}}}):_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.fieldDataValue),expression:"fieldDataValue"}],ref:"input",staticClass:"ui-text__input",attrs:{"placeholder":_vm.fieldData.placeholder,"maxlength":_vm.fieldData.maxLength,"required":"required","type":_vm.fieldData.type},domProps:{"value":(_vm.fieldDataValue)},on:{"input":function($event){if($event.target.composing){ return; }_vm.fieldDataValue=$event.target.value;}}})])]):_vm._e()},staticRenderFns: [],
+/* script */
+            const __vue_script__$3 = script$3;
+            
+/* template */
+var __vue_render__$3 = function() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c(
+    "span",
+    {
+      staticClass: "ui-select",
+      class: _vm.getClasses(_vm.fieldData.container.classes)
+    },
+    [
+      _c("label", { staticClass: "ui-select__element" }, [
+        _c("span", {
+          staticClass: "ui-select__label",
+          domProps: { innerHTML: _vm._s(_vm.createLabel(_vm.fieldData.name)) }
+        }),
+        _vm._v(" "),
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.fieldDataValue,
+                expression: "fieldDataValue"
+              }
+            ],
+            staticClass: "ui-select__select",
+            attrs: { name: _vm.fieldData.name },
+            on: {
+              change: function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value;
+                    return val
+                  });
+                _vm.fieldDataValue = $event.target.multiple
+                  ? $$selectedVal
+                  : $$selectedVal[0];
+              }
+            }
+          },
+          _vm._l(_vm.fieldData.options, function(option, index) {
+            return _c(
+              "option",
+              { key: index, domProps: { value: option.value } },
+              [_vm._v(_vm._s(option.label))]
+            )
+          }),
+          0
+        ),
+        _vm._v(" "),
+        _vm.iconName ? _c("span", { staticClass: "ui-select__icon" }) : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c("span", { staticClass: "ui-select__slot" }, [
+        _vm.fieldData.description
+          ? _c(
+              "button",
+              {
+                staticClass: "button--moreinfo",
+                on: {
+                  click: function($event) {
+                    $event.preventDefault();
+                    _vm.shownInfo = _vm.select;
+                    _vm.shownInfoVisible = true;
+                  }
+                }
+              },
+              [_vm._v("\n\t\t\t?\n\t\t")]
+            )
+          : _vm._e()
+      ])
+    ]
+  )
+};
+var __vue_staticRenderFns__$3 = [];
+__vue_render__$3._withStripped = true;
+
+  /* style */
+  const __vue_inject_styles__$3 = undefined;
+  /* scoped */
+  const __vue_scope_id__$3 = undefined;
+  /* module identifier */
+  const __vue_module_identifier__$3 = undefined;
+  /* functional template */
+  const __vue_is_functional_template__$3 = false;
+  /* component normalizer */
+  function __vue_normalize__$3(
+    template, style, script,
+    scope, functional, moduleIdentifier,
+    createInjector, createInjectorSSR
+  ) {
+    const component = (typeof script === 'function' ? script.options : script) || {};
+
+    // For security concerns, we use only base name in production mode.
+    component.__file = "/Users/dennisdipsaus/Documents/Projects/vue-uiFields/src/form/ui-select.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component
+  }
+  /* style inject */
+  
+  /* style inject SSR */
+  
+
+  
+  var uiSelect = __vue_normalize__$3(
+    { render: __vue_render__$3, staticRenderFns: __vue_staticRenderFns__$3 },
+    __vue_inject_styles__$3,
+    __vue_script__$3,
+    __vue_scope_id__$3,
+    __vue_is_functional_template__$3,
+    __vue_module_identifier__$3,
+    undefined,
+    undefined
+  )
+
+//
+var script$4 = {
 	mixins: [mixin]
 };
+
+/* script */
+            const __vue_script__$4 = script$4;
+            
+/* template */
+var __vue_render__$4 = function() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _vm.fieldData
+    ? _c(
+        "span",
+        {
+          staticClass: "ui-text",
+          class: _vm.getClasses(_vm.fieldData.container.classes)
+        },
+        [
+          _c("label", { staticClass: "ui-text__element" }, [
+            _vm.fieldData.required
+              ? _c("span", { staticClass: "ui-text__required" })
+              : _vm._e(),
+            _vm._v(" "),
+            _c("span", {
+              staticClass: "ui-text__label",
+              domProps: { innerHTML: _vm._s(_vm.fieldData.label) }
+            }),
+            _vm._v(" "),
+            _vm.fieldData.type === "checkbox"
+              ? _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.fieldDataValue,
+                      expression: "fieldDataValue"
+                    }
+                  ],
+                  ref: "input",
+                  staticClass: "ui-text__input",
+                  attrs: {
+                    placeholder: _vm.fieldData.placeholder,
+                    maxlength: _vm.fieldData.maxLength,
+                    required: "required",
+                    type: "checkbox"
+                  },
+                  domProps: {
+                    checked: Array.isArray(_vm.fieldDataValue)
+                      ? _vm._i(_vm.fieldDataValue, null) > -1
+                      : _vm.fieldDataValue
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$a = _vm.fieldDataValue,
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false;
+                      if (Array.isArray($$a)) {
+                        var $$v = null,
+                          $$i = _vm._i($$a, $$v);
+                        if ($$el.checked) {
+                          $$i < 0 && (_vm.fieldDataValue = $$a.concat([$$v]));
+                        } else {
+                          $$i > -1 &&
+                            (_vm.fieldDataValue = $$a
+                              .slice(0, $$i)
+                              .concat($$a.slice($$i + 1)));
+                        }
+                      } else {
+                        _vm.fieldDataValue = $$c;
+                      }
+                    }
+                  }
+                })
+              : _vm.fieldData.type === "radio"
+                ? _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.fieldDataValue,
+                        expression: "fieldDataValue"
+                      }
+                    ],
+                    ref: "input",
+                    staticClass: "ui-text__input",
+                    attrs: {
+                      placeholder: _vm.fieldData.placeholder,
+                      maxlength: _vm.fieldData.maxLength,
+                      required: "required",
+                      type: "radio"
+                    },
+                    domProps: { checked: _vm._q(_vm.fieldDataValue, null) },
+                    on: {
+                      change: function($event) {
+                        _vm.fieldDataValue = null;
+                      }
+                    }
+                  })
+                : _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.fieldDataValue,
+                        expression: "fieldDataValue"
+                      }
+                    ],
+                    ref: "input",
+                    staticClass: "ui-text__input",
+                    attrs: {
+                      placeholder: _vm.fieldData.placeholder,
+                      maxlength: _vm.fieldData.maxLength,
+                      required: "required",
+                      type: _vm.fieldData.type
+                    },
+                    domProps: { value: _vm.fieldDataValue },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.fieldDataValue = $event.target.value;
+                      }
+                    }
+                  })
+          ])
+        ]
+      )
+    : _vm._e()
+};
+var __vue_staticRenderFns__$4 = [];
+__vue_render__$4._withStripped = true;
+
+  /* style */
+  const __vue_inject_styles__$4 = undefined;
+  /* scoped */
+  const __vue_scope_id__$4 = undefined;
+  /* module identifier */
+  const __vue_module_identifier__$4 = undefined;
+  /* functional template */
+  const __vue_is_functional_template__$4 = false;
+  /* component normalizer */
+  function __vue_normalize__$4(
+    template, style, script,
+    scope, functional, moduleIdentifier,
+    createInjector, createInjectorSSR
+  ) {
+    const component = (typeof script === 'function' ? script.options : script) || {};
+
+    // For security concerns, we use only base name in production mode.
+    component.__file = "/Users/dennisdipsaus/Documents/Projects/vue-uiFields/src/form/ui-text.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component
+  }
+  /* style inject */
+  
+  /* style inject SSR */
+  
+
+  
+  var uiText = __vue_normalize__$4(
+    { render: __vue_render__$4, staticRenderFns: __vue_staticRenderFns__$4 },
+    __vue_inject_styles__$4,
+    __vue_script__$4,
+    __vue_scope_id__$4,
+    __vue_is_functional_template__$4,
+    __vue_module_identifier__$4,
+    undefined,
+    undefined
+  )
 
 class uiFieldsInstance {
 	constructor(options) {
@@ -606,25 +1371,6 @@ class uiFieldsInstance {
 	/* eslint-enable */
 }
 
-// import Vue from 'vue';
-
-// Vue.mixin({
-// 	methods: {
-// 		createNewUiFieldsInstance(options) {
-// 			return new uiFieldsInstance(options);
-// 		},
-// 		getClasses(classes, name = '') {
-// 			if (classes.length) {
-// 				const newClass = classes.map((clas) => `${clas}${name}`);
-// 				classes = [];
-// 				return `${newClass.join(' ')}`;
-// 			} else {
-// 				return '';
-// 			}
-// 		}
-// 	}
-// });
-
 const state = () => ({
 	fields: []
 });
@@ -717,14 +1463,13 @@ var uiFieldsStore = { state, mutations, actions };
 function install(Vue) {
 	if (install.installed) return;
 	install.installed = true;
-	Vue.component('uiButton', uiButton);
-	Vue.component('uiCheckbox',uiCheckbox);
-	Vue.component('uiFields',uiFields);
+	Vue.component('uiCheckbox', uiCheckbox);
+	Vue.component('uiFields', uiFields);
 	// Vue.component('uiNumber',uiNumber);
-	Vue.component('uiRadio ',uiRadio);
-	Vue.component('uiSelect',uiSelect);
-	Vue.component('uiText',uiText);
-	Vue.component('uiText',uiText);
+	Vue.component('uiRadio ', uiRadio);
+	Vue.component('uiSelect', uiSelect);
+	Vue.component('uiText', uiText);
+	Vue.component('uiText', uiText);
 }
 
 // Create module definition for Vue.use()
