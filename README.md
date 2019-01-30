@@ -1,5 +1,278 @@
 ### Setup formInstance
+uiFields is created to create forms faster and more consistency in the data. uiFields will container multiple options to create a form according to your own style. It uses getters and setters of the Vuex to control all data from one single point in a two way binding.
 
+The idea of formating fields with this plugin is to create a three layer data model. You can find the data on a key or a name (depending on what layer you are).
+
+```bash
+uiFields
+--| form - key
+-----| fieldset - key
+-------| singleField - name
+-------| singleField - name
+-----| fieldset - key
+-------| singleField - name
+```
+
+Each form has to be unique with an unique key. If you have a duplicate of an key the form will be overwritten. To create a new form you can use the function included in the plugin. You can create multiple forms.
+
+```js
+const YOUR_VARIABLE_NAME = this.createNewUiFieldsInstance();
+```
+
+I recommend saving the variable into your dataset so you can control it in your methods.
+
+**Note!**
+
+This will only create a form data. To save your dataset in the Vuex you have to set it using the dispatch function. This function has to be in the mounted function of Vue, all prepartion functions can be async or added in the created function.
+
+```js
+this.$store.dispatch('uiFields/setNewForm', YOUR_VARIABLE_NAME.getFieldSettings());
+```
+
+
+## Create your form
+To create a new uiFields instance and the first layer you can add multiple options. If you don't add these options the form will use its fallback values.
+Example:
+```js
+const YOUR_VARIABLE_NAME = this.createNewUiFieldsInstance(
+	{
+		OPTION: VALUE
+	}
+);
+```
+
+All the options:
+#### key
+The name of your form.
+```js
+const YOUR_VARIABLE_NAME = this.createNewUiFieldsInstance(
+	{
+		key: NAME_OF_YOUR_FORM //optional, default: 'form'
+	}
+);
+```
+
+#### container
+The options of your form.
+```js
+const YOUR_VARIABLE_NAME = this.createNewUiFieldsInstance(
+	{
+		container: { //has to be an object, optional
+			component: YOUR_COMPONENT_NAME, //default: 'fieldset'
+			classes: [] || '' //can be an array or a single class default: []
+		} //optional,
+	}
+);
+```
+
+
+#### data
+The data of your form. More information on the setFieldSet function!
+```js
+const YOUR_VARIABLE_NAME = this.createNewUiFieldsInstance(
+	{
+		data: [ //data of the second layer, can also be added by using the setFieldset function
+			{
+				key: NAME_OF_YOUR_FORM, //required, name of the form, otherwise this won't work
+				data: DATA_OF_YOUR_FIELDSET, //optional, more information on setFieldset function
+				container: { //has to be an object, optional
+					component: YOUR_COMPONENT_NAME, //default: 'fieldset'
+					classes: [] || '' //can be an array or a single class default: []
+				} //optional,
+			}
+
+		]
+	}
+);
+```
+
+### Example
+```js
+const YOUR_VARIABLE_NAME = this.createNewUiFieldsInstance(
+	{
+		key: 'test-field',
+		container: {
+			component: 'fieldset',
+			classes: 'test-field'
+		}
+	}
+);
+```
+
+This will add a basic form with the key `test-field` and a single class. For every second layer it will create a fieldset wrapping that data with the class `test-field`
+
+## Adding fieldsets to your form
+To create a new fieldset you can use multiple options (almost the same as creating a form)
+
+#### key
+The name of your fieldset.
+```js
+YOUR_VARIABLE_NAME.setFieldSet(
+	{
+		key: NAME_OF_YOUR_FIELDSET //optional, default: 'form'
+	}
+);
+```
+
+#### container
+The options of your fieldset.
+```js
+YOUR_VARIABLE_NAME.setFieldSet(
+	{
+		container: { //has to be an object, optional
+			component: NAME_OF_YOUR_FIELDSET, //default: 'div'
+			classes: [] || '' //can be an array or a single class default: []
+		} //optional,
+	}
+);
+```
+
+
+#### data
+The data of your fieldset. More information on the setField function!
+```js
+YOUR_VARIABLE_NAME.setFieldSet(
+	{
+		data: [ //data of the third layer, can also be added by using the setField function
+			{
+					depth: NAME_OF_YOUR_FIELDSET,
+					name: YOUR_FIELD_NAME,
+					type: FIELD_TYPE,
+					placeholder: PLACEHOLDER,
+					label: LABEL,
+					required: true,
+					errors: {
+						validation: VALIDATION,
+						message: MESSAGE
+					}
+				}
+		]
+	}
+);
+```
+
+### Example
+```js
+YOUR_VARIABLE_NAME.setFieldSet(
+	{
+		key: 'test-fieldSet',
+		container: {
+			component: 'fieldset',
+			classes: 'test-fieldSet'
+		}
+	}
+);
+```
+
+## Adding fields to your fieldset
+The most important thing is to link the field to your fieldset. This can be done by using the setField function.
+```js
+YOUR_VARIABLE_NAME.setField(
+	{
+		depth: NAME_OF_YOUR_FIELDSET,
+	}
+)
+```
+
+To create more fields at once you can also add and array.
+
+### setField function
+This function will create a single field. The props given to each field differ from the field type.
+
+Type options:
+
+* text
+* email
+* number
+* password
+* select
+* checkbox
+
+The default options for these fields are:
+
+```js
+{
+	key: 'name',
+	value: ''
+},
+{
+	key: 'value',
+	value: ''
+},
+{
+	key: 'label',
+	value: ''
+},
+{
+	key: 'type',
+	value: 'text'
+},
+{
+	key: 'required',
+	value: false
+},
+{
+	key: 'requiredText',
+	value: '*'
+},
+{
+	key: 'options',
+	value: []
+},
+{
+	key: 'maxLength',
+	value: null
+},
+{
+	key: 'minLength',
+	value: null
+},
+{
+	key: 'placeholder',
+	value: ''
+},
+{
+	key: 'container',
+	value: {}
+},
+{
+	key: 'component',
+	value: {
+		name: 'div',
+		props: [],
+		classes: [],
+		content: ''
+	}
+},
+{
+	key: 'errors',
+	value: {}
+}
+```
+
+All extra data can be added and will be saved under the extraData object.
+
+
+### Example
+```js
+YOUR_VARIABLE_NAME.setField([
+	{
+		depth: 'individual',
+		name: 'first_name',
+		type: 'text',
+		placeholder: 'Your first name',
+		label: 'First Name',
+		required: true,
+		errors: {
+			validation: 'required',
+			message: 'First name is required'
+		}
+	}
+]);
+```
+This will create a text field that is required in the fieldset individual.
+
+Example of a final dataset created:
 ```js
 [
 	{
@@ -172,72 +445,9 @@
 	}
 ];
 ```
+## Extra functions
 
-### uiFields
-
-How to use it.
-
-- Install Vuex component
-- Install plugin
-- Create new instance
-
-Done.
-
-## Docs
-
-uiFields is a class constructor combined with Vuex. If you create a new instance you have to dispatch this instance to the Vuex before you can use it. Props won't be needed. All data has the same structure so we can get constant data. The only thing uiFields will do is controlling your fields data without any trouble.
-
-### Install
-
-After installing create a new instance. I recommend doing this in created, before rendering data.
-
-```js
-const YOUR_VARIABLE_NAME = this.createNewUiFieldsInstance();
-```
-
-createNewUiFieldsInstance returns a new instance of uiFields and will set your base options.
-
-#### Base options
-
-```js
-{
-	key: 'form', //key of the form, default = 'form'
-	data: [
-		//array of fieldsets
-	],
-	container: {
-		classes: [], //array or string
-		component: 'fieldset' //String
-	}
-}
-```
-
-You can add your data on create or by calling a function
-
-#### setFieldSet
-
-```js
-formInstance.setFieldSet({
-	key: 'colors',
-	data: [],
-	container: {
-		component: 'div',
-		classes: ['pdp', 'pdp__colors']
-	}
-});
-```
-
-#### setField
-
-```js
-formInstance.setField({
-	name: 'Position',
-	depth: 'colors',
-	type: 'text'
-});
-```
-
-#### setNewCondition
+### setNewCondition
 
 ```js
 formInstance.setNewCondition([
