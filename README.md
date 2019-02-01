@@ -484,3 +484,15 @@ formInstance.setNewCondition({
 ```
 
 All functions can have a object or an array
+
+
+TODO
+Install
+component inladen
+Gaat kapot als er geen data is
+component name en key moeten hetzelfde zijn!
+setFieldSet can be an arry or an object
+options for checkobox and select
+How to retrieve and watch data
+dont validate if not added
+fields zitten altijd in zelfde form

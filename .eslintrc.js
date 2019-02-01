@@ -6,7 +6,7 @@ module.exports = {
 	},
 	parserOptions: {
 		parser: 'babel-eslint',
-		soureceType: 'module'
+		sourceType: 'module'
 	},
 	extends: [
 		// https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
@@ -31,10 +31,10 @@ module.exports = {
 		],
 		semi: ['warn', 'always'],
 		'no-console': 'off',
+		'yoda': 'warn',
 		'no-trailing-spaces': 'warn',
 		'no-undef': 'warn',
 		'no-irregular-whitespace': 'warn',
-		'no-unused-vars': 'warn',
 		indent: [
 			'warn',
 			'tab',

@@ -7,82 +7,84 @@
 			:class="getClasses(fields.container.classes)"
 			:key="i"
 		>
-			<slot></slot>
-			<template v-for="(item, index) of fields.data">
-				<component
-					v-if="checkTextField(item.type) && checkCondition(item.conditional)"
-					:is="fields.container.component"
-					:key="index"
-					:class="
-						`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(
-							fields.container.classes,
-							'__fieldset--text'
-						)}`
-					"
-				>
-					<div :class="`${getClasses(fields.container.classes, '__fieldset-container')}`">
-						<ui-text :field-index="index" :field-name="fieldName" :depth="fields.key" />
-					</div>
-				</component>
-				<component
-					v-else-if="item.type === 'select' && checkCondition(item.conditional)"
-					:is="fields.container.component"
-					:key="index"
-					:class="
-						`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(
-							fields.container.classes,
-							'__fieldset--select'
-						)}`
-					"
-				>
-					<div :class="`${getClasses(fields.container.classes, '__fieldset-container')}`">
-						<ui-select 
-:field-index="index" 
-:field-name="fieldName" :depth="fields.key"
-							icon-name="arrow-up"
-/>
-					</div>
-				</component>
-				<component
-					v-else-if="item.type === 'radio' && checkCondition(item.conditional)"
-					:is="fields.container.component"
-					:key="index"
-					:class="
-						`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(
-							fields.container.classes,
-							'__fieldset--radio'
-						)}`
-					"
-				>
-					<div :class="`${getClasses(fields.container.classes, '__fieldset-container')}`">
-						<ui-radio :field-index="index" :field-name="fieldName" :depth="fields.key" />
-					</div>
-				</component>
-				<component
-					v-else-if="item.type === 'checkbox' && checkCondition(item.conditional)"
-					:is="fields.container.component"
-					:key="index"
-					:class="
-						`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(
-							fields.container.classes,
-							'__fieldset--checkbox'
-						)}`
-					"
-				>
-					<div :class="`${getClasses(fields.container.classes, '__fieldset-container')}`">
-						<ui-checkbox :field-index="index" :field-name="fieldName" :depth="fields.key">
-							<modal-trigger
-								v-if="item.description"
-								:content="item.description"
-								title="Would you like logo embroidery? "
-								size="two-third"
+			<div :class="getClasses(fields.container.classes, '__container')">
+				<template v-for="(item, index) of fields.data">
+					<component
+						v-if="checkTextField(item.type) && checkCondition(item.conditional)"
+						:is="fields.container.component"
+						:key="index"
+						:class="`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(fields.container.classes, '__fieldset--text')}`"
+					>
+						<div :class="`${getClasses(fields.container.classes, '__fieldset-container')}`">
+							<ui-text :field-index="index" :field-name="fieldName" :depth="fields.key" />
+						</div>
+					</component>
+					<component
+						v-else-if="item.type === 'select' && checkCondition(item.conditional)"
+						:is="fields.container.component"
+						:key="index"
+						:class="`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(fields.container.classes, '__fieldset--select')}`"
+					>
+						<div :class="`${getClasses(fields.container.classes, '__fieldset-container')}`">
+							<ui-select
+								:field-index="index"
+								:field-name="fieldName"
+								:depth="fields.key"
+								icon-name="arrow-up"
+							/>
+						</div>
+					</component>
+					<component
+						v-else-if="item.type === 'radio' && checkCondition(item.conditional)"
+						:is="fields.container.component"
+						:key="`index ${item}`"
+						:class="`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(fields.container.classes, '__fieldset--radio')}`"
+					>
+						<div :class="`${getClasses(fields.container.classes, '__fieldset-container')}`">
+							<ui-radio
+								:field-index="index"
+								:field-name="fieldName"
+								:depth="fields.key"
+							/>
+						</div>
+					</component>
+					<component
+						v-else-if="item.type === 'checkbox' && checkCondition(item.conditional)"
+						:is="fields.container.component"
+						:key="index"
+						:class="`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(fields.container.classes, '__fieldset--checkbox')}`"
+					>
+						<div :class="`${getClasses(fields.container.classes, '__fieldset-container')}`">
+							<ui-checkbox
+								:field-index="index"
+								:field-name="fieldName"
+								:depth="fields.key"
 							>
-								Would you like logo embroidery?
-							</modal-trigger>
-						</ui-checkbox>
-					</div>
-				</component>
-			</template>
+							</ui-checkbox>
+						</div>
+					</component>
+					<component
+						v-else-if="item.type === 'component' && checkCondition(item.conditional)"
+						:is="fields.container.component"
+						:key="index"
+						:class="`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(fields.container.classes, '__fieldset--component')}`"
+					>
+						<component
+							v-if="item.component && item.component.content"
+							:is="item.component.name"
+							v-bind="item.component.props"
+							:class="item.component.classes"
+							v-html="item.component.content"
+						/>
+						<component
+							v-else-if="item.component"
+							:is="item.component.name"
+							v-bind="item.component.props"
+							:class="item.component.classes"
+						/>
+					</component>
+				</template>
+			</div>
 		</component>
 	</div>
 </template>
@@ -118,6 +120,9 @@ export default {
 			deep: true
 		}
 	},
+	beforeCreate() {
+		this.$store.dispatch('uiFields/resetFields');
+	},
 	methods: {
 		findCorrectFields(fields) {
 			return fields.find((field) => field.key === this.$props.fieldName) || [];
@@ -141,7 +146,7 @@ export default {
 			}
 		},
 		checkTextField(type) {
-			if (type === 'text' || type === 'number' || type === 'email' || type === 'tel') return true;
+			if (type === 'text' || type === 'number' || type === 'email' || type === 'tel' || type === 'password') return true;
 		}
 	}
 };

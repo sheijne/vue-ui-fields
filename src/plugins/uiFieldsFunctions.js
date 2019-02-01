@@ -49,16 +49,25 @@ export default {
 			return [];
 		},
 		createLabel(text) {
-			if (text) {
-				if (text.indexOf('attribute_') !== -1) {
+			const textLabel = text.label || text.name;
+			if (textLabel) {
+				if (textLabel.indexOf('attribute_') !== -1) {
 					//name starts with attribute and we need the last name then we format it
-					let newText = text.split('_');
+					let newText = textLabel.split('_');
 					newText = newText[newText.length - 1];
 					return newText.charAt(0).toUpperCase() + newText.slice(1);
 				} else {
-					return text;
+					return textLabel;
 				}
 			}
+		},
+		getValidationOptions(input) {
+			if (input) {
+				if (input.validation) {
+					return input.validation;
+				}
+			}
+			return '';
 		}
 	}
 };

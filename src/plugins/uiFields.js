@@ -170,6 +170,10 @@ class uiFieldsInstance {
 					value: false
 				},
 				{
+					key: 'requiredText',
+					value: '*'
+				},
+				{
 					key: 'options',
 					value: []
 				},
@@ -178,11 +182,23 @@ class uiFieldsInstance {
 					value: null
 				},
 				{
+					key: 'minLength',
+					value: null
+				},
+				{
 					key: 'placeholder',
 					value: ''
 				},
 				{
 					key: 'container',
+					value: {}
+				},
+				{
+					key: 'component',
+					value: {}
+				},
+				{
+					key: 'errors',
 					value: {}
 				}
 			];
@@ -196,7 +212,6 @@ class uiFieldsInstance {
 				delete optionsDup[option.key];
 			}
 		});
-
 		//add extra data if there is any
 		if (Object.keys(optionsDup).length) {
 			const { customData } = optionsDup;
@@ -234,80 +249,75 @@ class uiFieldsInstance {
 	}
 	createCondtion(options) {
 		//check if object
+		let fieldSet;
 		if (typeof options === 'object') {
 			//place keys in array
 			if (!Array.isArray(options.key)) options.key = [options.key];
 			//data we are working with
 			const data = this.getFieldSets();
+			//if options depth that means we have fields inside a fieldset
 			if (options.depth) {
 				//if depth we define condition on field
-				const fieldSet = data.find((field) => field.key === options.depth);
-				//fieldSet is the depth we want to define condition
-				if (fieldSet) {
-					//elExists is the field we want where we get the value of the condition
-					const elExists = fieldSet.data.find((field) => field.name === options.condition.key);
-					if (elExists) {
-						//forEach field we want to create the logic
-						options.key.forEach((name) => {
-							//get the fields that match the element name, returns field
-							const newField = fieldSet.data.filter((field) => field.name === name);
+				fieldSet = data.find((field) => field.key === options.depth);
+			} else {
+				//there is no depth and we filter a whole fieldset?
+				fieldSet = data.find((field) => field.key === options.condition.depth);
+			}
+			//fieldSet is the depth we want to define condition
+			if (fieldSet) {
+				//elExists is the field we want where we get the value of the condition
+				const elExists = fieldSet.data.find((field) => field.name === options.condition.key);
+				if (elExists) {
+					//forEach field we want to create the logic
+					options.key.forEach((name) => {
+						//get the fields that match the element name, returns field
+						let newField;
+						if (options.depth) {
+							newField = fieldSet.data.filter((field) => field.name === name);
+						} else {
+							newField = data.filter((field) => field.key === name);
+						}
 
-							//for each cause input fields can have same name, now its more forgiving
-							newField.forEach((allFields) => {
-								let val;
-								if (typeof options.condition.value === 'function') {
-									val = options.condition.value(elExists.value);
-								} else {
-									val = elExists.value === options.condition.value;
-								}
-								if (allFields) {
-									allFields.conditional = {
-										depth: options.depth,
-										key: options.condition.key,
-										value: options.condition.value,
-										show: val
-									};
-								}
-							});
+						//for each cause input fields can have same name, now its more forgiving
+						newField.forEach((allFields) => {
+							let val;
+							if (typeof options.condition.value === 'function') {
+								val = options.condition.value(elExists.value);
+							} else {
+								val = elExists.value === options.condition.value;
+							}
+							if (allFields) {
+								allFields.conditional = {
+									depth: options.depth || options.condition.depth,
+									key: options.condition.key,
+									value: options.condition.value,
+									show: val
+								};
+							}
 						});
-					} else {
-						this.createWarning('The field you entered does not exists, this condition will be ignored');
-					}
+					});
 				} else {
-					this.createWarning('The fieldset you entered does not exists, this condition will be ignored');
+					this.createWarning('The field you entered does not exists, this condition will be ignored');
 				}
 			} else {
-				if (options.condition.depth) {
-					const fieldSet = data.find((field) => field.key === options.condition.depth);
-					if (fieldSet) {
-						const elExists = fieldSet.data.find((field) => field.name === options.condition.key);
-						if (elExists) {
-							options.key.forEach((element) => {
-								const newField = data.filter((field) => field.key === element);
-								//for each cause input fields can have same name, now its more forgiving
-								newField.forEach((allFields) => {
-									let val;
-									if (typeof options.condition.value === 'function') {
-										val = options.condition.value(elExists.value);
-									} else {
-										val = elExists.value === options.condition.value;
-									}
-									if (allFields) {
-										allFields.conditional = {
-											depth: options.condition.depth,
-											key: options.condition.key,
-											value: options.condition.value,
-											show: val
-										};
-									}
-								});
-							});
-						} else {
-							this.createWarning('The field you entered does not exists, this condition will be ignored');
-						}
-					} else {
-						this.createWarning('The fieldset you entered does not exists, this condition will be ignored');
-					}
+				//fieldset does not exists
+				if (options.accros) {
+					options.key.forEach((name) => {
+						const newField = data.filter((field) => field.key === name);
+						newField.forEach((allFields) => {
+							if (allFields) {
+								allFields.conditional = {
+									depth: options.condition.depth,
+									key: options.condition.key,
+									value: options.condition.value,
+									show: options.accrosValue
+								};
+							}
+							this.formFields.accros = true;
+						});
+					});
+				} else {
+					this.createWarning('The fieldset you entered does not exists, this condition will be ignored');
 				}
 			}
 		}
@@ -319,5 +329,81 @@ class uiFieldsInstance {
 	}
 	/* eslint-enable */
 }
+
+Array.prototype.getSingleUiField = function(name) {
+	if (name) {
+		if (this.length) {
+			return this.find((field) => field.name === name);
+		}
+	}
+	return null;
+};
+
+import Vue from 'vue';
+
+Vue.mixin({
+	methods: {
+		createNewUiFieldsInstance(options) {
+			return new uiFieldsInstance(options);
+		},
+		getClasses(classes, name = '') {
+			if (classes.length) {
+				const newClass = classes.map((clas) => `${clas}${name}`);
+				classes = [];
+				return `${newClass.join(' ')}`;
+			} else {
+				return '';
+			}
+		},
+		getCorrectFieldSet(options) {
+			if (options) {
+				const uiField = this.$store.state.uiFields.fields;
+
+				if (options.formName) {
+					const form = uiField.find((form) => form.key === options.formName);
+					if (form && form.data) {
+						if (options.fieldsetName) {
+							const fieldSet = form.data.find((fieldset) => fieldset.key === options.fieldsetName);
+							if (fieldSet && fieldSet.data) {
+								return fieldSet.data;
+							}
+						}
+					}
+				}
+			}
+			return 'something went wrong';
+		},
+		getCorrectField(options) {
+			const fieldSet = this.getCorrectFieldSet(options);
+			if (typeof fieldSet === 'object') {
+				if (fieldSet.length) {
+					return fieldSet.find((field) => field.name === options.fieldName);
+				}
+			}
+			return 'something went wrong';
+		}
+	}
+});
+
+import UiButton from '~/components/form/ui-button.vue';
+import UiCheckbox from '~/components/form/ui-checkbox.vue';
+import UiSelect from '~/components/form/ui-select.vue';
+import UiText from '~/components/form/ui-text.vue';
+import UiFields from '~/components/form/ui-fields.vue';
+import UiRadio from '~/components/form/ui-radio.vue';
+
+const Components = {
+	UiButton,
+	UiCheckbox,
+	UiSelect,
+	UiText,
+	UiFields,
+	UiRadio
+};
+
+Object.keys(Components).forEach((key) => {
+	Vue.component(key, Components[key]);
+});
+
 
 export default uiFieldsInstance;
