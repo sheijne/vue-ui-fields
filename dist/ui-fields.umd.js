@@ -1,17 +1,84 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('~/components/icons'), require('~/plugins/mixins/uiFieldsFunctions'), require('vue'), require('~/components/form/ui-button.vue'), require('~/components/form/ui-checkbox.vue'), require('~/components/form/ui-select.vue'), require('~/components/form/ui-text.vue'), require('~/components/form/ui-fields.vue'), require('~/components/form/ui-radio.vue')) :
-	typeof define === 'function' && define.amd ? define(['exports', '~/components/icons', '~/plugins/mixins/uiFieldsFunctions', 'vue', '~/components/form/ui-button.vue', '~/components/form/ui-checkbox.vue', '~/components/form/ui-select.vue', '~/components/form/ui-text.vue', '~/components/form/ui-fields.vue', '~/components/form/ui-radio.vue'], factory) :
-	(factory((global.uiFields = {}),null,global.mixin,global.Vue,global.UiButton,global.UiCheckbox,global.UiSelect,global.UiText,global.UiFields,global.UiRadio));
-}(this, (function (exports,icons,mixin,Vue,UiButton,UiCheckbox,UiSelect,UiText,UiFields,UiRadio) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('vue')) :
+	typeof define === 'function' && define.amd ? define(['exports', 'vue'], factory) :
+	(factory((global.uiFields = {}),global.Vue));
+}(this, (function (exports,Vue) { 'use strict';
 
-	mixin = mixin && mixin.hasOwnProperty('default') ? mixin['default'] : mixin;
 	Vue = Vue && Vue.hasOwnProperty('default') ? Vue['default'] : Vue;
-	UiButton = UiButton && UiButton.hasOwnProperty('default') ? UiButton['default'] : UiButton;
-	UiCheckbox = UiCheckbox && UiCheckbox.hasOwnProperty('default') ? UiCheckbox['default'] : UiCheckbox;
-	UiSelect = UiSelect && UiSelect.hasOwnProperty('default') ? UiSelect['default'] : UiSelect;
-	UiText = UiText && UiText.hasOwnProperty('default') ? UiText['default'] : UiText;
-	UiFields = UiFields && UiFields.hasOwnProperty('default') ? UiFields['default'] : UiFields;
-	UiRadio = UiRadio && UiRadio.hasOwnProperty('default') ? UiRadio['default'] : UiRadio;
+
+	var mixin = {
+		props: {
+			fieldIndex: {
+				type: Number,
+				default: 0
+			},
+			fieldName: {
+				type: String,
+				default: null
+			},
+			depth: {
+				type: String,
+				default: null
+			},
+			iconName: {
+				type: String,
+				default: null
+			}
+		},
+		computed: {
+			fieldData: {
+				get: function() {
+					return this.findCorrectFields(this.$store.state.uiFields.fields);
+				}
+			},
+			fieldDataValue: {
+				get: function() {
+					return this.findCorrectFields(this.$store.state.uiFields.fields).value;
+				},
+				set: function(newValue) {
+					this.$store.dispatch('uiFields/updateFieldValue', {
+						name: this.$props.fieldName,
+						depth: this.$props.depth,
+						index: this.$props.fieldIndex,
+						value: newValue
+					});
+				}
+			}
+		},
+		methods: {
+			findCorrectFields(fields) {
+				const newField = fields.find((field) => field.key === this.$props.fieldName) || [];
+				if (newField) {
+					const selectedField = newField.data.find((field) => field.key === this.$props.depth);
+					if (selectedField) {
+						return selectedField.data[this.$props.fieldIndex];
+					}
+				}
+				return [];
+			},
+			createLabel(text) {
+				const textLabel = text.label || text.name;
+				if (textLabel) {
+					if (textLabel.indexOf('attribute_') !== -1) {
+						//name starts with attribute and we need the last name then we format it
+						let newText = textLabel.split('_');
+						newText = newText[newText.length - 1];
+						return newText.charAt(0).toUpperCase() + newText.slice(1);
+					} else {
+						return textLabel;
+					}
+				}
+			},
+			getValidationOptions(input) {
+				if (input) {
+					if (input.validation) {
+						return input.validation;
+					}
+				}
+				return '';
+			}
+		}
+	};
 
 	//
 	var script = {
@@ -1698,27 +1765,23 @@
 		}
 	});
 
-	const Components = {
-		UiButton,
-		UiCheckbox,
-		UiSelect,
-		UiText,
-		UiFields,
-		UiRadio
-	};
-
-	Object.keys(Components).forEach((key) => {
-		Vue.component(key, Components[key]);
-	});
-
 	const state = () => ({
-		fields: []
+		fields: [],
+		accros: []
 	});
 
 	const mutations = {
 		setSingleField(state, singleField) {
 			if (!state.fields.map((field) => field.key).includes(singleField.key)) {
 				state.fields.push(singleField);
+			} else {
+				const index = state.fields.findIndex((field) => field.key === singleField.key);
+				if (index >= 0) {
+					state.fields.splice(index, 1);
+				}
+			}
+			if (singleField.accros) {
+				state.accros.push(singleField.key);
 			}
 		},
 		updateFieldValue(state, options) {
@@ -1758,19 +1821,49 @@
 					if (fieldSet.conditional) {
 						//find field of conditional logic
 						const isValueFieldset = options.form.data.find((isValueField) => isValueField.key === fieldSet.conditional.depth);
-						const isValue = isValueFieldset.data.find((isValueField) => isValueField.name === fieldSet.conditional.key);
-						//check if condition is function or value
-						if (isValue) {
-							if (typeof fieldSet.conditional.value === 'function') {
-								//if function then execute function, parms is the value of the
-								fieldSet.conditional.show = fieldSet.conditional.value(isValue.value);
-							} else {
-								fieldSet.conditional.show = isValue.value === fieldSet.conditional.value;
+						if (isValueFieldset) {
+							const isValue = isValueFieldset.data.find((isValueField) => isValueField.name === fieldSet.conditional.key);
+							//check if condition is function or value
+							if (isValue) {
+								if (typeof fieldSet.conditional.value === 'function') {
+									//if function then execute function, parms is the value of the
+									fieldSet.conditional.show = fieldSet.conditional.value(isValue.value);
+								} else {
+									fieldSet.conditional.show = isValue.value === fieldSet.conditional.value;
+								}
 							}
 						}
 					}
 				});
 			}
+		},
+		updateConditionLogicFieldsetAcross(state, options) {
+			if (state.accros.length) {
+				const accros = state.accros;
+				accros.forEach((formName) => {
+					const form = state.fields.find((field) => field.key === formName);
+					if (form) {
+						form.data.forEach((data) => {
+							if (data.conditional) {
+								const fieldWeNeed = options.fieldSet.data[options.fieldOptions.index];
+								if (fieldWeNeed && fieldWeNeed.name === data.conditional.key) {
+									if (data.conditional.depth === options.fieldOptions.depth) {
+										if (typeof data.conditional.value === 'function') {
+											//if function then execute function, parms is the value of the
+											data.conditional.show = data.conditional.value(options.fieldOptions.value);
+										} else {
+											data.conditional.show = options.fieldOptions.value === data.conditional.value;
+										}
+									}
+								}
+							}
+						});
+					}
+				});
+			}
+		},
+		resetFields(state) {
+			state.fields = [];
 		}
 	};
 
@@ -1778,7 +1871,7 @@
 		setNewForm({ commit }, field) {
 			commit('setSingleField', field);
 		},
-		async updateFieldValue({ commit, state }, fieldOptions) {
+		updateFieldValue({ commit, state }, fieldOptions) {
 			if (fieldOptions) {
 				//find correct form
 				const form = state.fields.find((field) => field.key === fieldOptions.name);
@@ -1789,9 +1882,31 @@
 						commit('updateFieldValue', { fieldOptions, fieldSet });
 						commit('updateCondtionLogicField', { fieldOptions, fieldSet });
 						commit('updateCondtionLogicFieldset', { fieldOptions, form });
+						commit('updateConditionLogicFieldsetAcross', { fieldOptions, fieldSet });
 					}
 				}
 			}
+		},
+		resetSingleField({ dispatch, state }, fieldName) {
+			if (fieldName) {
+				//find correct form
+				const form = state.fields.find((field) => field.key === fieldName);
+				if (form) {
+					form.data.forEach((data) => {
+						data.data.forEach((field, i) => {
+							dispatch('updateFieldValue', {
+								name: fieldName,
+								depth: data.key,
+								index: i,
+								value: Array.isArray(field.value) ? [] : ''
+							});
+						});
+					});
+				}
+			}
+		},
+		resetFields({ commit }) {
+			commit('resetFields');
 		}
 	};
 

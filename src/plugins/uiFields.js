@@ -385,25 +385,4 @@ Vue.mixin({
 	}
 });
 
-import UiButton from '~/components/form/ui-button.vue';
-import UiCheckbox from '~/components/form/ui-checkbox.vue';
-import UiSelect from '~/components/form/ui-select.vue';
-import UiText from '~/components/form/ui-text.vue';
-import UiFields from '~/components/form/ui-fields.vue';
-import UiRadio from '~/components/form/ui-radio.vue';
-
-const Components = {
-	UiButton,
-	UiCheckbox,
-	UiSelect,
-	UiText,
-	UiFields,
-	UiRadio
-};
-
-Object.keys(Components).forEach((key) => {
-	Vue.component(key, Components[key]);
-});
-
-
 export default uiFieldsInstance;

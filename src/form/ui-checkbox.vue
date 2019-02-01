@@ -11,7 +11,7 @@
 			>
 			<span class="ui-checkbox__label">
 				<span class="ui-checkbox__icon">
-					<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" 
+					<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"
 viewBox="0 0 13 12">
 						<path
 							fill-rule="evenodd"
@@ -40,8 +40,7 @@ viewBox="0 0 13 12">
 </template>
 
 <script>
-import '~/components/icons';
-import mixin from '~/plugins/mixins/uiFieldsFunctions';
+import mixin from '../plugins/uiFieldsFunctions';
 export default {
 	mixins: [mixin]
 };

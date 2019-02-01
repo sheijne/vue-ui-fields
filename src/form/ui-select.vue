@@ -65,8 +65,7 @@
 </template>
 
 <script>
-import '~/components/icons';
-import mixin from '~/plugins/mixins/uiFieldsFunctions';
+import mixin from '../plugins/uiFieldsFunctions';
 export default {
 	mixins: [mixin]
 };
