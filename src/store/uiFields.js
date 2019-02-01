@@ -1,11 +1,20 @@
 export const state = () => ({
-	fields: []
+	fields: [],
+	accros: []
 });
 
 export const mutations = {
 	setSingleField(state, singleField) {
 		if (!state.fields.map((field) => field.key).includes(singleField.key)) {
 			state.fields.push(singleField);
+		} else {
+			const index = state.fields.findIndex((field) => field.key === singleField.key);
+			if (index >= 0) {
+				state.fields.splice(index, 1);
+			}
+		}
+		if (singleField.accros) {
+			state.accros.push(singleField.key);
 		}
 	},
 	updateFieldValue(state, options) {
@@ -45,19 +54,49 @@ export const mutations = {
 				if (fieldSet.conditional) {
 					//find field of conditional logic
 					const isValueFieldset = options.form.data.find((isValueField) => isValueField.key === fieldSet.conditional.depth);
-					const isValue = isValueFieldset.data.find((isValueField) => isValueField.name === fieldSet.conditional.key);
-					//check if condition is function or value
-					if (isValue) {
-						if (typeof fieldSet.conditional.value === 'function') {
-							//if function then execute function, parms is the value of the
-							fieldSet.conditional.show = fieldSet.conditional.value(isValue.value);
-						} else {
-							fieldSet.conditional.show = isValue.value === fieldSet.conditional.value;
+					if (isValueFieldset) {
+						const isValue = isValueFieldset.data.find((isValueField) => isValueField.name === fieldSet.conditional.key);
+						//check if condition is function or value
+						if (isValue) {
+							if (typeof fieldSet.conditional.value === 'function') {
+								//if function then execute function, parms is the value of the
+								fieldSet.conditional.show = fieldSet.conditional.value(isValue.value);
+							} else {
+								fieldSet.conditional.show = isValue.value === fieldSet.conditional.value;
+							}
 						}
 					}
 				}
 			});
 		}
+	},
+	updateConditionLogicFieldsetAcross(state, options) {
+		if (state.accros.length) {
+			const accros = state.accros;
+			accros.forEach((formName) => {
+				const form = state.fields.find((field) => field.key === formName);
+				if (form) {
+					form.data.forEach((data) => {
+						if (data.conditional) {
+							const fieldWeNeed = options.fieldSet.data[options.fieldOptions.index];
+							if (fieldWeNeed && fieldWeNeed.name === data.conditional.key) {
+								if (data.conditional.depth === options.fieldOptions.depth) {
+									if (typeof data.conditional.value === 'function') {
+										//if function then execute function, parms is the value of the
+										data.conditional.show = data.conditional.value(options.fieldOptions.value);
+									} else {
+										data.conditional.show = options.fieldOptions.value === data.conditional.value;
+									}
+								}
+							}
+						}
+					});
+				}
+			});
+		}
+	},
+	resetFields(state) {
+		state.fields = [];
 	}
 };
 
@@ -65,7 +104,7 @@ export const actions = {
 	setNewForm({ commit }, field) {
 		commit('setSingleField', field);
 	},
-	async updateFieldValue({ commit, state }, fieldOptions) {
+	updateFieldValue({ commit, state }, fieldOptions) {
 		if (fieldOptions) {
 			//find correct form
 			const form = state.fields.find((field) => field.key === fieldOptions.name);
@@ -76,9 +115,31 @@ export const actions = {
 					commit('updateFieldValue', { fieldOptions, fieldSet });
 					commit('updateCondtionLogicField', { fieldOptions, fieldSet });
 					commit('updateCondtionLogicFieldset', { fieldOptions, form });
+					commit('updateConditionLogicFieldsetAcross', { fieldOptions, fieldSet });
 				}
 			}
 		}
+	},
+	resetSingleField({ dispatch, state }, fieldName) {
+		if (fieldName) {
+			//find correct form
+			const form = state.fields.find((field) => field.key === fieldName);
+			if (form) {
+				form.data.forEach((data) => {
+					data.data.forEach((field, i) => {
+						dispatch('updateFieldValue', {
+							name: fieldName,
+							depth: data.key,
+							index: i,
+							value: Array.isArray(field.value) ? [] : ''
+						});
+					});
+				});
+			}
+		}
+	},
+	resetFields({ commit }) {
+		commit('resetFields');
 	}
 };
 
