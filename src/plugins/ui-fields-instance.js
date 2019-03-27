@@ -385,4 +385,4 @@ Vue.mixin({
 	}
 });
 
-export default uiFieldsInstance;
+export default new uiFieldsInstance;

@@ -1,9 +1,4 @@
-export const state = () => ({
-	fields: [],
-	accros: []
-});
-
-export const mutations = {
+const mutations = {
 	setSingleField(state, singleField) {
 		if (!state.fields.map((field) => field.key).includes(singleField.key)) {
 			state.fields.push(singleField);
@@ -100,7 +95,7 @@ export const mutations = {
 	}
 };
 
-export const actions = {
+const actions = {
 	setNewForm({ commit }, field) {
 		commit('setSingleField', field);
 	},
@@ -143,4 +138,20 @@ export const actions = {
 	}
 };
 
-export default { state, mutations, actions };
+export default async ({ store }) => {
+	store.registerModule(
+		'uiFields',
+		{
+			namespaced: true,
+			state: () => ({
+				fields: [],
+				accros: []
+			}),
+			actions: actions,
+			mutations: mutations
+		},
+		{
+			preserveState: false
+		}
+	);
+};
