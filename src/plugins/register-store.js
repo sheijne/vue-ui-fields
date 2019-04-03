@@ -115,7 +115,7 @@ const actions = {
 			}
 		}
 	},
-	resetSingleField({ dispatch, state }, fieldName) {
+	resetSingleForm({ dispatch, state }, fieldName) {
 		if (fieldName) {
 			//find correct form
 			const form = state.fields.find((field) => field.key === fieldName);

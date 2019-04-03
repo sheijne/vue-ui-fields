@@ -1,5 +1,56 @@
 <template>
-	<div>fissa</div>
+	<div v-if="uiFieldsData && uiFieldsData.container" :class="getClasses(uiFieldsData.container.classes)">
+		<component
+			v-for="(fields, i) of uiFieldsData.data"
+			v-if="checkCondition(fields.conditional)"
+			:is="uiFieldsData.container.component"
+			:class="getClasses(fields.container.classes)"
+			:key="i"
+		>
+			<div :class="[getClasses(fields.container.classes, '__container'), 'uiFields__container']">
+				<template v-for="(item, index) of fields.data">
+					<component
+						v-if="checkCondition(item.conditional) && item.type !== 'component'"
+						:is="fields.container.component"
+						:key="index"
+						:class="[
+							getClasses(item.container.classes, '__fieldset'),
+							getClasses(item.container.classes, '__fieldset--' + item.load.type),
+							'uiFields__fieldset',
+							'uiFields__fieldset--' + item.load.type
+						]"
+					>
+						<div :class="[getClasses(item.container.classes, '__fieldset-container'), 'uiFields__fieldset-container']">
+							<component :is="item.load.name" :field-index="index" :field-name="fieldName" :depth="fields.key" />
+						</div>
+					</component>
+					<component
+						v-else-if="item.type === 'component' && checkCondition(item.conditional)"
+						:is="fields.container.component"
+						:key="index"
+						:class="[
+							getClasses(item.container.classes, '__fieldset'),
+							getClasses(item.container.classes, '__fieldset--component')
+						]"
+					>
+						<component
+							v-if="item.component && item.component.content"
+							:is="item.component.name"
+							v-bind="item.component.props"
+							:class="item.component.classes"
+							v-html="item.component.content"
+						/>
+						<component
+							v-else-if="item.component"
+							:is="item.component.name"
+							v-bind="item.component.props"
+							:class="item.component.classes"
+						/>
+					</component>
+				</template>
+			</div>
+		</component>
+	</div>
 </template>
 
 <script>
@@ -57,9 +108,6 @@ export default {
 			} else {
 				return true;
 			}
-		},
-		checkTextField(type) {
-			if (type === 'text' || type === 'number' || type === 'email' || type === 'tel' || type === 'password') return true;
 		}
 	}
 };

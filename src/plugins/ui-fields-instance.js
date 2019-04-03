@@ -122,17 +122,31 @@ class uiFieldsInstance {
 			}
 		}
 	}
-	checkParams(options, depth = 0) {
+	setExtraCustomData(defaultOptions, optionsDup) {
 		let newData = {};
-		//depth, 0 is form, 1 is fieldset, 2 is field
-		if (typeof options !== 'object') options = {};
-		//make dubplicate of options
-		const optionsDup = { ...options };
-		//create variable defaultOptions
-		let defaultOptions = [];
+		//fill defaultOptions in newData and delete prop of dubplicate
+		defaultOptions.forEach((option) => {
+			newData[option.key] = optionsDup[option.key] || option.value;
+			if (typeof optionsDup[option.key] !== 'undefined') {
+				delete optionsDup[option.key];
+			}
+		});
+
+		//add extra data if there is any
+		if (Object.keys(optionsDup).length) {
+			const { customData } = optionsDup;
+			if (customData) {
+				newData.customData = { ...optionsDup, ...customData };
+			} else {
+				newData.customData = optionsDup;
+			}
+		}
+		return newData;
+	}
+	getDefaultOptions(depth) {
 		if (depth < 2) {
 			//defaultOptions of form and fieldset
-			defaultOptions = [
+			return [
 				{
 					key: 'key',
 					value: 'form'
@@ -148,7 +162,7 @@ class uiFieldsInstance {
 			];
 		} else {
 			//field has different settings
-			defaultOptions = [
+			return [
 				{
 					key: 'name',
 					value: ''
@@ -203,33 +217,28 @@ class uiFieldsInstance {
 				}
 			];
 		}
-		depth++;
+	}
+	checkParams(options, depth = 0) {
+		//depth, 0 is form, 1 is fieldset, 2 is field
+		if (typeof options !== 'object') options = {};
+		//make dubplicate of options
+		const optionsDup = { ...options };
+		//create variable defaultOptions
+		let newData = this.setExtraCustomData(this.getDefaultOptions(depth), optionsDup);
 
-		//fill defaultOptions in newData and delete prop of dubplicate
-		defaultOptions.forEach((option) => {
-			newData[option.key] = optionsDup[option.key] || option.value;
-			if (typeof optionsDup[option.key] !== 'undefined') {
-				delete optionsDup[option.key];
-			}
-		});
-		//add extra data if there is any
-		if (Object.keys(optionsDup).length) {
-			const { customData } = optionsDup;
-			if (customData) {
-				newData.customData = { ...optionsDup, ...customData };
-			} else {
-				newData.customData = optionsDup;
-			}
-		}
+		depth++;
 
 		//if object has data check the data aswell
 		if (newData.data && Array.isArray(newData.data)) {
 			newData.data = newData.data.map((data) => this.checkParams(data, depth)).filter((data) => data);
 		}
+
 		//create component name based on depth, options: div, fieldset, undefined
 		if (!newData.container.component) newData.container.component = depth === 1 ? 'fieldset' : 'div';
+
 		//if no classes add those
 		if (!newData.container.classes) newData.container.classes = [];
+
 		//if classes is string and not array make array
 		if (!Array.isArray(newData.container.classes)) {
 			newData.container.classes = [newData.container.classes];
@@ -238,14 +247,50 @@ class uiFieldsInstance {
 		//if type of field is select make middle standard selected
 		if (newData.type === 'select' || newData.type === 'radio') {
 			if (!newData.options.find((input) => input.selected)) {
-				newData.value = newData.options[Math.floor((newData.options.length - 1) / 2)].value;
-				newData.options[Math.floor((newData.options.length - 1) / 2)].selected = true;
+				newData.value = newData.options[0].value;
+				newData.options[0].selected = true;
 			} else {
 				const value = newData.options.find((input) => input.selected).value;
 				newData.value = value;
 			}
 		}
+
+		newData.load = this.createLoadData(newData);
+
 		return newData;
+	}
+	createLoadData(data) {
+		let component;
+		switch (data.type) {
+			case 'text':
+				component = 'uiText';
+				break;
+			case 'select':
+				component = 'uiSelect';
+				break;
+			case 'checkbox':
+				component = 'uiCheckbox';
+				break;
+			case 'radio':
+				component = 'uiRadio';
+				break;
+			case 'number':
+				component = 'uiText';
+				break;
+			case 'email':
+				component = 'uiText';
+				break;
+			case 'tel':
+				component = 'uiText';
+				break;
+			case 'password':
+				component = 'uiText';
+				break;
+		}
+		return {
+			name: component,
+			type: data.type
+		};
 	}
 	createCondtion(options) {
 		//check if object
@@ -339,6 +384,7 @@ Array.prototype.getSingleUiField = function(name) {
 	return null;
 };
 
+//global mixin functions
 import Vue from 'vue';
 
 Vue.mixin({
@@ -348,17 +394,13 @@ Vue.mixin({
 		},
 		getClasses(classes, name = '') {
 			if (classes.length) {
-				const newClass = classes.map((clas) => `${clas}${name}`);
-				classes = [];
-				return `${newClass.join(' ')}`;
-			} else {
-				return '';
+				return classes.map((clas) => `${clas}${name}`);
 			}
+			return '';
 		},
 		getCorrectFieldSet(options) {
 			if (options) {
 				const uiField = this.$store.state.uiFields.fields;
-
 				if (options.formName) {
 					const form = uiField.find((form) => form.key === options.formName);
 					if (form && form.data) {
@@ -371,7 +413,7 @@ Vue.mixin({
 					}
 				}
 			}
-			return 'something went wrong';
+			throw `The fields you asked for does not exist: ${options.formName}`;
 		},
 		getCorrectField(options) {
 			const fieldSet = this.getCorrectFieldSet(options);
@@ -380,9 +422,9 @@ Vue.mixin({
 					return fieldSet.find((field) => field.name === options.fieldName);
 				}
 			}
-			return 'something went wrong';
+			throw `The fields you asked for does not exist: ${options.fieldName}`;
 		}
 	}
 });
 
-export default new uiFieldsInstance;
+export default new uiFieldsInstance();
