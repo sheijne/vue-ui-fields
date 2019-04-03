@@ -82,7 +82,9 @@ class uiFieldsInstance {
 	}
 	setClass(options) {
 		if (options) {
-			let values = Array.isArray(options.value) ? options.value : [options.value];
+			let values = Array.isArray(options.value)
+				? options.value
+				: [options.value];
 
 			if (options.depth) {
 				//on field
@@ -97,7 +99,9 @@ class uiFieldsInstance {
 					});
 				} else {
 					//single field
-					const field = fieldSet.data.find((field) => options.key === field.name);
+					const field = fieldSet.data.find(
+						(field) => options.key === field.name
+					);
 					if (field) {
 						field.container.classes = [...field.container.classes, ...values];
 					}
@@ -224,17 +228,23 @@ class uiFieldsInstance {
 		//make dubplicate of options
 		const optionsDup = { ...options };
 		//create variable defaultOptions
-		let newData = this.setExtraCustomData(this.getDefaultOptions(depth), optionsDup);
+		let newData = this.setExtraCustomData(
+			this.getDefaultOptions(depth),
+			optionsDup
+		);
 
 		depth++;
 
 		//if object has data check the data aswell
 		if (newData.data && Array.isArray(newData.data)) {
-			newData.data = newData.data.map((data) => this.checkParams(data, depth)).filter((data) => data);
+			newData.data = newData.data
+				.map((data) => this.checkParams(data, depth))
+				.filter((data) => data);
 		}
 
 		//create component name based on depth, options: div, fieldset, undefined
-		if (!newData.container.component) newData.container.component = depth === 1 ? 'fieldset' : 'div';
+		if (!newData.container.component)
+			newData.container.component = depth === 1 ? 'fieldset' : 'div';
 
 		//if no classes add those
 		if (!newData.container.classes) newData.container.classes = [];
@@ -311,7 +321,9 @@ class uiFieldsInstance {
 			//fieldSet is the depth we want to define condition
 			if (fieldSet) {
 				//elExists is the field we want where we get the value of the condition
-				const elExists = fieldSet.data.find((field) => field.name === options.condition.key);
+				const elExists = fieldSet.data.find(
+					(field) => field.name === options.condition.key
+				);
 				if (elExists) {
 					//forEach field we want to create the logic
 					options.key.forEach((name) => {
@@ -342,7 +354,9 @@ class uiFieldsInstance {
 						});
 					});
 				} else {
-					this.createWarning('The field you entered does not exists, this condition will be ignored');
+					this.createWarning(
+						'The field you entered does not exists, this condition will be ignored'
+					);
 				}
 			} else {
 				//fieldset does not exists
@@ -362,7 +376,9 @@ class uiFieldsInstance {
 						});
 					});
 				} else {
-					this.createWarning('The fieldset you entered does not exists, this condition will be ignored');
+					this.createWarning(
+						'The fieldset you entered does not exists, this condition will be ignored'
+					);
 				}
 			}
 		}
@@ -405,7 +421,9 @@ Vue.mixin({
 					const form = uiField.find((form) => form.key === options.formName);
 					if (form && form.data) {
 						if (options.fieldsetName) {
-							const fieldSet = form.data.find((fieldset) => fieldset.key === options.fieldsetName);
+							const fieldSet = form.data.find(
+								(fieldset) => fieldset.key === options.fieldsetName
+							);
 							if (fieldSet && fieldSet.data) {
 								return fieldSet.data;
 							}
@@ -425,6 +443,12 @@ Vue.mixin({
 			throw `The fields you asked for does not exist: ${options.fieldName}`;
 		}
 	}
+});
+
+import VeeValidate from 'vee-validate';
+
+Vue.use(VeeValidate, {
+	events: 'blur'
 });
 
 export default new uiFieldsInstance();

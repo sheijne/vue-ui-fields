@@ -39,9 +39,12 @@ export default {
 	},
 	methods: {
 		findCorrectFields(fields) {
-			const newField = fields.find((field) => field.key === this.$props.fieldName) || [];
+			const newField =
+				fields.find((field) => field.key === this.$props.fieldName) || [];
 			if (newField) {
-				const selectedField = newField.data.find((field) => field.key === this.$props.depth);
+				const selectedField = newField.data.find(
+					(field) => field.key === this.$props.depth
+				);
 				if (selectedField) {
 					return selectedField.data[this.$props.fieldIndex];
 				}
