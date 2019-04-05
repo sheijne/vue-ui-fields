@@ -36,3 +36,6 @@ We made this module while making a few nuxt websites with a wordpress/woocommerc
 ### Any ideas?
 
 Please add an issue or do a PR, we are open for additions!
+
+### Docs
+https://github.com/MatiseAms/vue-ui-fields-docs
