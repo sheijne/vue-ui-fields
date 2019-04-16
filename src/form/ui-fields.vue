@@ -84,9 +84,6 @@ export default {
 			deep: true
 		}
 	},
-	beforeCreate() {
-		this.$store.dispatch('uiFields/resetFields');
-	},
 	methods: {
 		findCorrectFields(fields) {
 			return fields.find((field) => field.key === this.$props.fieldName) || [];
