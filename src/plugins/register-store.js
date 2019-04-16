@@ -6,9 +6,13 @@ const mutations = {
 			const index = state.fields.findIndex(
 				(field) => field.key === singleField.key
 			);
+			const stateDup = [...state.fields];
+
 			if (index >= 0) {
-				state.fields.splice(index, 1);
+				stateDup.splice(index, 1);
 			}
+			stateDup.push(singleField);
+			state.fields = stateDup;
 		}
 		if (singleField.accros) {
 			state.accros.push(singleField.key);
