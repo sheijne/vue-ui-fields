@@ -1,17 +1,18 @@
-export const state = () => ({
-	fields: [],
-	accros: []
-});
-
-export const mutations = {
+const mutations = {
 	setSingleField(state, singleField) {
 		if (!state.fields.map((field) => field.key).includes(singleField.key)) {
 			state.fields.push(singleField);
 		} else {
-			const index = state.fields.findIndex((field) => field.key === singleField.key);
+			const index = state.fields.findIndex(
+				(field) => field.key === singleField.key
+			);
+			const stateDup = [...state.fields];
+
 			if (index >= 0) {
-				state.fields.splice(index, 1);
+				stateDup.splice(index, 1);
 			}
+			stateDup.push(singleField);
+			state.fields = stateDup;
 		}
 		if (singleField.accros) {
 			state.accros.push(singleField.key);
@@ -33,14 +34,17 @@ export const mutations = {
 				//if conditional logic
 				if (field.conditional) {
 					//isValue is the field we need for conditional logic
-					const isValue = options.fieldSet.data.find((newField) => newField.name === field.conditional.key);
+					const isValue = options.fieldSet.data.find(
+						(newField) => newField.name === field.conditional.key
+					);
 					//check if condition is function or value
 					if (isValue) {
 						if (typeof field.conditional.value === 'function') {
 							//if function then execute function, parms is the value of the
 							field.conditional.show = field.conditional.value(isValue.value);
 						} else {
-							field.conditional.show = isValue.value === field.conditional.value;
+							field.conditional.show =
+								isValue.value === field.conditional.value;
 						}
 					}
 				}
@@ -53,16 +57,23 @@ export const mutations = {
 				//chechk if fieldset has conditional logic
 				if (fieldSet.conditional) {
 					//find field of conditional logic
-					const isValueFieldset = options.form.data.find((isValueField) => isValueField.key === fieldSet.conditional.depth);
+					const isValueFieldset = options.form.data.find(
+						(isValueField) => isValueField.key === fieldSet.conditional.depth
+					);
 					if (isValueFieldset) {
-						const isValue = isValueFieldset.data.find((isValueField) => isValueField.name === fieldSet.conditional.key);
+						const isValue = isValueFieldset.data.find(
+							(isValueField) => isValueField.name === fieldSet.conditional.key
+						);
 						//check if condition is function or value
 						if (isValue) {
 							if (typeof fieldSet.conditional.value === 'function') {
 								//if function then execute function, parms is the value of the
-								fieldSet.conditional.show = fieldSet.conditional.value(isValue.value);
+								fieldSet.conditional.show = fieldSet.conditional.value(
+									isValue.value
+								);
 							} else {
-								fieldSet.conditional.show = isValue.value === fieldSet.conditional.value;
+								fieldSet.conditional.show =
+									isValue.value === fieldSet.conditional.value;
 							}
 						}
 					}
@@ -78,14 +89,18 @@ export const mutations = {
 				if (form) {
 					form.data.forEach((data) => {
 						if (data.conditional) {
-							const fieldWeNeed = options.fieldSet.data[options.fieldOptions.index];
+							const fieldWeNeed =
+								options.fieldSet.data[options.fieldOptions.index];
 							if (fieldWeNeed && fieldWeNeed.name === data.conditional.key) {
 								if (data.conditional.depth === options.fieldOptions.depth) {
 									if (typeof data.conditional.value === 'function') {
 										//if function then execute function, parms is the value of the
-										data.conditional.show = data.conditional.value(options.fieldOptions.value);
+										data.conditional.show = data.conditional.value(
+											options.fieldOptions.value
+										);
 									} else {
-										data.conditional.show = options.fieldOptions.value === data.conditional.value;
+										data.conditional.show =
+											options.fieldOptions.value === data.conditional.value;
 									}
 								}
 							}
@@ -100,27 +115,34 @@ export const mutations = {
 	}
 };
 
-export const actions = {
+const actions = {
 	setNewForm({ commit }, field) {
 		commit('setSingleField', field);
 	},
 	updateFieldValue({ commit, state }, fieldOptions) {
 		if (fieldOptions) {
 			//find correct form
-			const form = state.fields.find((field) => field.key === fieldOptions.name);
+			const form = state.fields.find(
+				(field) => field.key === fieldOptions.name
+			);
 			if (form) {
 				//check if depth is valid
-				const fieldSet = form.data.find((field) => field.key === fieldOptions.depth);
+				const fieldSet = form.data.find(
+					(field) => field.key === fieldOptions.depth
+				);
 				if (fieldSet) {
 					commit('updateFieldValue', { fieldOptions, fieldSet });
 					commit('updateCondtionLogicField', { fieldOptions, fieldSet });
 					commit('updateCondtionLogicFieldset', { fieldOptions, form });
-					commit('updateConditionLogicFieldsetAcross', { fieldOptions, fieldSet });
+					commit('updateConditionLogicFieldsetAcross', {
+						fieldOptions,
+						fieldSet
+					});
 				}
 			}
 		}
 	},
-	resetSingleField({ dispatch, state }, fieldName) {
+	resetSingleForm({ dispatch, state }, fieldName) {
 		if (fieldName) {
 			//find correct form
 			const form = state.fields.find((field) => field.key === fieldName);
@@ -143,4 +165,20 @@ export const actions = {
 	}
 };
 
-export default { state, mutations, actions };
+export default async ({ store }) => {
+	store.registerModule(
+		'uiFields',
+		{
+			namespaced: true,
+			state: () => ({
+				fields: [],
+				accros: []
+			}),
+			actions: actions,
+			mutations: mutations
+		},
+		{
+			preserveState: false
+		}
+	);
+};

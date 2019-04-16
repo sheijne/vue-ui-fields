@@ -7,67 +7,31 @@
 			:class="getClasses(fields.container.classes)"
 			:key="i"
 		>
-			<div :class="getClasses(fields.container.classes, '__container')">
+			<div :class="[getClasses(fields.container.classes, '__container'), 'uiFields__container']">
 				<template v-for="(item, index) of fields.data">
 					<component
-						v-if="checkTextField(item.type) && checkCondition(item.conditional)"
+						v-if="checkCondition(item.conditional) && item.type !== 'component'"
 						:is="fields.container.component"
 						:key="index"
-						:class="`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(fields.container.classes, '__fieldset--text')}`"
+						:class="[
+							getClasses(item.container.classes, '__fieldset'),
+							getClasses(item.container.classes, '__fieldset--' + item.load.type),
+							'uiFields__fieldset',
+							'uiFields__fieldset--' + item.load.type
+						]"
 					>
-						<div :class="`${getClasses(fields.container.classes, '__fieldset-container')}`">
-							<ui-text :field-index="index" :field-name="fieldName" :depth="fields.key" />
-						</div>
-					</component>
-					<component
-						v-else-if="item.type === 'select' && checkCondition(item.conditional)"
-						:is="fields.container.component"
-						:key="index"
-						:class="`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(fields.container.classes, '__fieldset--select')}`"
-					>
-						<div :class="`${getClasses(fields.container.classes, '__fieldset-container')}`">
-							<ui-select
-								:field-index="index"
-								:field-name="fieldName"
-								:depth="fields.key"
-								icon-name="arrow-up"
-							/>
-						</div>
-					</component>
-					<component
-						v-else-if="item.type === 'radio' && checkCondition(item.conditional)"
-						:is="fields.container.component"
-						:key="`index ${item}`"
-						:class="`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(fields.container.classes, '__fieldset--radio')}`"
-					>
-						<div :class="`${getClasses(fields.container.classes, '__fieldset-container')}`">
-							<ui-radio
-								:field-index="index"
-								:field-name="fieldName"
-								:depth="fields.key"
-							/>
-						</div>
-					</component>
-					<component
-						v-else-if="item.type === 'checkbox' && checkCondition(item.conditional)"
-						:is="fields.container.component"
-						:key="index"
-						:class="`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(fields.container.classes, '__fieldset--checkbox')}`"
-					>
-						<div :class="`${getClasses(fields.container.classes, '__fieldset-container')}`">
-							<ui-checkbox
-								:field-index="index"
-								:field-name="fieldName"
-								:depth="fields.key"
-							>
-							</ui-checkbox>
+						<div :class="[getClasses(item.container.classes, '__fieldset-container'), 'uiFields__fieldset-container']">
+							<component :is="item.load.name" :field-index="index" :field-name="fieldName" :depth="fields.key" />
 						</div>
 					</component>
 					<component
 						v-else-if="item.type === 'component' && checkCondition(item.conditional)"
 						:is="fields.container.component"
 						:key="index"
-						:class="`${getClasses(fields.container.classes, '__fieldset')} ${getClasses(fields.container.classes, '__fieldset--component')}`"
+						:class="[
+							getClasses(item.container.classes, '__fieldset'),
+							getClasses(item.container.classes, '__fieldset--component')
+						]"
 					>
 						<component
 							v-if="item.component && item.component.content"
@@ -120,9 +84,6 @@ export default {
 			deep: true
 		}
 	},
-	beforeCreate() {
-		this.$store.dispatch('uiFields/resetFields');
-	},
 	methods: {
 		findCorrectFields(fields) {
 			return fields.find((field) => field.key === this.$props.fieldName) || [];
@@ -144,9 +105,6 @@ export default {
 			} else {
 				return true;
 			}
-		},
-		checkTextField(type) {
-			if (type === 'text' || type === 'number' || type === 'email' || type === 'tel' || type === 'password') return true;
 		}
 	}
 };
