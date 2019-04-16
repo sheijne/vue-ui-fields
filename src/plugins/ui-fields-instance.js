@@ -431,7 +431,7 @@ Vue.mixin({
 					}
 				}
 			}
-			throw `The fields you asked for does not exist: ${options.formName}`;
+			throw `The fields you asked for does not exist: ${options.formName} ${JSON.stringify(options)}`;
 		},
 		getCorrectField(options) {
 			const fieldSet = this.getCorrectFieldSet(options);
@@ -440,7 +440,7 @@ Vue.mixin({
 					return fieldSet.find((field) => field.name === options.fieldName);
 				}
 			}
-			throw `The fields you asked for does not exist: ${options.fieldName}`;
+			throw `The fields you asked for does not exist: ${options.fieldName} ${JSON.stringify(options)}`;
 		}
 	}
 });
