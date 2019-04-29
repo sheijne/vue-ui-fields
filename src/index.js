@@ -1,6 +1,7 @@
 const { resolve, join } = require('path');
 
-module.exports = function() {
+module.exports = function(moduleOptions) {
+
 	const pluginsPath = join(__dirname, 'plugins/');
 
 	this.addPlugin({
@@ -15,6 +16,6 @@ module.exports = function() {
 
 	this.addPlugin({
 		src: resolve(pluginsPath, `ui-fields-instance.js`),
-		options: {}
+		options: moduleOptions
 	});
 };

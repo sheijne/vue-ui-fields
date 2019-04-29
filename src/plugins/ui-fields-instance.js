@@ -444,11 +444,17 @@ Vue.mixin({
 		}
 	}
 });
+<% if (options.veeValidate && options.veeValidate.preload) { %>
 
-import VeeValidate from 'vee-validate';
+	import VeeValidate from 'vee-validate';
+	<% if (options.veeValidate.config) { %>
+		Vue.use(VeeValidate, <%= JSON.stringify(options.veeValidate.config, null, 2) %>);
+	<% } else { %>
+		Vue.use(VeeValidate, {
+			events: 'blur'
+		});
+	<% } %>		
+<% } %>
 
-Vue.use(VeeValidate, {
-	events: 'blur'
-});
 
 export default new uiFieldsInstance();
