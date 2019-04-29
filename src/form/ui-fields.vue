@@ -1,8 +1,7 @@
 <template>
 	<div v-if="uiFieldsData && uiFieldsData.container" :class="getClasses(uiFieldsData.container.classes)">
 		<component
-			v-for="(fields, i) of uiFieldsData.data"
-			v-if="checkCondition(fields.conditional)"
+			v-for="(fields, i) of fieldsDataData"
 			:is="uiFieldsData.container.component"
 			:class="getClasses(fields.container.classes)"
 			:key="i"
@@ -71,6 +70,11 @@ export default {
 			get: function() {
 				return this.$store.state.uiFields.fields;
 			}
+		},
+		fieldsDataData: function(){
+			return this.uiFieldsData.data.filter((fields)=>{
+				return this.checkCondition(fields.conditional);
+			})
 		}
 	},
 	watch: {
