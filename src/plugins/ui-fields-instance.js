@@ -218,6 +218,10 @@ class uiFieldsInstance {
 				{
 					key: 'errors',
 					value: {}
+				},
+				{
+					key: 'hooks',
+					value: null
 				}
 			];
 		}
@@ -453,7 +457,7 @@ Vue.mixin({
 		Vue.use(VeeValidate, {
 			events: 'blur'
 		});
-	<% } %>		
+	<% } %>
 <% } %>
 
 
