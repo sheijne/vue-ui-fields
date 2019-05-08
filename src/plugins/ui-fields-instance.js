@@ -300,6 +300,9 @@ class uiFieldsInstance {
 			case 'password':
 				component = 'uiText';
 				break;
+			case 'range':
+				component = 'uiText';
+				break;
 		}
 		return {
 			name: component,
