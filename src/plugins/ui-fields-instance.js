@@ -204,6 +204,14 @@ class uiFieldsInstance {
 					value: null
 				},
 				{
+					key: 'max',
+					value: null
+				},
+				{
+					key: 'min',
+					value: null
+				},
+				{
 					key: 'placeholder',
 					value: ''
 				},
