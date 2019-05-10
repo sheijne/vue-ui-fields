@@ -107,7 +107,7 @@ const mutations = {
 const actions = {
 	setNewForm({ commit, dispatch }, field) {
 		commit('setSingleField', field);
-		if (localStorage) {
+		if (process.browser) {
 			let uiFields = localStorage.getItem('uiFields');
 			if (uiFields) {
 				uiFields = JSON.parse(uiFields);
@@ -148,7 +148,8 @@ const actions = {
 						fieldOptions,
 						fieldSet
 					});
-					if (localStorage) {
+
+					if (process.browser) {
 						const uiFieldsLocal = localStorage.getItem('uiFields');
 						const time = new Date();
 						if (uiFieldsLocal) {
