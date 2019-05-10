@@ -66,15 +66,13 @@ export default {
 		};
 	},
 	computed: {
-		uiFields: {
-			get: function() {
-				return this.$store.state.uiFields.fields;
-			}
+		uiFields() {
+			return this.$store.state.uiFields.fields;
 		},
-		fieldsDataData: function(){
-			return this.uiFieldsData.data.filter((fields)=>{
+		fieldsDataData: function() {
+			return this.uiFieldsData.data.filter((fields) => {
 				return this.checkCondition(fields.conditional);
-			})
+			});
 		}
 	},
 	watch: {
@@ -86,6 +84,11 @@ export default {
 				this.$forceUpdate();
 			},
 			deep: true
+		}
+	},
+	created() {
+		if (this.findCorrectFields(this.uiFields)) {
+			this.uiFieldsData = this.findCorrectFields(this.uiFields);
 		}
 	},
 	methods: {
