@@ -131,7 +131,15 @@ class uiFieldsInstance {
 		let newData = {};
 		//fill defaultOptions in newData and delete prop of dubplicate
 		defaultOptions.forEach((option) => {
-			newData[option.key] = optionsDup[option.key] || option.value;
+			if (option.key === 'persistent') {
+				if (optionsDup[option.key] == false) {
+					newData[option.key] = false;
+				} else {
+					newData[option.key] = true;
+				}
+			} else {
+				newData[option.key] = optionsDup[option.key] || option.value;
+			}
 			if (typeof optionsDup[option.key] !== 'undefined') {
 				delete optionsDup[option.key];
 			}
@@ -231,6 +239,10 @@ class uiFieldsInstance {
 				{
 					key: 'hooks',
 					value: null
+				},
+				{
+					key: 'persistent',
+					value: true
 				}
 			];
 		}

@@ -83,7 +83,8 @@ export default {
 					depth: this.$props.depth,
 					index: this.$props.fieldIndex,
 					value: newValue,
-					time: time.getTime()
+					time: time.getTime(),
+					persistent: this.fieldData.persistent
 				});
 			}
 		}
