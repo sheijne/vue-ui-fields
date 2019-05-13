@@ -1,13 +1,6 @@
 <template>
-	<div
-		:class="getClasses(fieldData.container.classes)"
-		class="uiFields__field ui-radio"
-	>
-		<label
-			v-for="(option, index) in fieldData.options"
-			:key="index"
-			class="uiFields__element ui-radio__element"
-		>
+	<div :class="getClasses(fieldData.container.classes)" class="uiFields__field ui-radio">
+		<label v-for="(option, index) in fieldData.options" :key="index" class="uiFields__element ui-radio__element">
 			<input
 				v-validate.continues="getValidationOptions(fieldData.errors)"
 				:name="fieldData.name"
@@ -19,20 +12,30 @@
 			<span class="uiFields__label ui-radio__label">
 				<span class="ui-radio__label-text" v-html="option.label"></span>
 			</span>
+			<component
+				v-if="option.component"
+				:is="option.component.name"
+				v-bind="option.component.props"
+				:class="option.component.classes"
+			>
+				{{ option.component.content }}
+			</component>
 		</label>
 		<component
 			v-if="fieldData.component"
 			:is="fieldData.component.name"
 			v-bind="fieldData.component.props"
 			:class="fieldData.component.classes"
-			>{{ fieldData.component.content }}</component
 		>
-		<div
-			v-if="fieldData.errors && fieldData.errors.validation"
-			class="uiFields__errors ui-radio__errors"
-		>
+			{{ fieldData.component.content }}
+		</component>
+		<div v-if="fieldData.errors && fieldData.errors.validation" class="uiFields__errors ui-radio__errors">
 			<span
-				v-if="errors.collect(`${fieldData.errors.veeValidateScope || ''}${fieldData.errors.veeValidateScope ? '.' : ''}${fieldData.name}`).length"
+				v-if="
+					errors.collect(
+						`${fieldData.errors.veeValidateScope || ''}${fieldData.errors.veeValidateScope ? '.' : ''}${fieldData.name}`
+					).length
+				"
 				class="uiFields__error ui-radio__error"
 				v-html="fieldData.errors.message"
 			></span>
@@ -66,27 +69,26 @@ export default {
 			}
 		},
 		fieldDataValue: {
-			get: function() {
+			get() {
 				return this.findCorrectFields(this.$store.state.uiFields.fields).value;
 			},
-			set: function(newValue) {
+			set(newValue) {
+				const time = new Date();
 				this.$store.dispatch('uiFields/updateFieldValue', {
 					name: this.$props.fieldName,
 					depth: this.$props.depth,
 					index: this.$props.fieldIndex,
-					value: newValue
+					value: newValue,
+					time: time.getTime()
 				});
 			}
 		}
 	},
 	methods: {
 		findCorrectFields(fields) {
-			const newField =
-				fields.find((field) => field.key === this.$props.fieldName) || [];
+			const newField = fields.find((field) => field.key === this.$props.fieldName) || [];
 			if (newField) {
-				const selectedField = newField.data.find(
-					(field) => field.key === this.$props.depth
-				);
+				const selectedField = newField.data.find((field) => field.key === this.$props.depth);
 				if (selectedField) {
 					return selectedField.data[this.$props.fieldIndex];
 				}

@@ -1,6 +1,7 @@
 class uiFieldsInstance {
-	constructor(options) {
+	constructor(options, $store) {
 		this.formFields = this.init(options);
+		this.$store = $store;
 	}
 	init(options) {
 		return this.checkParams(options);
@@ -204,6 +205,14 @@ class uiFieldsInstance {
 					value: null
 				},
 				{
+					key: 'max',
+					value: null
+				},
+				{
+					key: 'min',
+					value: null
+				},
+				{
 					key: 'placeholder',
 					value: ''
 				},
@@ -218,6 +227,10 @@ class uiFieldsInstance {
 				{
 					key: 'errors',
 					value: {}
+				},
+				{
+					key: 'hooks',
+					value: null
 				}
 			];
 		}
@@ -294,6 +307,9 @@ class uiFieldsInstance {
 				component = 'uiText';
 				break;
 			case 'password':
+				component = 'uiText';
+				break;
+			case 'range':
 				component = 'uiText';
 				break;
 		}
@@ -385,6 +401,9 @@ class uiFieldsInstance {
 	}
 	//disabled eslint for the next line cause I need to create a warning for the developers
 	/* eslint-disable */
+	finishForm(){
+		this.$store.dispatch('uiFields/setNewForm', this.getFieldSettings());
+	}
 	createWarning(message) {
 		console.warn(message);
 	}
@@ -406,7 +425,8 @@ import Vue from 'vue';
 Vue.mixin({
 	methods: {
 		createNewUiFieldsInstance(options) {
-			return new uiFieldsInstance(options);
+			const fields = this.$store.state.uiFields.fields
+			return new uiFieldsInstance(options, this.$store);
 		},
 		getClasses(classes, name = '') {
 			if (classes.length) {
@@ -444,6 +464,8 @@ Vue.mixin({
 		}
 	}
 });
+
+
 <% if (options.veeValidate && options.veeValidate.preload) { %>
 
 	import VeeValidate from 'vee-validate';
@@ -453,7 +475,7 @@ Vue.mixin({
 		Vue.use(VeeValidate, {
 			events: 'blur'
 		});
-	<% } %>		
+	<% } %>
 <% } %>
 
 

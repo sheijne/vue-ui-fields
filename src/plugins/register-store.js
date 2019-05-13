@@ -3,9 +3,7 @@ const mutations = {
 		if (!state.fields.map((field) => field.key).includes(singleField.key)) {
 			state.fields.push(singleField);
 		} else {
-			const index = state.fields.findIndex(
-				(field) => field.key === singleField.key
-			);
+			const index = state.fields.findIndex((field) => field.key === singleField.key);
 			const stateDup = [...state.fields];
 
 			if (index >= 0) {
@@ -21,9 +19,14 @@ const mutations = {
 	updateFieldValue(state, options) {
 		if (options.fieldSet) {
 			const fieldWeNeed = options.fieldSet.data[options.fieldOptions.index];
-			//field we need is the field we want to update
-			fieldWeNeed.value = options.fieldOptions.value;
-			//in this fieldset we want to check condition logic
+			if (fieldWeNeed) {
+				//field we need is the field we want to update
+				fieldWeNeed.value = options.fieldOptions.value;
+				if (fieldWeNeed.hooks) {
+					fieldWeNeed.hooks(options.fieldOptions.value);
+				}
+				//in this fieldset we want to check condition logic
+			}
 		}
 	},
 	updateCondtionLogicField(state, options) {
@@ -34,17 +37,14 @@ const mutations = {
 				//if conditional logic
 				if (field.conditional) {
 					//isValue is the field we need for conditional logic
-					const isValue = options.fieldSet.data.find(
-						(newField) => newField.name === field.conditional.key
-					);
+					const isValue = options.fieldSet.data.find((newField) => newField.name === field.conditional.key);
 					//check if condition is function or value
 					if (isValue) {
 						if (typeof field.conditional.value === 'function') {
 							//if function then execute function, parms is the value of the
 							field.conditional.show = field.conditional.value(isValue.value);
 						} else {
-							field.conditional.show =
-								isValue.value === field.conditional.value;
+							field.conditional.show = isValue.value === field.conditional.value;
 						}
 					}
 				}
@@ -57,23 +57,16 @@ const mutations = {
 				//chechk if fieldset has conditional logic
 				if (fieldSet.conditional) {
 					//find field of conditional logic
-					const isValueFieldset = options.form.data.find(
-						(isValueField) => isValueField.key === fieldSet.conditional.depth
-					);
+					const isValueFieldset = options.form.data.find((isValueField) => isValueField.key === fieldSet.conditional.depth);
 					if (isValueFieldset) {
-						const isValue = isValueFieldset.data.find(
-							(isValueField) => isValueField.name === fieldSet.conditional.key
-						);
+						const isValue = isValueFieldset.data.find((isValueField) => isValueField.name === fieldSet.conditional.key);
 						//check if condition is function or value
 						if (isValue) {
 							if (typeof fieldSet.conditional.value === 'function') {
 								//if function then execute function, parms is the value of the
-								fieldSet.conditional.show = fieldSet.conditional.value(
-									isValue.value
-								);
+								fieldSet.conditional.show = fieldSet.conditional.value(isValue.value);
 							} else {
-								fieldSet.conditional.show =
-									isValue.value === fieldSet.conditional.value;
+								fieldSet.conditional.show = isValue.value === fieldSet.conditional.value;
 							}
 						}
 					}
@@ -89,18 +82,14 @@ const mutations = {
 				if (form) {
 					form.data.forEach((data) => {
 						if (data.conditional) {
-							const fieldWeNeed =
-								options.fieldSet.data[options.fieldOptions.index];
+							const fieldWeNeed = options.fieldSet.data[options.fieldOptions.index];
 							if (fieldWeNeed && fieldWeNeed.name === data.conditional.key) {
 								if (data.conditional.depth === options.fieldOptions.depth) {
 									if (typeof data.conditional.value === 'function') {
 										//if function then execute function, parms is the value of the
-										data.conditional.show = data.conditional.value(
-											options.fieldOptions.value
-										);
+										data.conditional.show = data.conditional.value(options.fieldOptions.value);
 									} else {
-										data.conditional.show =
-											options.fieldOptions.value === data.conditional.value;
+										data.conditional.show = options.fieldOptions.value === data.conditional.value;
 									}
 								}
 							}
@@ -116,21 +105,42 @@ const mutations = {
 };
 
 const actions = {
-	setNewForm({ commit }, field) {
+	setNewForm({ commit, dispatch }, field) {
 		commit('setSingleField', field);
+		if (process.browser) {
+			let uiFields = localStorage.getItem('uiFields');
+			if (uiFields) {
+				uiFields = JSON.parse(uiFields);
+				let time = new Date();
+				time = time.getTime();
+				const waitingTime = 1000 * 60 * 60 * 24 * 7;
+				if (uiFields.time - time < waitingTime) {
+					uiFields.data.forEach((field) => {
+						dispatch('updateFieldValue', field);
+					});
+				} else {
+					localStorage.removeItem('uiFields');
+				}
+			}
+		}
 	},
 	updateFieldValue({ commit, state }, fieldOptions) {
 		if (fieldOptions) {
 			//find correct form
-			const form = state.fields.find(
-				(field) => field.key === fieldOptions.name
-			);
+			const form = state.fields.find((field) => field.key === fieldOptions.name);
+
 			if (form) {
 				//check if depth is valid
-				const fieldSet = form.data.find(
-					(field) => field.key === fieldOptions.depth
-				);
+				const fieldSet = form.data.find((field) => field.key === fieldOptions.depth);
 				if (fieldSet) {
+					//check if string or number, string find field otherwise find index
+					if (typeof fieldOptions.index === 'string') {
+						const fieldIndex = fieldSet.data.findIndex((field) => field.name === fieldOptions.index);
+						if (fieldIndex > -1) {
+							fieldOptions.index = fieldIndex;
+						}
+					}
+
 					commit('updateFieldValue', { fieldOptions, fieldSet });
 					commit('updateCondtionLogicField', { fieldOptions, fieldSet });
 					commit('updateCondtionLogicFieldset', { fieldOptions, form });
@@ -138,6 +148,34 @@ const actions = {
 						fieldOptions,
 						fieldSet
 					});
+
+					if (process.browser) {
+						const uiFieldsLocal = localStorage.getItem('uiFields');
+						const time = new Date();
+						if (uiFieldsLocal) {
+							//change settings
+							let uiFields = JSON.parse(uiFieldsLocal);
+							const fieldIndex = uiFields.data.findIndex(
+								(field) =>
+									field.name === fieldOptions.name && field.depth === fieldOptions.depth && field.index === fieldOptions.index
+							);
+							if (fieldIndex > -1) {
+								uiFields.data[fieldIndex].value = fieldOptions.value;
+								uiFields.time = fieldOptions.time;
+								if (!uiFields.time) {
+									uiFields.time = time.getTime();
+								}
+							} else {
+								if (!fieldOptions.time) {
+									uiFields.time = time.getTime();
+								}
+								uiFields.data.push(fieldOptions);
+							}
+							localStorage.setItem('uiFields', JSON.stringify(uiFields));
+						} else {
+							localStorage.setItem('uiFields', JSON.stringify({ data: [fieldOptions], time: time.getTime() }));
+						}
+					}
 				}
 			}
 		}

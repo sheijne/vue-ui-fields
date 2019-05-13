@@ -1,9 +1,5 @@
 <template>
-	<div
-		v-if="fieldData"
-		:class="getClasses(fieldData.container.classes)"
-		class="uiFields__field ui-text"
-	>
+	<div v-if="fieldData" :class="getClasses(fieldData.container.classes)" class="uiFields__field ui-text">
 		<label class="uiFields__element ui-text__element">
 			<span
 				:class="{ 'ui-text__label--is-required': fieldData.required }"
@@ -11,11 +7,9 @@
 				v-html="fieldData.label"
 			>
 			</span>
-			<span
-				v-if="fieldData.required"
-				class="uiFields__label--required ui-text__label ui-text__label--required"
-				>{{ fieldData.requiredText }}</span
-			>
+			<span v-if="fieldData.required" class="uiFields__label--required ui-text__label ui-text__label--required">{{
+				fieldData.requiredText
+			}}</span>
 			<input
 				v-validate.continues="getValidationOptions(fieldData.errors)"
 				ref="input"
@@ -25,6 +19,8 @@
 				:placeholder="fieldData.placeholder"
 				:maxlength="fieldData.maxLength"
 				:minlength="fieldData.minLength"
+				:max="fieldData.max"
+				:min="fieldData.min"
 				:required="fieldData.required"
 				class="uiFields__input ui-text__input"
 			/>
@@ -34,14 +30,16 @@
 			:is="fieldData.component.name"
 			v-bind="fieldData.component.props"
 			:class="fieldData.component.classes"
-			>{{ fieldData.component.content }}</component
 		>
-		<div
-			v-if="fieldData.errors && fieldData.errors.validation"
-			class="uiFields__errors ui-text__errors"
-		>
+			{{ fieldData.component.content }}
+		</component>
+		<div v-if="fieldData.errors && fieldData.errors.validation" class="uiFields__errors ui-text__errors">
 			<span
-				v-if="errors.collect(`${fieldData.errors.veeValidateScope || ''}${fieldData.errors.veeValidateScope ? '.' : ''}${fieldData.name}`).length"
+				v-if="
+					errors.collect(
+						`${fieldData.errors.veeValidateScope || ''}${fieldData.errors.veeValidateScope ? '.' : ''}${fieldData.name}`
+					).length
+				"
 				class="uiFields__error ui-text__error"
 				v-html="fieldData.errors.message"
 			></span>
@@ -75,27 +73,26 @@ export default {
 			}
 		},
 		fieldDataValue: {
-			get: function() {
+			get() {
 				return this.findCorrectFields(this.$store.state.uiFields.fields).value;
 			},
-			set: function(newValue) {
+			set(newValue) {
+				const time = new Date();
 				this.$store.dispatch('uiFields/updateFieldValue', {
 					name: this.$props.fieldName,
 					depth: this.$props.depth,
 					index: this.$props.fieldIndex,
-					value: newValue
+					value: newValue,
+					time: time.getTime()
 				});
 			}
 		}
 	},
 	methods: {
 		findCorrectFields(fields) {
-			const newField =
-				fields.find((field) => field.key === this.$props.fieldName) || [];
+			const newField = fields.find((field) => field.key === this.$props.fieldName) || [];
 			if (newField) {
-				const selectedField = newField.data.find(
-					(field) => field.key === this.$props.depth
-				);
+				const selectedField = newField.data.find((field) => field.key === this.$props.depth);
 				if (selectedField) {
 					return selectedField.data[this.$props.fieldIndex];
 				}
