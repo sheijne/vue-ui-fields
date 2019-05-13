@@ -1,7 +1,7 @@
 <template>
 	<div
 		v-if="fieldData"
-		:class="[getClasses(fieldData.container.classes), { 'ui-select--edited': edited }]"
+		:class="[getClasses(fieldData.container.classes), { 'ui-select--edited': fieldData.edited }]"
 		class="uiFields__field ui-select"
 	>
 		<label class="uiFields__element ui-select__element">
@@ -67,9 +67,6 @@ export default {
 			default: null
 		}
 	},
-	data: () => ({
-		edited: false
-	}),
 	computed: {
 		fieldData: {
 			get: function() {

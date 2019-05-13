@@ -291,7 +291,7 @@ class uiFieldsInstance {
 		}
 
 		newData.load = this.createLoadData(newData);
-
+		newData.edited = false;
 		return newData;
 	}
 	createLoadData(data) {

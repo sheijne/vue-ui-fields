@@ -22,6 +22,7 @@ const mutations = {
 			if (fieldWeNeed) {
 				//field we need is the field we want to update
 				fieldWeNeed.value = options.fieldOptions.value;
+				fieldWeNeed.edited = true;
 				if (fieldWeNeed.hooks) {
 					fieldWeNeed.hooks(options.fieldOptions.value);
 				}
