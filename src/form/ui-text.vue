@@ -1,5 +1,9 @@
 <template>
-	<div v-if="fieldData" :class="getClasses(fieldData.container.classes)" class="uiFields__field ui-text">
+	<div
+		v-if="fieldData"
+		:class="[getClasses(fieldData.container.classes), { 'ui-text--edited': edited }]"
+		class="uiFields__field ui-text"
+	>
 		<label class="uiFields__element ui-text__element">
 			<span
 				:class="{ 'ui-text__label--is-required': fieldData.required }"
@@ -66,6 +70,9 @@ export default {
 			default: null
 		}
 	},
+	data: () => ({
+		edited: false
+	}),
 	computed: {
 		fieldData: {
 			get: function() {
@@ -77,6 +84,7 @@ export default {
 				return this.findCorrectFields(this.$store.state.uiFields.fields).value;
 			},
 			set(newValue) {
+				this.edited = true;
 				const time = new Date();
 				this.$store.dispatch('uiFields/updateFieldValue', {
 					name: this.$props.fieldName,

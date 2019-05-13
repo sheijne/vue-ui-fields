@@ -1,5 +1,5 @@
 <template>
-	<div :class="getClasses(fieldData.container.classes)" class="uiFields__field ui-checkbox">
+	<div :class="(getClasses(fieldData.container.classes), 'test')" class="uiFields__field ui-checkbox">
 		<label v-for="(option, index) in fieldData.options" :key="index" class="uiFields__element ui-checkbox__element">
 			<input
 				v-validate.continues="getValidationOptions(fieldData.errors)"
@@ -55,6 +55,9 @@ export default {
 			default: null
 		}
 	},
+	data: () => ({
+		edited: false
+	}),
 	computed: {
 		fieldData: {
 			get: function() {

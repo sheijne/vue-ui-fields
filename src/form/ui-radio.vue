@@ -1,5 +1,9 @@
 <template>
-	<div :class="getClasses(fieldData.container.classes)" class="uiFields__field ui-radio">
+	<div
+		v-if="fieldData"
+		:class="[getClasses(fieldData.container.classes), { 'ui-radio--edited': edited }]"
+		class="uiFields__field ui-radio"
+	>
 		<label v-for="(option, index) in fieldData.options" :key="index" class="uiFields__element ui-radio__element">
 			<input
 				v-validate.continues="getValidationOptions(fieldData.errors)"
@@ -10,7 +14,7 @@
 				class="uiFields__input ui-radio__input"
 			/>
 			<span class="uiFields__label ui-radio__label">
-				<span class="ui-radio__label-text" v-html="option.label"></span>
+				<span class="ui-radio__label-radio" v-html="option.label"></span>
 			</span>
 			<component
 				v-if="option.component"
@@ -62,6 +66,9 @@ export default {
 			default: null
 		}
 	},
+	data: () => ({
+		edited: false
+	}),
 	computed: {
 		fieldData: {
 			get: function() {
@@ -73,6 +80,7 @@ export default {
 				return this.findCorrectFields(this.$store.state.uiFields.fields).value;
 			},
 			set(newValue) {
+				this.edited = true;
 				const time = new Date();
 				this.$store.dispatch('uiFields/updateFieldValue', {
 					name: this.$props.fieldName,
