@@ -282,8 +282,18 @@ class uiFieldsInstance {
 		//if type of field is select make middle standard selected
 		if (newData.type === 'select' || newData.type === 'radio') {
 			if (!newData.options.find((input) => input.selected)) {
-				newData.value = newData.options[0].value;
-				newData.options[0].selected = true;
+				if (newData.value) {
+					const indexOf = newData.options.findIndex((input) => input.value === newData.value);
+					if (indexOf > -1) {
+						newData.options[indexOf].selected = true;
+					} else {
+						newData.value = newData.options[0].value;
+						newData.options[0].selected = true;	
+					}
+				} else {
+					newData.value = newData.options[0].value;
+					newData.options[0].selected = true;
+				}
 			} else {
 				const value = newData.options.find((input) => input.selected).value;
 				newData.value = value;
@@ -414,6 +424,9 @@ class uiFieldsInstance {
 	//disabled eslint for the next line cause I need to create a warning for the developers
 	/* eslint-disable */
 	finishForm(){
+		this.$store.dispatch('uiFields/setNewForm', this.getFieldSettings());
+	}
+	setForm(){
 		this.$store.dispatch('uiFields/setNewForm', this.getFieldSettings());
 	}
 	createWarning(message) {
