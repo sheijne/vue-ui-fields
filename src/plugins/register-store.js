@@ -22,6 +22,7 @@ const mutations = {
 			if (fieldWeNeed) {
 				//field we need is the field we want to update
 				fieldWeNeed.value = options.fieldOptions.value;
+				fieldWeNeed.edited = true;
 				if (fieldWeNeed.hooks) {
 					fieldWeNeed.hooks(options.fieldOptions.value);
 				}
@@ -104,6 +105,11 @@ const mutations = {
 	}
 };
 
+let waitingTime = 1000 * 60 * 60 * 24;
+<% if (options.persistentTime) { %>
+	waitingTime = <%- options.persistentTime %>
+<% } %>
+
 const actions = {
 	setNewForm({ commit, dispatch }, field) {
 		commit('setSingleField', field);
@@ -113,7 +119,6 @@ const actions = {
 				uiFields = JSON.parse(uiFields);
 				let time = new Date();
 				time = time.getTime();
-				const waitingTime = 1000 * 60 * 60 * 24 * 7;
 				if (uiFields.time - time < waitingTime) {
 					uiFields.data.forEach((field) => {
 						dispatch('updateFieldValue', field);
@@ -148,8 +153,7 @@ const actions = {
 						fieldOptions,
 						fieldSet
 					});
-
-					if (process.browser) {
+					if (process.browser && fieldOptions.persistent) {
 						const uiFieldsLocal = localStorage.getItem('uiFields');
 						const time = new Date();
 						if (uiFieldsLocal) {

@@ -1,5 +1,9 @@
 <template>
-	<div :class="getClasses(fieldData.container.classes)" class="uiFields__field ui-checkbox">
+	<div
+		v-if="fieldData"
+		:class="[getClasses(fieldData.container.classes), { 'ui-checkbox--edited': fieldData.edited }]"
+		class="uiFields__field ui-checkbox"
+	>
 		<label v-for="(option, index) in fieldData.options" :key="index" class="uiFields__element ui-checkbox__element">
 			<input
 				v-validate.continues="getValidationOptions(fieldData.errors)"
@@ -11,7 +15,7 @@
 				class="uiFields__input ui-checkbox__input"
 			/>
 			<span class="uiFields__label ui-checkbox__label">
-				<span class="ui-checkbox__label-text" v-html="option.label"></span>
+				<span class="ui-checkbox__label-checkbox" v-html="option.label"></span>
 			</span>
 		</label>
 		<component
@@ -72,7 +76,8 @@ export default {
 					depth: this.$props.depth,
 					index: this.$props.fieldIndex,
 					value: newValue,
-					time: time.getTime()
+					time: time.getTime(),
+					persistent: this.fieldData.persistent
 				});
 			}
 		}

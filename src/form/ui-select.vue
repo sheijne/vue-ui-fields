@@ -1,5 +1,9 @@
 <template>
-	<div :class="getClasses(fieldData.container.classes)" class="uiFields__field ui-select">
+	<div
+		v-if="fieldData"
+		:class="[getClasses(fieldData.container.classes), { 'ui-select--edited': fieldData.edited }]"
+		class="uiFields__field ui-select"
+	>
 		<label class="uiFields__element ui-select__element">
 			<span
 				:class="{ 'ui-select__label--is-required': fieldData.required }"
@@ -7,7 +11,7 @@
 				v-html="createLabel(fieldData)"
 			>
 			</span>
-			<span v-if="fieldData.required" class="uiFields__label--required ui-text__label ui-text__label--required">{{
+			<span v-if="fieldData.required" class="uiFields__label--required ui-select__label ui-select__label--required">{{
 				fieldData.requiredText
 			}}</span>
 			<select
@@ -74,13 +78,15 @@ export default {
 				return this.findCorrectFields(this.$store.state.uiFields.fields).value;
 			},
 			set(newValue) {
+				this.edited = true;
 				const time = new Date();
 				this.$store.dispatch('uiFields/updateFieldValue', {
 					name: this.$props.fieldName,
 					depth: this.$props.depth,
 					index: this.$props.fieldIndex,
 					value: newValue,
-					time: time.getTime()
+					time: time.getTime(),
+					persistent: this.fieldData.persistent
 				});
 			}
 		}

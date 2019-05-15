@@ -1,5 +1,9 @@
 <template>
-	<div :class="getClasses(fieldData.container.classes)" class="uiFields__field ui-radio">
+	<div
+		v-if="fieldData"
+		:class="[getClasses(fieldData.container.classes), { 'ui-checkbox--edited': fieldData.edited }]"
+		class="uiFields__field ui-radio"
+	>
 		<label v-for="(option, index) in fieldData.options" :key="index" class="uiFields__element ui-radio__element">
 			<input
 				v-validate.continues="getValidationOptions(fieldData.errors)"
@@ -10,7 +14,7 @@
 				class="uiFields__input ui-radio__input"
 			/>
 			<span class="uiFields__label ui-radio__label">
-				<span class="ui-radio__label-text" v-html="option.label"></span>
+				<span class="ui-radio__label-radio" v-html="option.label"></span>
 			</span>
 			<component
 				v-if="option.component"
@@ -79,7 +83,8 @@ export default {
 					depth: this.$props.depth,
 					index: this.$props.fieldIndex,
 					value: newValue,
-					time: time.getTime()
+					time: time.getTime(),
+					persistent: this.fieldData.persistent
 				});
 			}
 		}
