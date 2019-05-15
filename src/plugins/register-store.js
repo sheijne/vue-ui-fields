@@ -111,23 +111,8 @@ let waitingTime = 1000 * 60 * 60 * 24;
 <% } %>
 
 const actions = {
-	setNewForm({ commit, dispatch }, field) {
+	setNewForm({ commit }, field) {
 		commit('setSingleField', field);
-		if (process.browser) {
-			let uiFields = localStorage.getItem('uiFields');
-			if (uiFields) {
-				uiFields = JSON.parse(uiFields);
-				let time = new Date();
-				time = time.getTime();
-				if (uiFields.time - time < waitingTime) {
-					uiFields.data.forEach((field) => {
-						dispatch('updateFieldValue', field);
-					});
-				} else {
-					localStorage.removeItem('uiFields');
-				}
-			}
-		}
 	},
 	updateFieldValue({ commit, state }, fieldOptions) {
 		if (fieldOptions) {
@@ -204,6 +189,23 @@ const actions = {
 	},
 	resetFields({ commit }) {
 		commit('resetFields');
+	},
+	updateFromLocalStorage({ dispatch }) {
+		if (process.browser) {
+			let uiFields = localStorage.getItem('uiFields');
+			if (uiFields) {
+				uiFields = JSON.parse(uiFields);
+				let time = new Date();
+				time = time.getTime();
+				if (uiFields.time - time < waitingTime) {
+					uiFields.data.forEach((field) => {
+						dispatch('updateFieldValue', field);
+					});
+				} else {
+					localStorage.removeItem('uiFields');
+				}
+			}
+		}
 	}
 };
 

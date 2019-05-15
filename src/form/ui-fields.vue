@@ -91,6 +91,9 @@ export default {
 			this.uiFieldsData = this.findCorrectFields(this.uiFields);
 		}
 	},
+	mounted() {
+		this.$store.dispatch('uiFields/updateFromLocalStorage');
+	},
 	methods: {
 		findCorrectFields(fields) {
 			return fields.find((field) => field.key === this.$props.fieldName) || [];
@@ -108,7 +111,11 @@ export default {
 		},
 		checkCondition(input) {
 			if (input) {
-				return input.show;
+				if (input.show) {
+					return true;
+				} else {
+					return false;
+				}
 			} else {
 				return true;
 			}
