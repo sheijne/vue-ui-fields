@@ -239,7 +239,15 @@ class uiFieldsInstance {
         {
           key: "errors",
           value: {}
-        }
+        },
+				{
+					key: 'hooks',
+					value: null
+				},
+				{
+					key: 'persistent',
+					value: true
+				}
       ];
     }
   }

@@ -1,20 +1,17 @@
-const { resolve, join } = require('path');
+const { resolve, join } = require("path");
 
-module.exports = function() {
-	const pluginsPath = join(__dirname, 'plugins/');
+module.exports = function(moduleOptions) {
+  const pluginsPath = join(__dirname, "plugins/");
+  const componentsPath = join(__dirname, "components/");
+  this.addPlugin({
+    src: resolve(pluginsPath, `register-store.js`),
+    options: moduleOptions
+  });
 
-	this.addPlugin({
-		src: resolve(pluginsPath, `register-store.js`),
-		options: {}
-	});
-
-	this.addPlugin({
-		src: resolve(pluginsPath, `ui-fields-functions.js`),
-		options: {}
-	});
-
-	this.addPlugin({
-		src: resolve(pluginsPath, `ui-fields-instance.js`),
-		options: {}
-	});
+  this.addPlugin({
+    src: resolve(pluginsPath, `ui-fields-instance.js`),
+    options: moduleOptions
+  });
 };
+
+module.exports.meta = require("../package.json");
