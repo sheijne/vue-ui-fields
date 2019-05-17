@@ -459,6 +459,13 @@ Array.prototype.getSingleUiField = function(name) {
 //global mixin functions
 import Vue from "vue";
 
+Vue.component('uiText', () => import('uiText'));
+Vue.component('uiCheckbox', () => import('uiCheckbox'));
+Vue.component('uiSelect', () => import('uiSelect'));
+Vue.component('uiRadio', () => import('uiRadio'));
+Vue.component('uiFields', () => import('uiFields'));
+
+
 Vue.mixin({
   methods: {
     createNewUiFieldsInstance(options) {

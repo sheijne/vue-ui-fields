@@ -1,5 +1,5 @@
 "use-strict";
-export const mixinSettings = {
+export default {
   props: {
     fieldIndex: {
       type: Number,

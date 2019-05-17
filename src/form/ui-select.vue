@@ -51,7 +51,7 @@
   </div>
 </template>
 <script>
-const { mixinSettings } = require("../plugins/ui-fields-functions");
+import mixinSettings from "../plugins/ui-fields-functions";
 export default {
   mixins: [mixinSettings]
 };
