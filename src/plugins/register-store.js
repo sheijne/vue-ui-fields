@@ -122,9 +122,9 @@ const mutations = {
 };
 
 let waitingTime = 1000 * 60 * 60 * 24;
-// <% if (options.persistentTime) { %>
-// 	waitingTime = <%- options.persistentTime %>
-// <% } %>
+<% if (options.persistentTime) { %>
+	waitingTime = <%- options.persistentTime %>
+<% } %>
 
 const actions = {
   setNewForm({ commit }, field) {
