@@ -1,20 +1,12 @@
 {
-	"name": "@matise/ui-fields",
-	"version": "0.9.11",
-	"description": "uiFields generator for Vue",
-	"author": "Dennis Dipsaus",
-	"private": false,
-	"main": "src/index.js",
-	"peerDependencies": {
-		"vee-validate": "^2.2.0",
-		"vue": "^2.5.16"
-	},
-	"dependencies": {
-		"babel-eslint": "^10.0.1",
-		"eslint": "^5.9.0",
-		"eslint-loader": "^2.0.0",
-		"eslint-plugin-prettier": "^3.0.0",
-		"eslint-plugin-vue": "^4.0.0",
-		"prettier": "^1.17.0"
-	}
+  "name": "@matise/ui-fields",
+  "version": "1.0.0",
+  "description": "uiFields generator for Vue",
+  "author": "Dennis Dipsaus",
+  "private": false,
+  "main": "src/index.js",
+  "peerDependencies": {
+    "vee-validate": "^2.2.0",
+    "vue": "^2.5.16"
+  }
 }
