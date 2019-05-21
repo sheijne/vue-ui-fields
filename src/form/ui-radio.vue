@@ -19,6 +19,13 @@
       <span class="uiFields__label ui-radio__label">
         <span class="ui-radio__label-text" v-html="option.label"></span>
       </span>
+      <component
+        v-if="option.component"
+        :is="option.component.name"
+        v-bind="option.component.props"
+        :class="option.component.classes"
+        >{{ option.component.content }}</component
+      >
     </label>
     <component
       v-if="fieldData.component"
