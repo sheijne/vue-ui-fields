@@ -36,4 +36,8 @@ function extendBuild(config) {
     join(__dirname, "form"),
     "ui-radio"
   );
+  config.resolve.alias["uiTextarea"] = resolve(
+    join(__dirname, "form"),
+    "ui-textarea"
+  );
 }

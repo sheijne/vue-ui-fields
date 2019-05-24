@@ -331,7 +331,7 @@ class uiFieldsInstance {
         component = "uiText";
         break;
 			case "textarea":
-        component = "uiText";
+        component = "uiTextarea";
         break;
       case "email":
         component = "uiText";
@@ -467,6 +467,7 @@ Vue.component('uiCheckbox', () => import('uiCheckbox'));
 Vue.component('uiSelect', () => import('uiSelect'));
 Vue.component('uiRadio', () => import('uiRadio'));
 Vue.component('uiFields', () => import('uiFields'));
+Vue.component('uiTextarea', () => import('uiTextarea'));
 
 
 Vue.mixin({
