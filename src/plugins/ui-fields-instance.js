@@ -330,6 +330,9 @@ class uiFieldsInstance {
       case "number":
         component = "uiText";
         break;
+			case "textarea":
+        component = "uiText";
+        break;
       case "email":
         component = "uiText";
         break;
