@@ -10,6 +10,7 @@
     >
       <input
         v-validate.continues="getValidationOptions(fieldData.errors)"
+        :ref="fieldData.name"
         :name="fieldData.name"
         v-model="fieldDataValue"
         :value="option.value"

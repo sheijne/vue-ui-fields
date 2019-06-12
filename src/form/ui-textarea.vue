@@ -18,7 +18,7 @@
       >
       <textarea
         v-validate.continues="getValidationOptions(fieldData.errors)"
-        ref="input"
+        :ref="fieldData.name"
         v-model="fieldDataValue"
         :name="fieldData.name"
         :type="fieldData.type"
