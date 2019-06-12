@@ -43,7 +43,10 @@
       class="uiFields__errors ui-select__errors"
     >
       <span
-        v-if="errors.collect(fieldData.name).length"
+        v-if="
+          errors.collect(fieldData.name, fieldData.errors.veeValidateScope)
+            .length
+        "
         class="uiFields__error ui-select__error"
         v-html="fieldData.errors.message"
       ></span>

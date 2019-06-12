@@ -39,7 +39,10 @@
       class="uiFields__errors ui-radio__errors"
     >
       <span
-        v-if="errors.collect(fieldData.name).length"
+        v-if="
+          errors.collect(fieldData.name, fieldData.errors.veeValidateScope)
+            .length
+        "
         class="uiFields__error ui-radio__error"
         v-html="fieldData.errors.message"
       ></span>
