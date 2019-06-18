@@ -1,3 +1,9 @@
+let waitingTime = 1000 * 60 * 60 * 24;
+<% if (options.persistentTime) { %>
+  waitingTime = <%= options.persistentTime %>
+<% } %>
+
+
 const mutations = {
   setSingleField(state, singleField) {
     if (!state.fields.map(field => field.key).includes(singleField.key)) {
@@ -121,11 +127,6 @@ const mutations = {
   }
 };
 
-let waitingTime = 1000 * 60 * 60 * 24;
-<% if (options.persistentTime) { %>
-	waitingTime = <%- options.persistentTime %>
-<% } %>
-
 const actions = {
   setNewForm({ commit }, field) {
     commit("setSingleField", field);
@@ -228,7 +229,7 @@ const actions = {
         uiFields = JSON.parse(uiFields);
         let time = new Date();
         time = time.getTime();
-        if (uiFields.time - time < waitingTime) {
+        if (time - uiFields.time < waitingTime) {
           uiFields.data.forEach(field => {
             dispatch("updateFieldValue", field);
           });
