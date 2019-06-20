@@ -22,10 +22,7 @@
         v-model="fieldDataValue"
         :name="fieldData.name"
         :type="fieldData.type"
-        :placeholder="fieldData.placeholder"
-        :maxlength="fieldData.maxLength"
-        :minlength="fieldData.minLength"
-        :required="fieldData.required"
+        v-bind="fieldData.props"
         class="uiFields__input ui-text__input"
       />
     </label>
