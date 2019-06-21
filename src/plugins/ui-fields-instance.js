@@ -32,7 +32,12 @@ class uiFieldsInstance {
   defaultRemainingDataValues = [
     { key: 'persistent', type: 'boolean', default: true },
     { key: 'requiredText', type: 'string', default: '*' }
+  ]
 
+  defaultCustomComponentProps = [
+    { key: 'content', type: 'string' },
+    { key: 'name', type: 'string' },
+    { key: 'props', type: 'object' },
   ]
   /**
    * Init a new uiFields instance
@@ -229,14 +234,23 @@ class uiFieldsInstance {
 
       delete remainingProperties.props;
 
+      if (remainingProperties.component) {
+        const [componentOptions, remainingProps] = this.formatProperties(remainingProperties.component, this.defaultCustomComponentProps);
+
+        const componentClasses = this.formatClasses(remainingProps.classes);
+        componentOptions.classes = componentClasses;
+        newField.component = componentOptions;
+        delete remainingProps.classes;
+        delete remainingProperties.component;
+      }
+
       newField = { ...newField, ...componentProperties };
       newField.value = value;
       newField.uiFieldsData = {
-        ...remainingProperties,
         componentType: componentType,
         ...defaultRemainingProperties,
       };
-
+      newField.customData = remainingProperties;
       newField.conditionValue = true;
 
       fieldset.fields.push(newField);
