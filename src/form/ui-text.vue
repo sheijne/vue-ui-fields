@@ -15,6 +15,11 @@
         >{{ fieldData.uiFieldsData.requiredText }}</span
       >
       <input
+        v-validate.continues="
+          fieldData.uiFieldsData.errors
+            ? fieldData.uiFieldsData.errors.validation
+            : undefined
+        "
         :ref="fieldData.name"
         v-model="fieldDataValue"
         :name="fieldData.name"
@@ -23,7 +28,7 @@
         class="uiFields__input ui-text__input"
       />
     </label>
-    <!-- <component
+    <component
       v-if="fieldData.component"
       :is="fieldData.component.name"
       v-bind="fieldData.component.props"
@@ -32,18 +37,37 @@
       {{ fieldData.component.content }}
     </component>
     <div
-      v-if="fieldData.errors && fieldData.errors.validation"
+      v-if="
+        fieldData.uiFieldsData.errors &&
+          fieldData.uiFieldsData.errors.validation
+      "
       class="uiFields__errors ui-text__errors"
     >
       <span
         v-if="
-          errors.collect(fieldData.name, fieldData.errors.veeValidateScope)
-            .length
+          errors.collect(
+            fieldData.name,
+            fieldData.uiFieldsData.errors.veeValidateScope
+          ).length && !fieldData.uiFieldsData.errors.message
         "
         class="uiFields__error ui-text__error"
-        v-html="fieldData.errors.message"
+        v-for="error in errors.collect(
+          fieldData.name,
+          fieldData.uiFieldsData.errors.veeValidateScope
+        )"
+        >{{ error }}</span
+      >
+      <span
+        v-else-if="
+          errors.collect(
+            fieldData.name,
+            fieldData.uiFieldsData.errors.veeValidateScope
+          ).length && fieldData.uiFieldsData.errors.message
+        "
+        class="uiFields__error ui-text__error"
+        v-html="fieldData.uiFieldsData.errors.message"
       ></span>
-    </div> -->
+    </div>
   </div>
 </template>
 <script>

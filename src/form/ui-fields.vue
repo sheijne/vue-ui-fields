@@ -49,31 +49,34 @@
               />
             </div>
           </component>
-          <!-- <component
+          <component
             v-else-if="
-              item.type === 'component' && checkCondition(item.conditional)
+              field.conditionValue &&
+                field.uiFieldsData.componentType === 'component'
             "
-            :is="fields.container.component"
+            :is="fieldset.component"
             :key="index"
             :class="[
-              getClasses(item.container.classes, '__fieldset'),
-              getClasses(item.container.classes, '__fieldset--component')
+              getClasses(field.HTMLProperties.classes, '__fieldset'),
+              getClasses(field.HTMLProperties.classes, '__fieldset--component'),
+              'uiFields__fieldset',
+              'uiFields__fieldset--component'
             ]"
           >
             <component
-              v-if="item.component && item.component.content"
-              :is="item.component.name"
-              v-bind="item.component.props"
-              :class="item.component.classes"
-              v-html="item.component.content"
+              v-if="field.component && field.component.content"
+              :is="field.component.name"
+              v-bind="field.component.props"
+              :class="field.component.classes"
+              v-html="field.component.content"
             />
             <component
-              v-else-if="item.component"
-              :is="item.component.name"
-              v-bind="item.component.props"
-              :class="item.component.classes"
+              v-else-if="field.component"
+              :is="field.component.name"
+              v-bind="field.component.props"
+              :class="field.component.classes"
             />
-          </component> -->
+          </component>
         </template>
       </div>
     </component>

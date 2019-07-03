@@ -31,7 +31,14 @@ class uiFieldsInstance {
 
   defaultRemainingDataValues = [
     { key: 'persistent', type: 'boolean', default: true },
+    { key: 'errors', type: 'object' },
     { key: 'requiredText', type: 'string', default: '*' }
+  ]
+
+  defaultErrorSettings = [
+    { key: 'validation', type: 'string' },
+    { key: 'message', type: 'string' },
+    { key: 'veeValidateScope', type: 'string' }
   ]
 
   defaultCustomComponentProps = [
@@ -162,9 +169,7 @@ class uiFieldsInstance {
       const [HTMLProperties, remainingHTMLProps] = this.formatProperties(options, this.defaultHTMLProps);
       const [componentProperties, remainingComponentProps] = this.formatProperties(remainingHTMLProps, this.defaultInputComponentProps);
       const [defaultRemainingProperties, remainingProperties] = this.formatProperties(remainingComponentProps, this.defaultRemainingDataValues);
-
       //check for remaingin static items
-
       //check component type
       const componentType = this.formateComponentType(componentProperties.type);
 
@@ -267,7 +272,6 @@ class uiFieldsInstance {
   }
   setNewCondition(options) {
     //lets find the dependent first
-    // const form = this.getForm
     const dependentOptions = options.dependent;
 
     //check required variables
@@ -462,6 +466,8 @@ class uiFieldsInstance {
         return "uiText";
       case "range":
         return "uiText";
+      default:
+        return type;
     }
   }
   createError(message) {
