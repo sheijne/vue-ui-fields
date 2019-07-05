@@ -3,6 +3,7 @@ let waitingTime = 1000 * 60 * 60 * 24;
   waitingTime = <%= options.persistentTime %>
 <% } %>
 
+const time = new Date();
 
 const mutations = {
   setForm(state, form) {
@@ -74,57 +75,23 @@ const actions = {
     }
 
     commit('updateFieldValue', fieldOptions);
-    // if (fieldOptions) {
-    //   //find correct form
-    //   const form = state.fields.find(field => field.key === fieldOptions.name);
-
-    //   if (form) {
-    //     //check if depth is valid
-    //     const fieldSet = form.data.find(
-    //       field => field.key === fieldOptions.depth
-    //     );
-    //     if (fieldSet) {
-
-    //       if (fieldOptions.index > -1 && fieldSet.data[fieldOptions.index]) {
-    //         const persistent = fieldSet.data[fieldOptions.index].persistent;
-    //         const time = new Date();
-    //         fieldOptions.time = time.getTime();
-    //         if (process.browser && persistent) {
-    //           const uiFieldsLocal = localStorage.getItem("uiFields");
-    //           const time = new Date();
-    //           if (uiFieldsLocal) {
-    //             //change settings
-    //             let uiFields = JSON.parse(uiFieldsLocal);
-    //             const fieldIndex = uiFields.data.findIndex(
-    //               field =>
-    //                 field.name === fieldOptions.name &&
-    //                 field.depth === fieldOptions.depth &&
-    //                 field.index === fieldOptions.index
-    //             );
-    //             if (fieldIndex > -1) {
-    //               uiFields.data[fieldIndex].value = fieldOptions.value;
-    //               uiFields.time = fieldOptions.time;
-    //               if (!uiFields.time) {
-    //                 uiFields.time = time.getTime();
-    //               }
-    //             } else {
-    //               if (!fieldOptions.time) {
-    //                 uiFields.time = time.getTime();
-    //               }
-    //               uiFields.data.push(fieldOptions);
-    //             }
-    //             localStorage.setItem("uiFields", JSON.stringify(uiFields));
-    //           } else {
-    //             localStorage.setItem(
-    //               "uiFields",
-    //               JSON.stringify({ data: [fieldOptions], time: time.getTime() })
-    //             );
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
+    if (fieldOptions) {
+      if (process.browser && fieldOptions.persistent) {
+        const uiFieldsLocal = localStorage.getItem("uiFields");
+        if (uiFieldsLocal) {
+          let uiFields = JSON.parse(uiFieldsLocal);
+          const findIndex = uiFields.data.findIndex((item) => item.fieldIndex === fieldOptions.fieldIndex && item.fieldsetIndex === fieldOptions.fieldsetIndex && item.formName === fieldOptions.formName);
+          if (findIndex > -1) {
+            uiFields.data[findIndex] = fieldOptions;
+          } else {
+            uiFields.data.push(fieldOptions);
+          }
+          localStorage.setItem("uiFields", JSON.stringify({ data: uiFields.data, time: time.getTime() }));
+        } else {
+          localStorage.setItem("uiFields", JSON.stringify({ data: [fieldOptions], time: time.getTime() }));
+        }
+      }
+    }
   },
   resetSingleForm({ dispatch, state }, formName) {
     if (formName) {

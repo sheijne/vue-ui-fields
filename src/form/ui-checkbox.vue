@@ -1,45 +1,94 @@
 <template>
   <div
-    :class="getClasses(fieldData.container.classes)"
-    class="uiFields__field ui-checkbox"
+    v-if="fieldData"
+    :class="`uiFields__field ${component} ${fieldData.HTMLProperties.classes}`"
   >
+    <span
+      :class="[
+        fieldData.HTMLProperties.required
+          ? `${component}__label--is-required uiFields__label ${component}__label`
+          : `uiFields__label ${component}__label`
+      ]"
+      v-html="fieldData.label"
+    >
+    </span>
+    <span
+      v-if="fieldData.HTMLProperties.required"
+      :class="
+        `uiFields__label--required ${component}__label ${component}__label--required`
+      "
+    >
+      {{ fieldData.uiFieldsData.requiredText }}
+    </span>
     <label
       v-for="(option, index) in fieldData.options"
       :key="index"
-      class="uiFields__element ui-checkbox__element"
+      :class="`uiFields__element ${component}__element`"
     >
       <input
-        v-validate.continues="getValidationOptions(fieldData.errors)"
+        v-validate.continues="
+          fieldData.uiFieldsData.errors
+            ? fieldData.uiFieldsData.errors.validation
+            : undefined
+        "
         :ref="fieldData.name"
-        :name="fieldData.name"
         v-model="fieldDataValue"
         :value="option.value"
-        :required="fieldData.required"
-        type="checkbox"
-        class="uiFields__input ui-checkbox__input"
+        :name="fieldData.name"
+        :type="fieldData.type"
+        v-bind="fieldData.HTMLProperties"
+        :class="`uiFields__input ${component}__input`"
       />
-      <span class="uiFields__label ui-checkbox__label">
-        <span class="ui-checkbox__label-text" v-html="option.label"></span>
+      <span class="uiFields__label ui-radio__label">
+        <span class="ui-radio__label-text" v-html="option.label"></span>
       </span>
+      <component
+        v-if="option.component"
+        :is="option.component.name"
+        v-bind="option.component.props"
+        :class="option.component.classes"
+        >{{ option.component.content }}</component
+      >
     </label>
     <component
       v-if="fieldData.component"
       :is="fieldData.component.name"
       v-bind="fieldData.component.props"
       :class="fieldData.component.classes"
-      >{{ fieldData.component.content }}</component
     >
+      {{ fieldData.component.content }}
+    </component>
     <div
-      v-if="fieldData.errors && fieldData.errors.validation"
-      class="uiFields__errors ui-checkbox__errors"
+      v-if="
+        fieldData.uiFieldsData.errors &&
+          fieldData.uiFieldsData.errors.validation
+      "
+      :class="`uiFields__errors ${component}__errors`"
     >
       <span
         v-if="
-          errors.collect(fieldData.name, fieldData.errors.veeValidateScope)
-            .length
+          errors.collect(
+            fieldData.name,
+            fieldData.uiFieldsData.errors.veeValidateScope
+          ).length && !fieldData.uiFieldsData.errors.message
         "
-        class="uiFields__error ui-checkbox__error"
-        v-html="fieldData.errors.message"
+        :class="`uiFields__error ${component}__error`"
+        v-for="error in errors.collect(
+          fieldData.name,
+          fieldData.uiFieldsData.errors.veeValidateScope
+        )"
+      >
+        {{ error }}
+      </span>
+      <span
+        v-else-if="
+          errors.collect(
+            fieldData.name,
+            fieldData.uiFieldsData.errors.veeValidateScope
+          ).length && fieldData.uiFieldsData.errors.message
+        "
+        :class="`uiFields__error ${component}__error`"
+        v-html="fieldData.uiFieldsData.errors.message"
       ></span>
     </div>
   </div>
@@ -47,6 +96,9 @@
 <script>
 import mixinSettings from "../plugins/ui-fields-functions";
 export default {
-  mixins: [mixinSettings]
+  mixins: [mixinSettings],
+  data: () => ({
+    component: "ui-checkbox"
+  })
 };
 </script>

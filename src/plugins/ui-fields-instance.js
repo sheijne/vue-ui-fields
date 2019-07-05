@@ -179,7 +179,7 @@ class uiFieldsInstance {
 
       //we need options for these elements
       //format things when select or radio
-      if (componentProperties.type === 'select' || componentProperties.type === 'radio') {
+      if (componentProperties.type === 'select' || componentProperties.type === 'radio' || componentProperties.type === 'checkbox') {
         const options = remainingProperties.options;
         if (options && Array.isArray(options)) {
 

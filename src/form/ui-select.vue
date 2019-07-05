@@ -1,34 +1,47 @@
 <template>
   <div
-    :class="getClasses(fieldData.container.classes)"
-    class="uiFields__field ui-select"
+    v-if="fieldData"
+    :class="`uiFields__field ${component} ${fieldData.HTMLProperties.classes}`"
   >
-    <label class="uiFields__element ui-select__element">
+    <label :class="`uiFields__element ${component}__element`">
       <span
-        :class="{ 'ui-select__label--is-required': fieldData.required }"
-        class="uiFields__label ui-select__label"
-        v-html="createLabel(fieldData)"
+        :class="[
+          fieldData.HTMLProperties.required
+            ? `${component}__label--is-required uiFields__label ${component}__label`
+            : `uiFields__label ${component}__label`
+        ]"
+        v-html="fieldData.label"
       >
       </span>
       <span
-        v-if="fieldData.required"
-        class="uiFields__label--required ui-text__label ui-text__label--required"
-        >{{ fieldData.requiredText }}</span
+        v-if="fieldData.HTMLProperties.required"
+        :class="
+          `uiFields__label--required ${component}__label ${component}__label--required`
+        "
       >
+        {{ fieldData.uiFieldsData.requiredText }}
+      </span>
       <select
-        v-validate.continues="getValidationOptions(fieldData.errors)"
-        :name="fieldData.name"
-        :required="fieldData.required"
+        v-validate.continues="
+          fieldData.uiFieldsData.errors
+            ? fieldData.uiFieldsData.errors.validation
+            : undefined
+        "
+        :ref="fieldData.name"
         v-model="fieldDataValue"
-        class="uiFields__input ui-select__select"
+        :name="fieldData.name"
+        :type="fieldData.type"
+        v-bind="fieldData.HTMLProperties"
+        :class="`uiFields__input ${component}__input`"
       >
         <option
           v-for="(option, index) in fieldData.options"
           :key="index"
           :value="option.value"
           :disabled="option.disabled"
-          >{{ option.label }}</option
         >
+          {{ option.label }}
+        </option>
       </select>
     </label>
     <component
@@ -36,19 +49,40 @@
       :is="fieldData.component.name"
       v-bind="fieldData.component.props"
       :class="fieldData.component.classes"
-      >{{ fieldData.component.content }}</component
     >
+      {{ fieldData.component.content }}
+    </component>
     <div
-      v-if="fieldData.errors && fieldData.errors.validation"
-      class="uiFields__errors ui-select__errors"
+      v-if="
+        fieldData.uiFieldsData.errors &&
+          fieldData.uiFieldsData.errors.validation
+      "
+      :class="`uiFields__errors ${component}__errors`"
     >
       <span
         v-if="
-          errors.collect(fieldData.name, fieldData.errors.veeValidateScope)
-            .length
+          errors.collect(
+            fieldData.name,
+            fieldData.uiFieldsData.errors.veeValidateScope
+          ).length && !fieldData.uiFieldsData.errors.message
         "
-        class="uiFields__error ui-select__error"
-        v-html="fieldData.errors.message"
+        :class="`uiFields__error ${component}__error`"
+        v-for="error in errors.collect(
+          fieldData.name,
+          fieldData.uiFieldsData.errors.veeValidateScope
+        )"
+      >
+        {{ error }}
+      </span>
+      <span
+        v-else-if="
+          errors.collect(
+            fieldData.name,
+            fieldData.uiFieldsData.errors.veeValidateScope
+          ).length && fieldData.uiFieldsData.errors.message
+        "
+        :class="`uiFields__error ${component}__error`"
+        v-html="fieldData.uiFieldsData.errors.message"
       ></span>
     </div>
   </div>
@@ -56,6 +90,9 @@
 <script>
 import mixinSettings from "../plugins/ui-fields-functions";
 export default {
-  mixins: [mixinSettings]
+  mixins: [mixinSettings],
+  data: () => ({
+    component: "ui-select"
+  })
 };
 </script>

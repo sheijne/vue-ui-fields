@@ -1,4 +1,3 @@
-"use-strict";
 export default {
   props: {
     formName: {
@@ -19,9 +18,10 @@ export default {
       get() {
         const form = this.findCorrectFields(this.$store.state.uiFields.fields);
         if (form) {
-          return form.fieldsets[this.$props.fieldsetIndex].fields[
-            this.$props.fieldIndex
-          ];
+          const fieldsets = form.fieldsets[this.$props.fieldsetIndex];
+          if (fieldsets) {
+            return fieldsets.fields[this.$props.fieldIndex];
+          }
         } else {
           return {};
         }
@@ -43,7 +43,8 @@ export default {
           formName: this.$props.formName,
           fieldsetIndex: this.$props.fieldsetIndex,
           fieldIndex: this.$props.fieldIndex,
-          value: newValue
+          value: newValue,
+          persistent: this.fieldData.uiFieldsData.persistent
         });
       }
     }
