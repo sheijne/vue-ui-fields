@@ -32,16 +32,16 @@ const mutations = {
               const form = state.fields.find((form) => form.name === condition.formName);
               if (condition.hasOwnProperty('fieldIndex')) {
                 const field = form.fieldsets[condition.fieldsetIndex].fields[condition.fieldIndex];
-                if (typeof condition.condition === 'string') {
-                  field.conditionValue = options.value === condition;
+                if (typeof condition.condition !== 'function') {
+                  field.conditionValue = options.value === condition.condition;
                 } else if (typeof condition.condition === 'function') {
                   field.conditionValue = condition.condition(options.value);
                 }
               } else {
                 //fieldset condition
                 const fieldset = form.fieldsets[condition.fieldsetIndex];
-                if (typeof condition.condition === 'string') {
-                  fieldset.conditionValue = options.value === condition;
+                if (typeof condition.condition !== 'function') {
+                  fieldset.conditionValue = options.value === condition.condition;
                 } else if (typeof condition.condition === 'function') {
                   fieldset.conditionValue = condition.condition(options.value);
                 }

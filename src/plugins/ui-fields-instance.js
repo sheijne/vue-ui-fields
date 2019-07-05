@@ -26,7 +26,7 @@ class uiFieldsInstance {
     { key: 'label', type: 'string', default: '' },
     { key: 'selected', type: 'boolean', default: false },
     { key: 'value', type: 'any', value: '' },
-
+    { key: 'disabled', type: 'boolean' },
   ]
 
   defaultRemainingDataValues = [
@@ -219,8 +219,12 @@ class uiFieldsInstance {
               if (option) option.selected = true;
             }
           } else {
-            formattedOptions[0].selected = true;
-            value = formattedOptions[0].value;
+            if (componentProperties.type !== 'checkbox') {
+              formattedOptions[0].selected = true;
+              value = formattedOptions[0].value;
+            } else {
+              value = false;
+            }
           }
           newField.options = formattedOptions,
             delete remainingProperties.options;
@@ -293,24 +297,20 @@ class uiFieldsInstance {
 
     if (!options.fieldName) {
       //condition is on fieldset level
-      if (!dependentOptions.hasOwnProperty('formName') || dependentOptions.formName === this.getFormName()) {
-        const fieldForCondition = this.getFieldByName(dependentOptions.fieldName, dependentOptions.fieldsetName);
-        if (fieldForCondition) {
-          if (!fieldForCondition.hasOwnProperty('conditions')) {
-            fieldForCondition.conditions = [];
-          }
-          if (Array.isArray(options.fieldsetName)) {
-            options.fieldName.forEach((fieldName) => {
-              let optionDup = { ...options };
-              optionDup.fieldsetName = fieldName;
-              this._setNewFieldsetConditionHelper(optionDup, fieldForCondition);
-            });
-          } else {
-            this._setNewFieldsetConditionHelper(options, fieldForCondition);
-          }
+      const fieldForCondition = this.getFieldByName(dependentOptions.fieldName, dependentOptions.fieldsetName);
+      if (fieldForCondition) {
+        if (!fieldForCondition.hasOwnProperty('conditions')) {
+          fieldForCondition.conditions = [];
         }
-      } else {
-        //create condition accross feature request
+        if (Array.isArray(options.fieldsetName)) {
+          options.fieldsetName.forEach((fieldName) => {
+            let optionDup = { ...options };
+            optionDup.fieldsetName = fieldName;
+            this._setNewFieldsetConditionHelper(optionDup, fieldForCondition);
+          });
+        } else {
+          this._setNewFieldsetConditionHelper(options, fieldForCondition);
+        }
       }
     } else {
       if (!dependentOptions.hasOwnProperty('formName') || dependentOptions.formName === this.getFormName()) {
@@ -343,7 +343,6 @@ class uiFieldsInstance {
   _setNewFieldsetConditionHelper(options, fieldForCondition) {
     const fieldSetCurrent = this.getFieldsetByName(options.fieldsetName);
     const fieldsetIndex = this.getFieldsets().findIndex((fieldset) => fieldset.name === options.fieldsetName);
-
     if (fieldsetIndex > -1) {
       fieldForCondition.conditions.push({
         formName: this.getFormName(),
@@ -352,8 +351,7 @@ class uiFieldsInstance {
       });
 
       //test condition the first time
-
-      if (typeof options.condition === 'string') {
+      if (typeof options.condition !== 'function') {
         fieldSetCurrent.conditionValue = fieldForCondition.value === options.condition;
       } else if (typeof options.condition === 'function') {
         fieldSetCurrent.conditionValue = options.condition(fieldForCondition.value);
@@ -365,7 +363,16 @@ class uiFieldsInstance {
   }
   _setNewFieldConditionHelper(options, fieldForCondition) {
     const fieldCurrent = this.getFieldByName(options.fieldName, options.fieldsetName);
+    if (!fieldCurrent) {
+      this.createWarning(`setNewCondition will be ignored for the following field: options: ${options.formName}, ${options.fieldsetName}, ${this.getFormName()}`)
+      return;
+    }
     const fieldsetIndex = this.getFieldsets().findIndex((fieldset) => fieldset.name === options.fieldsetName);
+    if (fieldsetIndex === -1) {
+      this.createWarning(`setNewCondition will be ignored for the following field: options: ${options.formName}, ${options.fieldsetName}, ${this.getFormName()}`)
+      return;
+    }
+
     const fieldIndex = this.getFieldsetByName(options.fieldsetName).fields.findIndex((field) => field.name === options.fieldName);
 
     if (fieldsetIndex > -1 && fieldIndex > -1) {
@@ -378,7 +385,7 @@ class uiFieldsInstance {
 
       //test condition the first time
 
-      if (typeof options.condition === 'string') {
+      if (typeof options.condition !== 'function') {
         fieldCurrent.conditionValue = fieldForCondition.value === options.condition;
       } else if (typeof options.condition === 'function') {
         fieldCurrent.conditionValue = options.condition(fieldForCondition.value);

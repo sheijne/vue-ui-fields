@@ -3,23 +3,6 @@
     v-if="fieldData"
     :class="`uiFields__field ${component} ${fieldData.HTMLProperties.classes}`"
   >
-    <span
-      :class="[
-        fieldData.HTMLProperties.required
-          ? `${component}__label--is-required uiFields__label ${component}__label`
-          : `uiFields__label ${component}__label`
-      ]"
-      v-html="fieldData.label"
-    >
-    </span>
-    <span
-      v-if="fieldData.HTMLProperties.required"
-      :class="
-        `uiFields__label--required ${component}__label ${component}__label--required`
-      "
-    >
-      {{ fieldData.uiFieldsData.requiredText }}
-    </span>
     <label
       v-for="(option, index) in fieldData.options"
       :key="index"
@@ -39,8 +22,8 @@
         v-bind="fieldData.HTMLProperties"
         :class="`uiFields__input ${component}__input`"
       />
-      <span class="uiFields__label ui-radio__label">
-        <span class="ui-radio__label-text" v-html="option.label"></span>
+      <span class="uiFields__label ui-checkbox__label">
+        <span class="ui-checkbox__label-text" v-html="option.label"></span>
       </span>
       <component
         v-if="option.component"

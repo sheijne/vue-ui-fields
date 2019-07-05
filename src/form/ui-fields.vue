@@ -1,12 +1,11 @@
 <template>
-  <div v-if="uiFields" :class="uiFields.classes">
+  <div v-if="uiFields && uiFields.fieldsets" :class="uiFields.classes">
     <component
-      v-for="(fieldset, i) of uiFields.fieldsets.filter(
-        fieldset => fieldset.conditionValue
-      )"
+      v-for="(fieldset, i) of uiFields.fieldsets"
       :is="uiFields.component"
       :class="fieldset.classes"
       :key="i"
+      v-show="fieldset.conditionValue"
     >
       <div
         :class="[
@@ -26,10 +25,10 @@
               getClasses(field.HTMLProperties.classes, '__fieldset'),
               getClasses(
                 field.HTMLProperties.classes,
-                '__fieldset--' + field.uiFieldsData.componentType
+                '__fieldset--' + field.type
               ),
               'uiFields__fieldset',
-              'uiFields__fieldset--' + field.uiFieldsData.componentType
+              'uiFields__fieldset--' + field.type
             ]"
           >
             <div
@@ -94,6 +93,14 @@ export default {
   computed: {
     uiFields() {
       return this.findCorrectFields(this.$store.state.uiFields.fields);
+    }
+  },
+  watch: {
+    uiFields: {
+      handler() {
+        this.$forceUpdate();
+      },
+      deep: true
     }
   },
   mounted() {

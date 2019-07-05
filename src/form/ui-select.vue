@@ -30,9 +30,8 @@
         :ref="fieldData.name"
         v-model="fieldDataValue"
         :name="fieldData.name"
-        :type="fieldData.type"
         v-bind="fieldData.HTMLProperties"
-        :class="`uiFields__input ${component}__input`"
+        :class="`uiFields__input ${component}__select`"
       >
         <option
           v-for="(option, index) in fieldData.options"
