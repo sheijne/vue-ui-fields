@@ -3,23 +3,6 @@
     v-if="fieldData"
     :class="`uiFields__field ${component} ${fieldData.HTMLProperties.classes}`"
   >
-    <span
-      :class="[
-        fieldData.HTMLProperties.required
-          ? `${component}__label--is-required uiFields__label ${component}__label`
-          : `uiFields__label ${component}__label`
-      ]"
-      v-html="fieldData.label"
-    >
-    </span>
-    <span
-      v-if="fieldData.HTMLProperties.required"
-      :class="
-        `uiFields__label--required ${component}__label ${component}__label--required`
-      "
-    >
-      {{ fieldData.uiFieldsData.requiredText }}
-    </span>
     <label
       v-for="(option, index) in fieldData.options"
       :key="index"
@@ -43,11 +26,11 @@
         <span class="ui-radio__label-text" v-html="option.label"></span>
       </span>
       <component
-        v-if="option.component"
-        :is="option.component.name"
-        v-bind="option.component.props"
-        :class="option.component.classes"
-        >{{ option.component.content }}</component
+        v-if="option.customData.component"
+        :is="option.customData.component.name"
+        v-bind="option.customData.component.props"
+        :class="option.customData.component.classes"
+        >{{ option.customData.component.content }}</component
       >
     </label>
     <component
@@ -68,8 +51,9 @@
       <span
         v-if="
           errors.collect(
-            fieldData.name,
-            fieldData.uiFieldsData.errors.veeValidateScope
+            (fieldData.uiFieldsData.errors.veeValidateScope
+              ? fieldData.uiFieldsData.errors.veeValidateScope + '.'
+              : '') + fieldData.name
           ).length && !fieldData.uiFieldsData.errors.message
         "
         :class="`uiFields__error ${component}__error`"
@@ -81,10 +65,11 @@
         {{ error }}
       </span>
       <span
-        v-else-if="
+        v-if="
           errors.collect(
-            fieldData.name,
-            fieldData.uiFieldsData.errors.veeValidateScope
+            (fieldData.uiFieldsData.errors.veeValidateScope
+              ? fieldData.uiFieldsData.errors.veeValidateScope + '.'
+              : '') + fieldData.name
           ).length && fieldData.uiFieldsData.errors.message
         "
         :class="`uiFields__error ${component}__error`"

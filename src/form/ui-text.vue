@@ -53,8 +53,9 @@
       <span
         v-if="
           errors.collect(
-            fieldData.name,
-            fieldData.uiFieldsData.errors.veeValidateScope
+            (fieldData.uiFieldsData.errors.veeValidateScope
+              ? fieldData.uiFieldsData.errors.veeValidateScope + '.'
+              : '') + fieldData.name
           ).length && !fieldData.uiFieldsData.errors.message
         "
         :class="`uiFields__error ${component}__error`"
@@ -66,10 +67,11 @@
         {{ error }}
       </span>
       <span
-        v-else-if="
+        v-if="
           errors.collect(
-            fieldData.name,
-            fieldData.uiFieldsData.errors.veeValidateScope
+            (fieldData.uiFieldsData.errors.veeValidateScope
+              ? fieldData.uiFieldsData.errors.veeValidateScope + '.'
+              : '') + fieldData.name
           ).length && fieldData.uiFieldsData.errors.message
         "
         :class="`uiFields__error ${component}__error`"

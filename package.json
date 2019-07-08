@@ -8,5 +8,6 @@
   "peerDependencies": {
     "vee-validate": "^2.2.0",
     "vue": "^2.5.16"
-  }
+  },
+  "dependencies": {}
 }

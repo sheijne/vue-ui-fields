@@ -25,8 +25,9 @@ const mutations = {
 
           //activate hooks
           if (field.uiFieldsData.hooks) {
-            field.uiFieldsData.hooks();
+            field.uiFieldsData.hooks(options.value);
           }
+
           if (field.conditions) {
             field.conditions.forEach((condition) => {
               const form = state.fields.find((form) => form.name === condition.formName);
@@ -59,7 +60,9 @@ const mutations = {
 
 const actions = {
   setNewForm({ commit }, form) {
-    commit("setForm", form);
+    if (!process.server) {
+      commit("setForm", form);
+    }
   },
   updateFieldValue({ commit, state }, fieldOptions) {
 
@@ -76,7 +79,7 @@ const actions = {
 
     commit('updateFieldValue', fieldOptions);
     if (fieldOptions) {
-      if (process.browser && fieldOptions.persistent) {
+      if (process.client && fieldOptions.persistent !== 'false') {
         const uiFieldsLocal = localStorage.getItem("uiFields");
         if (uiFieldsLocal) {
           let uiFields = JSON.parse(uiFieldsLocal);
@@ -115,7 +118,7 @@ const actions = {
     commit("resetFields");
   },
   updateFromLocalStorage({ dispatch }) {
-    if (process.browser) {
+    if (process.client) {
       let uiFields = localStorage.getItem("uiFields");
       if (uiFields) {
         uiFields = JSON.parse(uiFields);

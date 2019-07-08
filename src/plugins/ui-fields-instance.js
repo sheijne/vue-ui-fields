@@ -32,7 +32,9 @@ class uiFieldsInstance {
   defaultRemainingDataValues = [
     { key: 'persistent', type: 'boolean', default: true },
     { key: 'errors', type: 'object' },
-    { key: 'requiredText', type: 'string', default: '*' }
+    { key: 'requiredText', type: 'string', default: '*' },
+    { key: 'hooks', type: 'function' }
+
   ]
 
   defaultErrorSettings = [
