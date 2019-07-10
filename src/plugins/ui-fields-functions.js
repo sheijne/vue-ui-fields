@@ -1,79 +1,57 @@
-"use-strict";
 export default {
   props: {
+    formName: {
+      type: String,
+      default: "null"
+    },
     fieldIndex: {
       type: Number,
       default: 0
     },
-    fieldName: {
-      type: String,
-      default: null
-    },
-    depth: {
-      type: String,
-      default: null
-    },
-    iconName: {
-      type: String,
+    fieldsetIndex: {
+      type: Number,
       default: null
     }
   },
   computed: {
     fieldData: {
-      get: function() {
-        return this.findCorrectFields(this.$store.state.uiFields.fields);
+      get() {
+        const form = this.findCorrectFields(this.$store.state.uiFields.fields);
+        if (form) {
+          const fieldsets = form.fieldsets[this.$props.fieldsetIndex];
+          if (fieldsets) {
+            return fieldsets.fields[this.$props.fieldIndex];
+          }
+        } else {
+          return {};
+        }
       }
     },
     fieldDataValue: {
       get() {
-        return this.findCorrectFields(this.$store.state.uiFields.fields).value;
+        const form = this.findCorrectFields(this.$store.state.uiFields.fields);
+        if (form) {
+          return form.fieldsets[this.$props.fieldsetIndex].fields[
+            this.$props.fieldIndex
+          ].value;
+        } else {
+          return undefined;
+        }
       },
       set(newValue) {
-        this.edited = true;
-        const time = new Date();
         this.$store.dispatch("uiFields/updateFieldValue", {
-          name: this.$props.fieldName,
-          depth: this.$props.depth,
-          index: this.$props.fieldIndex,
-          value: newValue
+          formName: this.$props.formName,
+          fieldsetIndex: this.$props.fieldsetIndex,
+          fieldIndex: this.$props.fieldIndex,
+          value: newValue,
+          persistent: this.fieldData.uiFieldsData.persistent
         });
       }
     }
   },
   methods: {
     findCorrectFields(fields) {
-      const newField =
-        fields.find(field => field.key === this.$props.fieldName) || [];
-      if (newField) {
-        const selectedField = newField.data.find(
-          field => field.key === this.$props.depth
-        );
-        if (selectedField) {
-          return selectedField.data[this.$props.fieldIndex];
-        }
-      }
-      return [];
-    },
-    createLabel(text) {
-      const textLabel = text.label || text.name;
-      if (textLabel) {
-        if (textLabel.indexOf("attribute_") !== -1) {
-          //name starts with attribute and we need the last name then we format it
-          let newText = textLabel.split("_");
-          newText = newText[newText.length - 1];
-          return newText.charAt(0).toUpperCase() + newText.slice(1);
-        } else {
-          return textLabel;
-        }
-      }
-    },
-    getValidationOptions(input) {
-      if (input) {
-        if (input.validation) {
-          return input.validation;
-        }
-      }
-      return "";
+      return fields.find(field => field.name === this.$props.formName) || [];
     }
   }
 };

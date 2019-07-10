@@ -1,148 +1,126 @@
 <template>
-  <div
-    v-if="uiFieldsData && uiFieldsData.container"
-    :class="getClasses(uiFieldsData.container.classes)"
-  >
-    <component
-      v-for="(fields, i) of fieldsDataData"
-      :is="uiFieldsData.container.component"
-      :class="getClasses(fields.container.classes)"
-      :key="i"
-    >
-      <div
-        :class="[
-          getClasses(fields.container.classes, '__container'),
-          'uiFields__container'
-        ]"
-      >
-        <template v-for="(item, index) of fields.data">
-          <component
-            v-if="checkCondition(item.conditional) && item.type !== 'component'"
-            :is="fields.container.component"
-            :key="index"
-            :class="[
-              getClasses(item.container.classes, '__fieldset'),
-              getClasses(
-                item.container.classes,
-                '__fieldset--' + item.load.type
-              ),
-              'uiFields__fieldset',
-              'uiFields__fieldset--' + item.load.type
-            ]"
-          >
-            <div
-              :class="[
-                getClasses(item.container.classes, '__fieldset-container'),
-                'uiFields__fieldset-container'
-              ]"
-            >
-              <component
-                :is="item.load.name"
-                :field-index="index"
-                :field-name="fieldName"
-                :depth="fields.key"
-              />
-            </div>
-          </component>
-          <component
-            v-else-if="
-              item.type === 'component' && checkCondition(item.conditional)
-            "
-            :is="fields.container.component"
-            :key="index"
-            :class="[
-              getClasses(item.container.classes, '__fieldset'),
-              getClasses(item.container.classes, '__fieldset--component')
-            ]"
-          >
-            <component
-              v-if="item.component && item.component.content"
-              :is="item.component.name"
-              v-bind="item.component.props"
-              :class="item.component.classes"
-              v-html="item.component.content"
-            />
-            <component
-              v-else-if="item.component"
-              :is="item.component.name"
-              v-bind="item.component.props"
-              :class="item.component.classes"
-            />
-          </component>
-        </template>
-      </div>
-    </component>
-  </div>
+	<div>
+		<no-ssr>
+			<div v-if="uiFields && uiFields.fieldsets" :class="uiFields.classes">
+				<component
+					v-for="(fieldset, i) of uiFields.fieldsets"
+					:is="uiFields.component"
+					:class="[
+						fieldset.classes,
+						fieldset.conditionValue ? 'fieldset--enabled' : 'fieldset--disabled'
+					]"
+					:key="i"
+					v-show="fieldset.conditionValue"
+				>
+					<div
+						v-if="fieldset.conditionValue"
+						:class="[
+							getClasses(fieldset.classes, '__container'),
+							'uiFields__container'
+						]"
+					>
+						<template v-for="(field, index) of fieldset.fields">
+							<component
+								v-if="
+									field.conditionValue &&
+										field.uiFieldsData.componentType !== 'component'
+								"
+								:is="fieldset.component"
+								:key="index"
+								:class="[
+									getClasses(field.HTMLProperties.classes, '__fieldset'),
+									getClasses(
+										field.HTMLProperties.classes,
+										'__fieldset--' + field.type
+									),
+									'uiFields__fieldset',
+									'uiFields__fieldset--' + field.type
+								]"
+							>
+								<div
+									:class="[
+										getClasses(
+											field.HTMLProperties.classes,
+											'__fieldset-container'
+										),
+										'uiFields__fieldset-container'
+									]"
+								>
+									<component
+										:is="field.uiFieldsData.componentType"
+										:form-name="fieldName"
+										:fieldset-index="i"
+										:field-index="index"
+									/>
+								</div>
+							</component>
+							<component
+								v-else-if="
+									field.conditionValue &&
+										field.uiFieldsData.componentType === 'component'
+								"
+								:is="fieldset.component"
+								:key="index"
+								:class="[
+									getClasses(field.HTMLProperties.classes, '__fieldset'),
+									getClasses(
+										field.HTMLProperties.classes,
+										'__fieldset--component'
+									),
+									'uiFields__fieldset',
+									'uiFields__fieldset--component'
+								]"
+							>
+								<component
+									v-if="field.component && field.component.content"
+									:is="field.component.name"
+									v-bind="field.component.props"
+									:class="field.component.classes"
+									v-html="field.component.content"
+								/>
+								<component
+									v-else-if="field.component"
+									:is="field.component.name"
+									v-bind="field.component.props"
+									:class="field.component.classes"
+								/>
+							</component>
+						</template>
+					</div>
+				</component>
+			</div>
+		</no-ssr>
+	</div>
 </template>
 
 <script>
 export default {
-  props: {
-    fieldName: {
-      type: String,
-      default: "form"
-    }
-  },
-  data() {
-    return {
-      uiFieldsData: {}
-    };
-  },
-  computed: {
-    uiFields() {
-      return this.$store.state.uiFields.fields;
-    },
-    fieldsDataData: function() {
-      return this.uiFieldsData.data.filter(fields => {
-        return this.checkCondition(fields.conditional);
-      });
-    }
-  },
-  watch: {
-    uiFields: {
-      handler() {
-        if (this.findCorrectFields(this.uiFields)) {
-          this.uiFieldsData = this.findCorrectFields(this.uiFields);
-        }
-        this.$forceUpdate();
-      },
-      deep: true
-    }
-  },
-  created() {
-    if (this.findCorrectFields(this.uiFields)) {
-      this.uiFieldsData = this.findCorrectFields(this.uiFields);
-    }
-  },
-  mounted() {
-    this.$store.dispatch("uiFields/updateFromLocalStorage");
-  },
-  methods: {
-    findCorrectFields(fields) {
-      return fields.find(field => field.key === this.$props.fieldName) || [];
-    },
-    conditions(fields) {
-      return fields.data.map(field => {
-        if (field.data) {
-          return field.data.map(secondField => {
-            if (secondField.conditional) {
-              return secondField.conditional.show;
-            }
-          });
-        }
-      });
-    },
-    checkCondition(input) {
-      if (input) {
-        if (input.show) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return true;
-      }
-    }
-  }
+	props: {
+		fieldName: {
+			type: String,
+			default: 'form'
+		}
+	},
+	computed: {
+		uiFields() {
+			return this.findCorrectFields(this.$store.state.uiFields.fields);
+		}
+	},
+	watch: {
+		uiFields: {
+			handler() {
+				this.$forceUpdate();
+			},
+			deep: true
+		}
+	},
+	created() {
+		this.$store.dispatch('uiFields/updateFromLocalStorage');
+	},
+	methods: {
+		findCorrectFields(fields) {
+			return fields.find((field) => field.name === this.$props.fieldName) || [];
+		}
+	}
 };
 </script>
