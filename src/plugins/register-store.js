@@ -79,7 +79,7 @@ const actions = {
 
     commit('updateFieldValue', fieldOptions);
     if (fieldOptions) {
-      if (process.client && fieldOptions.persistent !== 'false') {
+      if (process.client && fieldOptions.persistent !== false) {
         const uiFieldsLocal = localStorage.getItem("uiFields");
         if (uiFieldsLocal) {
           let uiFields = JSON.parse(uiFieldsLocal);
