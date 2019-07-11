@@ -79,7 +79,7 @@ const actions = {
 
     commit('updateFieldValue', fieldOptions);
     if (fieldOptions) {
-      if (process.client && fieldOptions.persistent !== false) {
+      if (process.client && fieldOptions.persistent !== 'false') {
         const uiFieldsLocal = localStorage.getItem("uiFields");
         if (uiFieldsLocal) {
           let uiFields = JSON.parse(uiFieldsLocal);
@@ -136,6 +136,11 @@ const actions = {
   }
 };
 
+const getters = {
+  field: (state) => (name) => {
+    return state.fields.find((item) => item.name === name) || {};
+  }
+}
 export default async ({ store }) => {
   store.registerModule(
     "uiFields",
@@ -144,8 +149,9 @@ export default async ({ store }) => {
       state: () => ({
         fields: []
       }),
-      actions: actions,
-      mutations: mutations
+      actions,
+      mutations,
+      getters
     },
     {
       preserveState: false
