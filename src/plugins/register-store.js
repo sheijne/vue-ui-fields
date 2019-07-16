@@ -8,9 +8,8 @@ const time = new Date();
 const mutations = {
   setForm(state, form) {
     const formExsist = state.fields.findIndex((singleForm) => singleForm.name === form.name);
-    if (formExsist > -1) {
-      state.fields[formExsist] = form;
-    } else {
+    //dont change if it already exsists
+    if (formExsist === -1) {
       state.fields.push(form);
     }
   },
