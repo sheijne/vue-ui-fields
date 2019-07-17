@@ -262,7 +262,6 @@ class uiFieldsInstance {
 
 
           const selected = formattedOptions.filter((option) => option.selected);
-
           if (selected && selected.length) {
             //a value is selected
             if (selected.length === 1) {
@@ -279,10 +278,14 @@ class uiFieldsInstance {
           } else if (value) {
             //there is a value in the global
             if (Array.isArray(value)) {
-              value.forEach((val) => {
-                const option = formattedOptions.find((option) => option.value === val);
-                if (option) option.selected = true;
-              });
+              if (value.length) {
+                value.forEach((val) => {
+                  const option = formattedOptions.find((option) => option.value === val);
+                  if (option) option.selected = true;
+                });
+              } else {
+                value = value;
+              }
             } else {
               const option = formattedOptions.find((option) => option.value === value);
               if (option) option.selected = true;

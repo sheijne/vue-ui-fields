@@ -24,7 +24,7 @@
 				@change="checkErrors('change')"
 				@blur="checkErrors('blur')"
 				:value="option.value"
-				:name="fieldData.name"
+				:name="option.name"
 				:type="fieldData.type"
 				v-bind="fieldData.HTMLProperties"
 				:class="`uiFields__input ${component}__input`"

@@ -18,7 +18,6 @@
 			:class="`uiFields__element ${component}__element`"
 		>
 			<input
-				:id="`${fieldsetName}__${fieldData.name}`"
 				v-model="fieldDataValue"
 				@input="checkErrors('input')"
 				@change="checkErrors('change')"
