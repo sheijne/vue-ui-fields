@@ -7,7 +7,7 @@
 	"maxlength": "Fields do not match requirements",
 	"min": "Fields do not match requirements",
 	"minlength": "Fields do not match requirements",
-	"numebr": "Field only can contains numbers",
+	"number": "Field only can contains numbers",
 	"postalcode": "Postcode is invalid",
 	"required": "This field is required",
 	"url": "URL not valid"
