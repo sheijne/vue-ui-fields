@@ -50,6 +50,7 @@
 										:is="field.uiFieldsData.componentType"
 										:form-name="fieldName"
 										:fieldset-index="i"
+										:fieldset-name="fieldset.name"
 										:field-index="index"
 									/>
 								</div>

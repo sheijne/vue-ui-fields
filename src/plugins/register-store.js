@@ -156,31 +156,57 @@ const actions = {
   },
   setError({ commit, state }, fieldOptions) {
     const form = state.fields.find((form) => form.name === fieldOptions.formName);
-    if (typeof fieldOptions.fieldsetIndex === 'string') {
-      const fieldset = form.fieldsets.findIndex((fieldsetItem) => fieldsetItem.name === fieldOptions.fieldsetIndex);
-      fieldOptions.fieldsetIndex = fieldset;
-    }
 
-    if (typeof fieldOptions.fieldIndex === 'string') {
-      const field = form.fieldsets[fieldOptions.fieldsetIndex].fields.findIndex((field) => field.name === fieldOptions.fieldIndex);
-      fieldOptions.fieldIndex = field;
+    if (typeof fieldOptions.fieldsetIndex === 'number') {
+      const fieldset = form.fieldsets[fieldOptions.fieldsetIndex];
+      fieldOptions.fieldsetIndex = fieldset.name;
     }
 
     commit('setError', fieldOptions);
   },
   removeError({ commit, state }, fieldOptions) {
     const form = state.fields.find((form) => form.name === fieldOptions.formName);
-    if (typeof fieldOptions.fieldsetIndex === 'string') {
-      const fieldset = form.fieldsets.findIndex((fieldsetItem) => fieldsetItem.name === fieldOptions.fieldsetIndex);
-      fieldOptions.fieldsetIndex = fieldset;
+    if (typeof fieldOptions.fieldsetIndex === 'number') {
+      const fieldset = form.fieldsets[fieldOptions.fieldsetIndex];
+      fieldOptions.fieldsetIndex = fieldset.name;
     }
-
-    if (typeof fieldOptions.fieldIndex === 'string') {
-      const field = form.fieldsets[fieldOptions.fieldsetIndex].fields.findIndex((field) => field.name === fieldOptions.fieldIndex);
-      fieldOptions.fieldIndex = field;
-    }
-
     commit('removeError', fieldOptions);
+  },
+  validate({ dispatch, getters }, formName) {
+    return new Promise((resolve) => {
+      const fields = getters.flattenFields(formName);
+      fields.forEach((field) => {
+        if (field.errors.validation) {
+          const validation = field.errors.validation;
+          validation.forEach((item) => {
+            const result = item.validation(field.value);
+            if (!result) {
+              //there is an error, lets push it to the store (setter)
+              dispatch('setError', {
+                formName: formName,
+                fieldsetIndex: field.fieldsetName,
+                fieldIndex: field.name,
+                name: item.name,
+                message: item.message(field.value, field.name),
+                value: field.value
+              });
+            } else {
+              dispatch('removeError', {
+                formName: formName,
+                fieldsetIndex: field.fieldsetName,
+                fieldIndex: field.name,
+                name: item.name
+              });
+            }
+          });
+        }
+      });
+      const errors = getters.errors({ formName: [formName] });
+      resolve({
+        valid: errors.length === 0,
+        errors
+      });
+    })
   }
 };
 
@@ -192,8 +218,49 @@ const getters = {
     return {};
   },
   error: (state) => (options) => {
+    const form = state.fields.find((form) => form.name === options.formName);
+
+    if (typeof options.fieldsetIndex === 'number') {
+      const fieldset = form.fieldsets[options.fieldsetIndex];
+      options.fieldsetIndex = fieldset.name;
+    }
+
     if (options && state.errors) {
       return state.errors.filter((item) => item.formName === options.formName && item.fieldsetIndex === options.fieldsetIndex && item.fieldIndex === options.fieldIndex);
+    }
+    return [];
+  },
+  errors: (state) => (options) => {
+    if (options) {
+      if (options.formName) {
+        const errors = options.formName.reduce((accum, error) => {
+          if (!!options.fieldsetIndex) {
+            if (!!options.fieldIndex) {
+              accum = accum.concat(state.errors.filter((item) => item.formName === error && item.fieldsetIndex === options.fieldsetIndex && item.fieldIndex === options.fieldIndex));
+            } else {
+              accum = accum.concat(state.errors.filter((item) => item.formName === error && item.fieldsetIndex === options.fieldsetIndex));
+            }
+          } else {
+            console.log(state.errors, error)
+            accum = accum.concat(state.errors.filter((item) => item.formName === error));
+          }
+          return accum;
+        }, []);
+        return errors;
+      }
+    }
+    return [];
+  },
+  flattenFields: (state) => (formName, fieldsetName) => {
+    const form = state.fields.find((form) => form.name === formName);
+    if (form) {
+      return form.fieldsets.reduce((accum, curr) => {
+        accum = accum.concat(curr.fields.map((field) => ({ ...field, fieldsetName: curr.name })));
+        if (fieldsetName) {
+          accum = accum.filter((item) => item.fieldsetNAme === fieldsetName)
+        }
+        return accum;
+      }, []);
     }
     return [];
   }

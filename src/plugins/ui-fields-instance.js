@@ -331,7 +331,7 @@ class uiFieldsInstance {
             if (typeof validation === 'string') {
               const data = uiFieldsValidationRules[validation];
               return {
-                message: messages[this.errorSettings.i18n][validation],
+                message: () => messages[this.errorSettings.i18n][validation],
                 validation: data.validation,
                 name: validation
               }
@@ -343,8 +343,14 @@ class uiFieldsInstance {
               }
             } else if (typeof validation === 'object') {
               const data = uiFieldsValidationRules[validation.name];
+              let message = messages[this.errorSettings.i18n][validation.name];
+              if (typeof validation.message === 'function') {
+                message = validation.message;
+              } else if (validation.message) {
+                message = () => validation.message;
+              }
               return {
-                message: validation.message || messages[this.errorSettings.i18n][validation.name],
+                message,
                 validation: data.validation,
                 name: validation.name
               }
@@ -360,7 +366,6 @@ class uiFieldsInstance {
       };
       newField.customData = remainingProperties;
       newField.conditionValue = true;
-      newField.edited = false;
 
       fieldset.fields.push(newField);
     } else {
@@ -605,6 +610,7 @@ import Vue from "vue";
 
 Vue.component('uiText', () => import('uiText'));
 Vue.component('uiError', () => import('uiError'));
+Vue.component('uiErrors', () => import('uiErrors'));
 Vue.component('uiCheckbox', () => import('uiCheckbox'));
 Vue.component('uiSelect', () => import('uiSelect'));
 Vue.component('uiRadio', () => import('uiRadio'));
@@ -653,3 +659,29 @@ Vue.mixin({
     }
   }
 });
+
+export default async ({ store }) => {
+  Vue.prototype.$uiFields = {
+    new(options) {
+      return new uiFieldsInstance(options, store);
+    },
+    validate(formName) {
+      return new Promise(async (resolve) => {
+        const result = await store.dispatch('uiFields/validate', formName);
+        if (!result.valid) {
+          const element = document.getElementById(`${result.errors[0].fieldsetIndex}__${result.errors[0].fieldIndex}`);
+          if (element) {
+            element.focus();
+          }
+        }
+        resolve(result);
+      });
+    },
+    setError(options) {
+      store.dispatch('uiFields/setError', options);
+    },
+    removeError(options) {
+      store.dispatch('uiFields/removeError', options);
+    }
+  }
+}

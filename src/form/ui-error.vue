@@ -27,8 +27,8 @@ export default {
 			default: 'null'
 		},
 		fieldIndex: {
-			type: Number,
-			default: 0
+			type: String,
+			default: ''
 		},
 		fieldsetIndex: {
 			type: Number,
@@ -37,10 +37,6 @@ export default {
 		componentName: {
 			type: String,
 			default: ''
-		},
-		classes: {
-			type: Object,
-			default: () => {}
 		}
 	},
 	computed: {

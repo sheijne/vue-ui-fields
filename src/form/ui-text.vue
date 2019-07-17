@@ -4,10 +4,10 @@
 		:class="[
 			`uiFields__field ${component} ${fieldData.HTMLProperties.classes}`,
 			!pristine ? `uiFields__field--${fieldData.errors.classes.pristine}` : '',
-			pristine && valid === true
+			valid === true
 				? `uiFields__field--${fieldData.errors.classes.valid}`
 				: '',
-			pristine && valid === false
+			valid === false
 				? `uiFields__field--${fieldData.errors.classes.error}`
 				: ''
 		]"
@@ -31,10 +31,11 @@
 				{{ fieldData.uiFieldsData.requiredText }}
 			</span>
 			<input
-				:ref="fieldData.name"
+				:id="`${fieldsetName}__${fieldData.name}`"
 				v-model="fieldDataValue"
-				@input="checkErrorsInput"
-				@blur="checkErrorsBlur"
+				@input="checkErrors('input')"
+				@change="checkErrors('change')"
+				@blur="checkErrors('blur')"
 				:name="fieldData.name"
 				:type="fieldData.type"
 				v-bind="fieldData.HTMLProperties"
@@ -53,9 +54,8 @@
 			v-if="fieldData.errors.showErrors && fieldData.errors.validation"
 			:form-name="formName"
 			:fieldset-index="fieldsetIndex"
-			:field-index="fieldIndex"
+			:field-index="fieldData.name"
 			:component-name="component"
-			:classes="fieldData.errors.classes"
 		/>
 	</div>
 </template>
@@ -65,50 +65,6 @@ export default {
 	mixins: [mixinSettings],
 	data: () => ({
 		component: 'ui-text'
-	}),
-	methods: {
-		checkErrorsBlur() {
-			if (this.fieldData.errors.event === 'blur') {
-				this.checkErrors();
-			}
-		},
-		checkErrorsInput() {
-			if (this.fieldData.errors.event === 'input') {
-				this.checkErrors();
-			}
-		},
-		checkErrors() {
-			const validation = this.fieldData.errors.validation;
-			if (validation) {
-				validation.forEach((item) => {
-					const result = item.validation(this.fieldDataValue);
-					if (!result) {
-						//there is an error, lets push it to the store (setter)
-						this.$store.dispatch('uiFields/setError', {
-							formName: this.formName,
-							fieldsetIndex: this.fieldsetIndex,
-							fieldIndex: this.fieldIndex,
-							name: item.name,
-							message: item.message,
-							value: this.fieldDataValue
-						});
-						this.valid = false;
-					} else {
-						this.$store.dispatch('uiFields/removeError', {
-							formName: this.formName,
-							fieldsetIndex: this.fieldsetIndex,
-							fieldIndex: this.fieldIndex,
-							name: item.name,
-							message: item.message,
-							value: this.fieldDataValue
-						});
-						this.valid = true;
-					}
-				});
-			} else {
-				this.valid = true;
-			}
-		}
-	}
+	})
 };
 </script>

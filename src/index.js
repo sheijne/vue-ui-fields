@@ -34,6 +34,9 @@ function extendBuild(config) {
     "en.json"
   );
   config.resolve.alias["uiError"] = resolve(join(__dirname, "form"), "ui-error");
+
+  config.resolve.alias["uiErrors"] = resolve(join(__dirname, "form"), "ui-errors");
+
   config.resolve.alias["uiText"] = resolve(join(__dirname, "form"), "ui-text");
   config.resolve.alias["uiCheckbox"] = resolve(
     join(__dirname, "form"),
