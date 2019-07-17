@@ -54,7 +54,28 @@ const mutations = {
   },
   resetFields(state) {
     state.fields = [];
-  }
+  },
+  setError(state, options) {
+    const stateDup = [...state.errors];
+    const errorExsist = stateDup.findIndex((error) => error.formName === options.formName && error.fieldsetIndex === options.fieldsetIndex && error.fieldIndex === options.fieldIndex && error.name === options.name);
+
+    if (errorExsist === -1) {
+      stateDup.push(options);
+    }
+
+    state.errors = stateDup;
+  },
+  removeError(state, options) {
+    const stateDup = [...state.errors];
+    const errorExsist = stateDup.findIndex((error) => error.formName === options.formName && error.fieldsetIndex === options.fieldsetIndex && error.fieldIndex === options.fieldIndex && error.name === options.name);
+
+    if (errorExsist > -1) {
+      //we can only remove an item that already exsists
+      stateDup.splice(errorExsist, 1);
+    }
+
+    state.errors = stateDup;
+  },
 };
 
 const actions = {
@@ -132,12 +153,49 @@ const actions = {
         }
       }
     }
+  },
+  setError({ commit, state }, fieldOptions) {
+    const form = state.fields.find((form) => form.name === fieldOptions.formName);
+    if (typeof fieldOptions.fieldsetIndex === 'string') {
+      const fieldset = form.fieldsets.findIndex((fieldsetItem) => fieldsetItem.name === fieldOptions.fieldsetIndex);
+      fieldOptions.fieldsetIndex = fieldset;
+    }
+
+    if (typeof fieldOptions.fieldIndex === 'string') {
+      const field = form.fieldsets[fieldOptions.fieldsetIndex].fields.findIndex((field) => field.name === fieldOptions.fieldIndex);
+      fieldOptions.fieldIndex = field;
+    }
+
+    commit('setError', fieldOptions);
+  },
+  removeError({ commit, state }, fieldOptions) {
+    const form = state.fields.find((form) => form.name === fieldOptions.formName);
+    if (typeof fieldOptions.fieldsetIndex === 'string') {
+      const fieldset = form.fieldsets.findIndex((fieldsetItem) => fieldsetItem.name === fieldOptions.fieldsetIndex);
+      fieldOptions.fieldsetIndex = fieldset;
+    }
+
+    if (typeof fieldOptions.fieldIndex === 'string') {
+      const field = form.fieldsets[fieldOptions.fieldsetIndex].fields.findIndex((field) => field.name === fieldOptions.fieldIndex);
+      fieldOptions.fieldIndex = field;
+    }
+
+    commit('removeError', fieldOptions);
   }
 };
 
 const getters = {
   field: (state) => (name) => {
-    return state.fields.find((item) => item.name === name) || {};
+    if (name && state.fields) {
+      return state.fields.find((item) => item.name === name) || {};
+    }
+    return {};
+  },
+  error: (state) => (options) => {
+    if (options && state.errors) {
+      return state.errors.filter((item) => item.formName === options.formName && item.fieldsetIndex === options.fieldsetIndex && item.fieldIndex === options.fieldIndex);
+    }
+    return [];
   }
 }
 export default async ({ store }) => {
@@ -146,7 +204,8 @@ export default async ({ store }) => {
     {
       namespaced: true,
       state: () => ({
-        fields: []
+        fields: [],
+        errors: []
       }),
       actions,
       mutations,

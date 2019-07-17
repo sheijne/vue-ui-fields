@@ -1,4 +1,8 @@
 export default {
+  data: () => ({
+    pristine: false,
+    valid: null
+  }),
   props: {
     formName: {
       type: String,
@@ -39,6 +43,7 @@ export default {
         }
       },
       set(newValue) {
+        this.pristine = true;
         this.$store.dispatch("uiFields/updateFieldValue", {
           formName: this.$props.formName,
           fieldsetIndex: this.$props.fieldsetIndex,
