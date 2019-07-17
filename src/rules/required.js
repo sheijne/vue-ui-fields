@@ -8,7 +8,8 @@ const isNullOrUndefined = (...values) => {
 	});
 };
 
-const validation = (value) => {
+
+export default (value) => {
 	if (isNullOrUndefined(value) || isEmptyArray(value)) {
 		return false;
 	}
@@ -19,8 +20,4 @@ const validation = (value) => {
 	}
 
 	return !!String(value).trim().length;
-}
-
-export default {
-	validation
 }

@@ -86,7 +86,7 @@ export default {
         const validation = this.fieldData.errors.validation;
         if (validation) {
           validation.forEach((item) => {
-            const result = item.validation(this.fieldDataValue);
+            const result = item.validation(this.fieldDataValue, item.options);
             if (!result) {
               //there is an error, lets push it to the store (setter)
               this.$store.dispatch('uiFields/setError', {

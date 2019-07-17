@@ -177,9 +177,9 @@ const actions = {
       const fields = getters.flattenFields(formName);
       fields.forEach((field) => {
         if (field.errors.validation) {
-          const validation = field.errors.validation;
+          const validation = [...field.errors.validation];
           validation.forEach((item) => {
-            const result = item.validation(field.value);
+            const result = item.validation(field.value, item.options);
             if (!result) {
               //there is an error, lets push it to the store (setter)
               dispatch('setError', {
@@ -241,7 +241,6 @@ const getters = {
               accum = accum.concat(state.errors.filter((item) => item.formName === error && item.fieldsetIndex === options.fieldsetIndex));
             }
           } else {
-            console.log(state.errors, error)
             accum = accum.concat(state.errors.filter((item) => item.formName === error));
           }
           return accum;

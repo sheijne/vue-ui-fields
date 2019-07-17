@@ -1,9 +1,5 @@
 import { isEmail } from 'validator';
 
-const validation = (value) => {
+export default (value) => {
 	return isEmail(value);
-}
-
-export default {
-	validation
 }

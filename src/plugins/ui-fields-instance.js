@@ -36,7 +36,6 @@ if (errorOptions) {
 }
 
 import uiFieldsValidationRules from 'uiFieldsValidationRules';
-
 import uiFieldsLanguageNL from 'uiFieldsLanguageNL';
 import uiFieldsLanguageEN from 'uiFieldsLanguageEN';
 
@@ -332,18 +331,20 @@ class uiFieldsInstance {
               const data = uiFieldsValidationRules[validation];
               return {
                 message: () => messages[this.errorSettings.i18n][validation],
-                validation: data.validation,
-                name: validation
+                validation: data,
+                name: validation,
+                options: {}
               }
             } else if (typeof validation.custom === 'function') {
               return {
                 message: validation.message,
                 validation: validation.custom,
                 name: validation.custom,
+                options: validation.options
               }
             } else if (typeof validation === 'object') {
               const data = uiFieldsValidationRules[validation.name];
-              let message = messages[this.errorSettings.i18n][validation.name];
+              let message = () => messages[this.errorSettings.i18n][validation.name];
               if (typeof validation.message === 'function') {
                 message = validation.message;
               } else if (validation.message) {
@@ -351,8 +352,9 @@ class uiFieldsInstance {
               }
               return {
                 message,
-                validation: data.validation,
-                name: validation.name
+                validation: data,
+                name: validation.name,
+                options: validation.options
               }
             }
           });
