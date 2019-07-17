@@ -1,4 +1,8 @@
 export default {
+  data: () => ({
+    pristine: false,
+    valid: null
+  }),
   props: {
     formName: {
       type: String,
@@ -11,6 +15,10 @@ export default {
     fieldsetIndex: {
       type: Number,
       default: null
+    },
+    fieldsetName: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -39,6 +47,7 @@ export default {
         }
       },
       set(newValue) {
+        this.pristine = true;
         this.$store.dispatch("uiFields/updateFieldValue", {
           formName: this.$props.formName,
           fieldsetIndex: this.$props.fieldsetIndex,
@@ -47,11 +56,62 @@ export default {
           persistent: this.fieldData.uiFieldsData.persistent
         });
       }
+    },
+    errors() {
+      return this.$store.getters['uiFields/error']({
+        formName: this.formName,
+        fieldIndex: this.fieldData.name,
+        fieldsetIndex: this.fieldsetIndex
+      });
+    }
+  },
+  watch: {
+    errors: {
+      handler() {
+        if (this.errors.length === 0) {
+          this.valid = true;
+        } else {
+          this.valid = false;
+        }
+      },
+      deep: true
     }
   },
   methods: {
     findCorrectFields(fields) {
       return fields.find(field => field.name === this.$props.formName) || [];
+    },
+    checkErrors(event) {
+      if (this.fieldData.errors.event === event) {
+        const validation = this.fieldData.errors.validation;
+        if (validation) {
+          validation.forEach((item) => {
+            const result = item.validation(this.fieldDataValue, item.options);
+            if (!result) {
+              //there is an error, lets push it to the store (setter)
+              this.$store.dispatch('uiFields/setError', {
+                formName: this.formName,
+                fieldsetIndex: this.fieldsetIndex,
+                fieldIndex: this.fieldData.name,
+                name: item.name,
+                message: item.message(this.fieldDataValue, this.fieldData.name),
+                value: this.fieldDataValue
+              });
+              this.valid = false;
+            } else {
+              this.$store.dispatch('uiFields/removeError', {
+                formName: this.formName,
+                fieldsetIndex: this.fieldsetIndex,
+                fieldIndex: this.fieldData.name,
+                name: item.name
+              });
+              this.valid = true;
+            }
+          });
+        } else {
+          this.valid = true;
+        }
+      }
     }
   }
 };

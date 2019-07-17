@@ -1,0 +1,14 @@
+{
+	"creditcard": "Creditcard is not valid",
+	"date": "Date is not valid",
+	"email": "Email is not valid",
+	"equalTo": "Fields are not equal",
+	"max": "Fields do not match requirements",
+	"maxlength": "Fields do not match requirements",
+	"min": "Fields do not match requirements",
+	"minlength": "Fields do not match requirements",
+	"numebr": "Field only can contains numbers",
+	"postalcode": "Postcode is invalid",
+	"required": "This field is required",
+	"url": "URL not valid"
+}

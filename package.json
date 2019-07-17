@@ -1,13 +1,14 @@
 {
   "name": "@matise/ui-fields",
-  "version": "1.1.3",
+  "version": "2.0.0",
   "description": "uiFields generator for Vue",
   "author": "Dennis Dipsaus",
   "private": false,
   "main": "src/index.js",
   "peerDependencies": {
-    "vee-validate": "^2.2.0",
     "vue": "^2.5.16"
   },
-  "dependencies": {}
+  "dependencies": {
+    "validator": "^11.1.0"
+  }
 }

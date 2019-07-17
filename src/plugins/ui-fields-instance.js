@@ -1,7 +1,55 @@
+const errorObject = {
+  event: 'blur',
+  showErrors: true,
+  i18n: 'en',
+  classes: {
+    error: 'invalid',
+    valid: 'valid',
+    pristine: 'pristine'
+  }
+}
+
+let errorOptions;
+<% if (options.validation) { %> errorOptions = <%= JSON.stringify(options.validation) %><% } %>
+
+if (errorOptions) {
+  if (errorOptions.event) {
+    errorObject.event = errorOptions.event;
+  }
+  if (errorOptions.hasOwnProperty('showErrors')) {
+    errorObject.showErrors = errorOptions.showErrors;
+  }
+  if (errorOptions.i18n) {
+    errorObject.i18n = errorOptions.i18n;
+  }
+  if (errorOptions.classes) {
+    if (errorOptions.classes.error) {
+      errorObject.classes.error = errorOptions.classes.error;
+    }
+    if (errorOptions.classes.valid) {
+      errorObject.classes.valid = errorOptions.classes.valid;
+    }
+    if (errorOptions.classes.pristine) {
+      errorObject.classes.pristine = errorOptions.classes.pristine;
+    }
+  }
+}
+
+import uiFieldsValidationRules from 'uiFieldsValidationRules';
+import uiFieldsLanguageNL from 'uiFieldsLanguageNL';
+import uiFieldsLanguageEN from 'uiFieldsLanguageEN';
+
+const messages = {
+  en: uiFieldsLanguageEN,
+  nl: uiFieldsLanguageNL
+};
+
 class uiFieldsInstance {
 
   #form = {};
   #store = {};
+
+  errorSettings = errorObject;
 
   defaultHTMLProps = [
     { key: 'autocomplete', type: 'string' },
@@ -59,6 +107,8 @@ class uiFieldsInstance {
     this.setFormName(options.name);
     this.setFormClasses(options.classes);
     this.setFormComponent(options.component);
+    this.setFormErrorSettings(options.validation);
+
   }
   setFormName(name) {
     //check if name
@@ -84,6 +134,23 @@ class uiFieldsInstance {
   }
   setFormComponent(component) {
     this.#form.component = component || 'fieldset';
+  }
+  setFormErrorSettings(options) {
+    if (options) {
+      this.errorSettings.event = options.event || errorObject.event;
+      this.errorSettings.showErrors = options.hasOwnProperty('showErrors') ? options.showErrors : errorObject.showErrors;
+      this.errorSettings.i18n = options.i18n || errorObject.i18n;
+
+      if (options.classes) {
+        this.errorSettings.classes = {
+          error: options.classes.error || errorObject.classes.error,
+          valid: options.classes.valid || errorObject.classes.valid,
+          pristine: options.classes.pristine || errorObject.classes.pristine
+        }
+      }
+    } else {
+      this.errorSettings = errorObject;
+    }
   }
   getForm() {
     return this.#form;
@@ -195,7 +262,6 @@ class uiFieldsInstance {
 
 
           const selected = formattedOptions.filter((option) => option.selected);
-
           if (selected && selected.length) {
             //a value is selected
             if (selected.length === 1) {
@@ -212,10 +278,14 @@ class uiFieldsInstance {
           } else if (value) {
             //there is a value in the global
             if (Array.isArray(value)) {
-              value.forEach((val) => {
-                const option = formattedOptions.find((option) => option.value === val);
-                if (option) option.selected = true;
-              });
+              if (value.length) {
+                value.forEach((val) => {
+                  const option = formattedOptions.find((option) => option.value === val);
+                  if (option) option.selected = true;
+                });
+              } else {
+                value = value;
+              }
             } else {
               const option = formattedOptions.find((option) => option.value === value);
               if (option) option.selected = true;
@@ -255,6 +325,44 @@ class uiFieldsInstance {
         delete remainingProperties.component;
       }
 
+      newField.errors = { ...this.errorSettings };
+      if (remainingProperties.hasOwnProperty('validation')) {
+        //set validation elements
+        if (Array.isArray(remainingProperties.validation)) {
+          newField.errors.validation = remainingProperties.validation.map((validation) => {
+            if (typeof validation === 'string') {
+              const data = uiFieldsValidationRules[validation];
+              return {
+                message: () => messages[this.errorSettings.i18n][validation],
+                validation: data,
+                name: validation,
+                options: {}
+              }
+            } else if (typeof validation.custom === 'function') {
+              return {
+                message: validation.message,
+                validation: validation.custom,
+                name: validation.custom,
+                options: validation.options
+              }
+            } else if (typeof validation === 'object') {
+              const data = uiFieldsValidationRules[validation.name];
+              let message = () => messages[this.errorSettings.i18n][validation.name];
+              if (typeof validation.message === 'function') {
+                message = validation.message;
+              } else if (validation.message) {
+                message = () => validation.message;
+              }
+              return {
+                message,
+                validation: data,
+                name: validation.name,
+                options: validation.options
+              }
+            }
+          });
+        }
+      }
       newField = { ...newField, ...componentProperties };
       newField.value = value;
       newField.uiFieldsData = {
@@ -506,6 +614,8 @@ Array.prototype.getSingleUiField = function (name) {
 import Vue from "vue";
 
 Vue.component('uiText', () => import('uiText'));
+Vue.component('uiError', () => import('uiError'));
+Vue.component('uiErrors', () => import('uiErrors'));
 Vue.component('uiCheckbox', () => import('uiCheckbox'));
 Vue.component('uiSelect', () => import('uiSelect'));
 Vue.component('uiRadio', () => import('uiRadio'));
@@ -555,13 +665,28 @@ Vue.mixin({
   }
 });
 
-<% if (options.veeValidate && options.veeValidate.preload) { %>
-	import VeeValidate from 'vee-validate';
-	<% if (options.veeValidate.config) { %>
-    Vue.use(VeeValidate, <%= JSON.stringify(options.veeValidate.config, null, 2) %>);
-	<% } else { %>
-    Vue.use(VeeValidate, {
-      events: 'blur'
-    });
-	<% } %>
-<% } %>
+export default async ({ store }) => {
+  Vue.prototype.$uiFields = {
+    new(options) {
+      return new uiFieldsInstance(options, store);
+    },
+    validate(formName) {
+      return new Promise(async (resolve) => {
+        const result = await store.dispatch('uiFields/validate', formName);
+        if (!result.valid) {
+          const element = document.getElementById(`${result.errors[0].fieldsetIndex}__${result.errors[0].fieldIndex}`);
+          if (element) {
+            element.focus();
+          }
+        }
+        resolve(result);
+      });
+    },
+    setError(options) {
+      store.dispatch('uiFields/setError', options);
+    },
+    removeError(options) {
+      store.dispatch('uiFields/removeError', options);
+    }
+  }
+}

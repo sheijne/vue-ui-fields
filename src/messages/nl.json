@@ -1,0 +1,14 @@
+{
+	"creditcard": "Geen geldige creditcard",
+	"date": "Datum is niet geldig",
+	"email": "Geen geldig e-mailadres",
+	"equalTo": "Velden zijn niet gelijk aan elkaar",
+	"max": "Veld voldoent niet aan de eisen",
+	"maxlength": "Veld voldoent niet aan de eisen",
+	"min": "Veld voldoent niet aan de eisen",
+	"minlength": "Veld voldoent niet aan de eisen",
+	"numebr": "Veld mag alleen nummers bevatten",
+	"postalcode": "Geen geldige postcode",
+	"required": "Dit veld is verplicht",
+	"url": "Url is niet geldig"
+}
