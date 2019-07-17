@@ -1,7 +1,16 @@
 <template>
 	<div
 		v-if="fieldData"
-		:class="`uiFields__field ${component} ${fieldData.HTMLProperties.classes}`"
+		:class="[
+			`uiFields__field ${component} ${fieldData.HTMLProperties.classes}`,
+			!pristine ? `uiFields__field--${fieldData.errors.classes.pristine}` : '',
+			valid === true
+				? `uiFields__field--${fieldData.errors.classes.valid}`
+				: '',
+			valid === false
+				? `uiFields__field--${fieldData.errors.classes.error}`
+				: ''
+		]"
 	>
 		<label :class="`uiFields__element ${component}__element`">
 			<span
@@ -22,8 +31,11 @@
 				{{ fieldData.uiFieldsData.requiredText }}
 			</span>
 			<textarea
-				:ref="fieldData.name"
+				:id="`${fieldsetName}__${fieldData.name}`"
 				v-model="fieldDataValue"
+				@input="checkErrors('input')"
+				@change="checkErrors('change')"
+				@blur="checkErrors('blur')"
 				:name="fieldData.name"
 				:type="fieldData.type"
 				v-bind="fieldData.HTMLProperties"
@@ -38,41 +50,13 @@
 		>
 			{{ fieldData.component.content }}
 		</component>
-		<div
-			v-if="
-				fieldData.uiFieldsData.errors &&
-					fieldData.uiFieldsData.errors.validation
-			"
-			:class="`uiFields__errors ${component}__errors`"
-		>
-			<span
-				v-if="
-					errors.collect(
-						(fieldData.uiFieldsData.errors.veeValidateScope
-							? fieldData.uiFieldsData.errors.veeValidateScope + '.'
-							: '') + fieldData.name
-					).length && !fieldData.uiFieldsData.errors.message
-				"
-				:class="`uiFields__error ${component}__error`"
-				v-for="error in errors.collect(
-					fieldData.name,
-					fieldData.uiFieldsData.errors.veeValidateScope
-				)"
-			>
-				{{ error }}
-			</span>
-			<span
-				v-if="
-					errors.collect(
-						(fieldData.uiFieldsData.errors.veeValidateScope
-							? fieldData.uiFieldsData.errors.veeValidateScope + '.'
-							: '') + fieldData.name
-					).length && fieldData.uiFieldsData.errors.message
-				"
-				:class="`uiFields__error ${component}__error`"
-				v-html="fieldData.uiFieldsData.errors.message"
-			></span>
-		</div>
+		<ui-error
+			v-if="fieldData.errors.showErrors && fieldData.errors.validation"
+			:form-name="formName"
+			:fieldset-index="fieldsetIndex"
+			:field-index="fieldData.name"
+			:component-name="component"
+		/>
 	</div>
 </template>
 <script>
