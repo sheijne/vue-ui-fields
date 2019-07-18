@@ -1,19 +1,22 @@
 <template>
 	<div
-		v-if="errors.length && errors.some((error) => error.name === 'required')"
+		v-if="
+			uiFieldsErrors.length &&
+				uiFieldsErrors.some((error) => error.name === 'required')
+		"
 		:class="`uiFields__errors ${componentName}__errors`"
 	>
 		<span :class="`uiFields__error ${componentName}__error`">
-			{{ errors.find((error) => error.name === 'required').message }}
+			{{ uiFieldsErrors.find((error) => error.name === 'required').message }}
 		</span>
 	</div>
 	<div
-		v-else-if="errors.length"
+		v-else-if="uiFieldsErrors.length"
 		:class="`uiFields__errors ${componentName}__errors`"
 	>
 		<span
 			:class="`uiFields__error ${componentName}__error`"
-			v-for="error in errors"
+			v-for="error in uiFieldsErrors"
 		>
 			{{ error.message }}
 		</span>
@@ -40,7 +43,7 @@ export default {
 		}
 	},
 	computed: {
-		errors() {
+		uiFieldsErrors() {
 			return this.$store.getters['uiFields/error']({
 				formName: this.formName,
 				fieldIndex: this.fieldIndex,

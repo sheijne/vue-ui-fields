@@ -5,14 +5,12 @@ module.exports = function (moduleOptions) {
 
   this.addPlugin({
     src: resolve(pluginsPath, `register-store.js`),
-    options: moduleOptions,
-    mode: 'client'
+    options: moduleOptions
   });
 
   this.addPlugin({
     src: resolve(pluginsPath, `ui-fields-instance.js`),
-    options: moduleOptions,
-    mode: 'client'
+    options: moduleOptions
   });
 
   this.extendBuild(extendBuild.bind(this));

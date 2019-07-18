@@ -233,7 +233,7 @@ const getters = {
   errors: (state) => (options) => {
     if (options) {
       if (options.formName) {
-        const errors = options.formName.reduce((accum, error) => {
+        let errors = options.formName.reduce((accum, error) => {
           if (!!options.fieldsetIndex) {
             if (!!options.fieldIndex) {
               accum = accum.concat(state.errors.filter((item) => item.formName === error && item.fieldsetIndex === options.fieldsetIndex && item.fieldIndex === options.fieldIndex));

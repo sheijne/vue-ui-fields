@@ -18,7 +18,7 @@
 			:class="`uiFields__element ${component}__element`"
 		>
 			<input
-				:id="`${fieldsetName}__${fieldData.name}`"
+				:id="`${fieldsetName}__${option.value}`"
 				v-model="fieldDataValue"
 				@input="checkErrors('input')"
 				@change="checkErrors('change')"
