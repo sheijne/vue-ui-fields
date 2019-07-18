@@ -1,6 +1,7 @@
 <template>
 	<div
 		v-if="fieldData"
+		:id="`${fieldsetName}__${fieldData.name}`"
 		:class="[
 			`uiFields__field ${component} ${fieldData.HTMLProperties.classes}`,
 			!pristine ? `uiFields__field--${fieldData.errors.classes.pristine}` : '',
@@ -18,7 +19,6 @@
 			:class="`uiFields__element ${component}__element`"
 		>
 			<input
-				:id="`${fieldsetName}__${option.value}`"
 				v-model="fieldDataValue"
 				@input="checkErrors('input')"
 				@change="checkErrors('change')"

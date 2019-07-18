@@ -684,7 +684,10 @@ export default async ({ store }) => {
             //there are only own errors, scroll to the first error
             const element = document.getElementById(`${result.errors[0].fieldsetIndex}__${result.errors[0].fieldIndex}`);
             if (element) {
-              element.focus();
+              element.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+              });
             }
           }
         }

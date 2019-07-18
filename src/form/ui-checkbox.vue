@@ -1,6 +1,7 @@
 <template>
 	<div
 		v-if="fieldData"
+		:id="`${fieldsetName}__${fieldData.name}`"
 		:class="[
 			`uiFields__field ${component} ${fieldData.HTMLProperties.classes}`,
 			!pristine ? `uiFields__field--${fieldData.errors.classes.pristine}` : '',
