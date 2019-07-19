@@ -11,6 +11,8 @@ const mutations = {
     //dont change if it already exsists
     if (formExsist === -1) {
       state.fields.push(form);
+    } else {
+      state.fields.splice(formExsist, 1, form);
     }
   },
   updateFieldValue(state, options) {
