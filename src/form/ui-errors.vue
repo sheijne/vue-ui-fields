@@ -1,6 +1,6 @@
 <template>
-	<div v-else-if="errors.length" :class="`uiFields__errors`">
-		<span :class="`uiFields__error`" v-for="error in errors">
+	<div v-else-if="uiFieldsErrors.length" :class="`uiFields__errors`">
+		<span :class="`uiFields__error`" v-for="error in uiFieldsErrors">
 			{{ error.message }}
 		</span>
 	</div>
@@ -22,7 +22,7 @@ export default {
 		}
 	},
 	computed: {
-		errors() {
+		uiFieldsErrors() {
 			return this.$store.getters['uiFields/errors']({
 				formName: this.fieldName.split('|'),
 				fieldIndex: this.fieldIndex,

@@ -3,6 +3,7 @@
 	"date": "Date is not valid",
 	"email": "Email is not valid",
 	"equalTo": "Fields are not equal",
+	"notEqualTo": "Fields can not be equal",
 	"max": "Fields do not match requirements",
 	"maxlength": "Fields do not match requirements",
 	"min": "Fields do not match requirements",

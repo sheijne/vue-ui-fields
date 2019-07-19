@@ -10,7 +10,8 @@ import max from './max.js';
 import creditcard from './creditcard.js';
 import date from './date.js';
 import url from './url.js';
-import equalTo from './equalTo.js';
+import equalTo from './equalto.js';
+import notEqualTo from './notequalto.js';
 
 export default {
 	required,
@@ -24,5 +25,6 @@ export default {
 	creditcard,
 	date,
 	url,
-	equalTo
+	equalTo,
+	notEqualTo
 }

@@ -11,6 +11,8 @@ const mutations = {
     //dont change if it already exsists
     if (formExsist === -1) {
       state.fields.push(form);
+    } else {
+      state.fields.splice(formExsist, 1, form);
     }
   },
   updateFieldValue(state, options) {
@@ -180,7 +182,7 @@ const actions = {
           const validation = [...field.errors.validation];
           validation.forEach((item) => {
             const result = item.validation(field.value, item.options);
-            if (!result) {
+            if (!result && field.conditionValue === true && field.fieldsetShow === true) {
               //there is an error, lets push it to the store (setter)
               dispatch('setError', {
                 formName: formName,
@@ -233,7 +235,7 @@ const getters = {
   errors: (state) => (options) => {
     if (options) {
       if (options.formName) {
-        const errors = options.formName.reduce((accum, error) => {
+        let errors = options.formName.reduce((accum, error) => {
           if (!!options.fieldsetIndex) {
             if (!!options.fieldIndex) {
               accum = accum.concat(state.errors.filter((item) => item.formName === error && item.fieldsetIndex === options.fieldsetIndex && item.fieldIndex === options.fieldIndex));
@@ -254,9 +256,9 @@ const getters = {
     const form = state.fields.find((form) => form.name === formName);
     if (form) {
       return form.fieldsets.reduce((accum, curr) => {
-        accum = accum.concat(curr.fields.map((field) => ({ ...field, fieldsetName: curr.name })));
+        accum = accum.concat(curr.fields.map((field) => ({ ...field, fieldsetName: curr.name, fieldsetShow: curr.conditionValue })));
         if (fieldsetName) {
-          accum = accum.filter((item) => item.fieldsetNAme === fieldsetName)
+          accum = accum.filter((item) => item.fieldsetName === fieldsetName)
         }
         return accum;
       }, []);

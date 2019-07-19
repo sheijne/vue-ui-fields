@@ -674,19 +674,31 @@ export default async ({ store }) => {
       return new Promise(async (resolve) => {
         const result = await store.dispatch('uiFields/validate', formName);
         if (!result.valid) {
-          const element = document.getElementById(`${result.errors[0].fieldsetIndex}__${result.errors[0].fieldIndex}`);
-          if (element) {
-            element.focus();
+          const errors = result.errors.filter((error) => error.custom_error);
+          if (errors.length === result.errors.length) {
+            //only custom errors, delete and return
+            errors.forEach((error) => store.dispatch('uiFields/removeError', error));
+            result.errors = [];
+            result.valid = true;
+          } else {
+            //there are only own errors, scroll to the first error
+            const element = document.getElementById(`${result.errors[0].fieldsetIndex}__${result.errors[0].fieldIndex}`);
+            if (element) {
+              element.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+              });
+            }
           }
         }
         resolve(result);
       });
     },
     setError(options) {
-      store.dispatch('uiFields/setError', options);
+      store.dispatch('uiFields/setError', { ...options, custom_error: true });
     },
     removeError(options) {
-      store.dispatch('uiFields/removeError', options);
+      store.dispatch('uiFields/removeError', { ...options, custom_error: true });
     }
   }
 }
