@@ -13,12 +13,12 @@ export default {
 			default: ''
 		},
 		fieldIndex: {
-			type: Number,
-			default: null
+			type: String,
+			default: ''
 		},
 		fieldsetIndex: {
-			type: Number,
-			default: null
+			type: String,
+			default: ''
 		}
 	},
 	computed: {
