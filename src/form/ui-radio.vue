@@ -19,6 +19,7 @@
 			:class="`uiFields__element ${component}__element`"
 		>
 			<input
+				v-if="visibleField"
 				v-model="fieldDataValue"
 				@input="checkErrors('input')"
 				@change="checkErrors('change')"

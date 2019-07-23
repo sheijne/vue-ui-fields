@@ -19,6 +19,10 @@ export default {
     fieldsetName: {
       type: String,
       default: ''
+    },
+    visibleField: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {

@@ -31,6 +31,7 @@
 				{{ fieldData.uiFieldsData.requiredText }}
 			</span>
 			<textarea
+				v-if="visibleField"
 				:id="`${fieldsetName}__${fieldData.name}`"
 				v-model="fieldDataValue"
 				@input="checkErrors('input')"

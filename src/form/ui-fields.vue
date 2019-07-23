@@ -21,10 +21,8 @@
 					>
 						<template v-for="(field, index) of fieldset.fields">
 							<component
-								v-if="
-									field.conditionValue &&
-										field.uiFieldsData.componentType !== 'component'
-								"
+								v-if="field.uiFieldsData.componentType !== 'component'"
+								v-show="field.conditionValue"
 								:is="fieldset.component"
 								:key="index"
 								:class="[
@@ -48,6 +46,7 @@
 								>
 									<component
 										:is="field.uiFieldsData.componentType"
+										:visibleField="field.conditionValue ? true : false"
 										:form-name="fieldName"
 										:fieldset-index="i"
 										:fieldset-name="fieldset.name"
