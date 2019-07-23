@@ -180,8 +180,8 @@ const actions = {
       fields.forEach((field) => {
         if (field.errors.validation) {
           const validation = [...field.errors.validation];
-          validation.forEach((item) => {
-            const result = item.validation(field.value, item.options);
+          validation.forEach(async (item) => {
+            const result = await item.validation(field.value, item.options);
             if (!result && field.conditionValue === true && field.fieldsetShow === true) {
               //there is an error, lets push it to the store (setter)
               dispatch('setError', {
