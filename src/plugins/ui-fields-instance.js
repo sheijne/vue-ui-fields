@@ -244,7 +244,7 @@ class uiFieldsInstance {
 
       let newField = {};
 
-      let value = remainingProperties.value || '';
+      let value = remainingProperties.hasOwnProperty('value') ? remainingProperties.value : '';
 
       //we need options for these elements
       //format things when select or radio
