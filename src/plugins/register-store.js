@@ -174,35 +174,81 @@ const actions = {
     }
     commit('removeError', fieldOptions);
   },
-  validate({ dispatch, getters }, formName) {
-    return new Promise((resolve) => {
+  validate({ dispatch, getters }, { formName, options }) {
+    return new Promise(async (resolve) => {
       const fields = getters.flattenFields(formName);
-      fields.forEach((field) => {
+      const validation = fields.reduce((accum, field, index) => {
         if (field.errors.validation) {
-          const validation = [...field.errors.validation];
-          validation.forEach((item) => {
-            const result = item.validation(field.value, item.options);
-            if (!result && field.conditionValue === true && field.fieldsetShow === true) {
-              //there is an error, lets push it to the store (setter)
-              dispatch('setError', {
-                formName: formName,
-                fieldsetIndex: field.fieldsetName,
-                fieldIndex: field.name,
-                name: item.name,
-                message: item.message(field.value, field.name),
-                value: field.value
-              });
-            } else {
+          const validation = [...field.errors.validation].map((item) => ({
+            item,
+            field,
+            index
+          }));
+          if (field.conditionValue === true && field.fieldsetShow === true) {
+            accum = accum.concat(validation);
+            return accum;
+          } else {
+            field.errors.validation.forEach((item) => {
               dispatch('removeError', {
                 formName: formName,
                 fieldsetIndex: field.fieldsetName,
                 fieldIndex: field.name,
                 name: item.name
               });
-            }
-          });
+            })
+          }
         }
-      });
+        return accum;
+      }, []);
+      await Promise.all(validation.map((valid) => {
+        return new Promise(async (resolveMap) => {
+          const item = valid.item;
+          const field = valid.field;
+          let validate = true;
+          if (field.fieldsetShow !== true || field.conditionValue !== true) {
+            validate = false;
+          }
+          if ((options && options.fieldsetName !== field.fieldsetName)) {
+            validate = false;
+          }
+          if ((options && options.fieldName !== field.name)) {
+            validate = false;
+          }
+
+          if (!validate) {
+            dispatch('removeError', {
+              formName: formName,
+              fieldsetIndex: field.fieldsetName,
+              fieldIndex: field.name,
+              name: item.name
+            });
+            resolveMap();
+            return;
+          }
+
+          const result = await item.validation(field.value, item.options);
+          if (!result) {
+            //there is an error, lets push it to the store (setter)
+            dispatch('setError', {
+              formName: formName,
+              fieldsetIndex: field.fieldsetName,
+              fieldIndex: field.name,
+              name: item.name,
+              message: item.message(field.value, field.name),
+              value: field.value,
+              sortIndex: valid.index
+            });
+          } else {
+            dispatch('removeError', {
+              formName: formName,
+              fieldsetIndex: field.fieldsetName,
+              fieldIndex: field.name,
+              name: item.name
+            });
+          }
+          resolveMap();
+        })
+      }));
       const errors = getters.errors({ formName: [formName] });
       resolve({
         valid: errors.length === 0,
@@ -247,6 +293,7 @@ const getters = {
           }
           return accum;
         }, []);
+        errors.sort((a, b) => a.sortIndex > b.sortIndex ? 1 : -1)
         return errors;
       }
     }

@@ -12,6 +12,7 @@ import date from './date.js';
 import url from './url.js';
 import equalTo from './equalto.js';
 import notEqualTo from './notequalto.js';
+import vat from './vat.js';
 
 export default {
 	required,
@@ -26,5 +27,6 @@ export default {
 	date,
 	url,
 	equalTo,
-	notEqualTo
+	notEqualTo,
+	vat
 }

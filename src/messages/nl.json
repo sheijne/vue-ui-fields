@@ -11,5 +11,6 @@
 	"number": "Veld mag alleen nummers bevatten",
 	"postalcode": "Geen geldige postcode",
 	"required": "Dit veld is verplicht",
-	"url": "Url is niet geldig"
+	"url": "Url is niet geldig",
+	"vat": "VAT nummer is niet geldig"
 }

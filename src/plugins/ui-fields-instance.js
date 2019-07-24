@@ -670,9 +670,9 @@ export default async ({ store }) => {
     new(options) {
       return new uiFieldsInstance(options, store);
     },
-    validate(formName) {
+    validate(formName, options) {
       return new Promise(async (resolve) => {
-        const result = await store.dispatch('uiFields/validate', formName);
+        const result = await store.dispatch('uiFields/validate', { formName, options });
         if (!result.valid) {
           const errors = result.errors.filter((error) => error.custom_error);
           if (errors.length === result.errors.length) {
