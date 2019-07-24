@@ -1,6 +1,6 @@
 {
   "name": "@matise/ui-fields",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "uiFields generator for Vue",
   "author": "Dennis Dipsaus",
   "private": false,
