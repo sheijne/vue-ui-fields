@@ -54,6 +54,23 @@ const mutations = {
       }
     }
   },
+  addExtraCondition(state, { depObj, conditionObj }) {
+    const form = state.fields.find((form) => form.name === depObj.formName);
+    if (form) {
+      const field = form.fieldsets[depObj.fieldSetForCondition].fields[depObj.fieldIndex];
+      if (!field.hasOwnProperty('conditions')) {
+        field.conditions = [];
+      }
+      field.conditions.push(conditionObj);
+      const form2 = state.fields.find((form) => form.name === conditionObj.formName);
+      const field2 = form2.fieldsets[conditionObj.fieldsetIndex].fields[conditionObj.fieldIndex];
+      if (typeof conditionObj.condition !== 'function') {
+      } else if (typeof conditionObj.condition === 'function') {
+        field2.conditionValue = field.value === conditionObj.condition;
+        field2.conditionValue = conditionObj.condition(field.value);
+      }
+    }
+  },
   resetFields(state) {
     state.fields = [];
   },
@@ -87,7 +104,6 @@ const actions = {
     }
   },
   updateFieldValue({ commit, state }, fieldOptions) {
-
     const form = state.fields.find((form) => form.name === fieldOptions.formName);
     if (typeof fieldOptions.fieldsetIndex === 'string') {
       const fieldset = form.fieldsets.findIndex((fieldsetItem) => fieldsetItem.name === fieldOptions.fieldsetIndex);
@@ -255,6 +271,60 @@ const actions = {
         errors
       });
     })
+  },
+  extraCondition({ commit, getters }, options) {
+    const dependentOptions = options.dependent;
+    const form = getters['field'](dependentOptions.formName);
+    if (form && Object.keys(form).length) {
+      const fieldSetForCondition = form.fieldsets.findIndex((fieldset) => {
+        if (fieldset.name === dependentOptions.fieldsetName) {
+          return true;
+        }
+      });
+      if (fieldSetForCondition > -1) {
+        const fieldForCondition = form.fieldsets[fieldSetForCondition].fields.findIndex((field) => field.name === dependentOptions.fieldName);
+        if (fieldForCondition > -1) {
+          const depObj = {
+            formName: dependentOptions.formName,
+            fieldIndex: fieldForCondition,
+            fieldSetForCondition,
+          }
+          //depObject found, condition object needs to be created
+
+          const form2 = getters['field'](options.formName);
+          if (form2 && Object.keys(form2).length) {
+            const fieldSetForCondition2 = form2.fieldsets.findIndex((fieldset) => {
+              if (fieldset.name === options.fieldsetName) {
+                return true;
+              }
+            });
+            if (fieldSetForCondition2 > -1) {
+              const fieldForCondition2 = form2.fieldsets[fieldSetForCondition2].fields.findIndex((field) => field.name === options.fieldName);
+              if (fieldForCondition > -1) {
+                const conditionObj = {
+                  formName: options.formName,
+                  fieldsetIndex: fieldSetForCondition2,
+                  fieldIndex: fieldForCondition2,
+                  condition: options.condition
+                };
+                commit('addExtraCondition',
+                  {
+                    depObj,
+                    conditionObj
+                  }
+                );
+              }
+            }
+          }
+        } else {
+          console.warn('setNewCondition will be ignored, field not found')
+        }
+      } else {
+        console.warn('setNewCondition will be ignored, field not found')
+      }
+    } else {
+      console.warn('setNewCondition will be ignored, incorrect formName')
+    }
   }
 };
 

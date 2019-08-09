@@ -405,48 +405,50 @@ class uiFieldsInstance {
       this.createWarning(`setNewCondition will be ignored, missing condition`);
     }
 
-    if (!options.fieldName) {
-      //condition is on fieldset level
-      const fieldForCondition = this.getFieldByName(dependentOptions.fieldName, dependentOptions.fieldsetName);
-      if (fieldForCondition) {
-        if (!fieldForCondition.hasOwnProperty('conditions')) {
-          fieldForCondition.conditions = [];
-        }
-        if (Array.isArray(options.fieldsetName)) {
-          options.fieldsetName.forEach((fieldName) => {
-            let optionDup = { ...options };
-            optionDup.fieldsetName = fieldName;
-            this._setNewFieldsetConditionHelper(optionDup, fieldForCondition);
-          });
-        } else {
-          this._setNewFieldsetConditionHelper(options, fieldForCondition);
-        }
-      }
+    if (dependentOptions.hasOwnProperty('formName')) {
+      this.createWarning('create new condition with the dispatch function');
     } else {
-      if (!dependentOptions.hasOwnProperty('formName') || dependentOptions.formName === this.getFormName()) {
-
+      if (!options.fieldName) {
+        //condition is on fieldset level
         const fieldForCondition = this.getFieldByName(dependentOptions.fieldName, dependentOptions.fieldsetName);
-
         if (fieldForCondition) {
           if (!fieldForCondition.hasOwnProperty('conditions')) {
             fieldForCondition.conditions = [];
           }
-
-          if (Array.isArray(options.fieldName)) {
-            options.fieldName.forEach((fieldName) => {
+          if (Array.isArray(options.fieldsetName)) {
+            options.fieldsetName.forEach((fieldName) => {
               let optionDup = { ...options };
-              optionDup.fieldName = fieldName;
-              this._setNewFieldConditionHelper(optionDup, fieldForCondition);
+              optionDup.fieldsetName = fieldName;
+              this._setNewFieldsetConditionHelper(optionDup, fieldForCondition);
             });
           } else {
-            this._setNewFieldConditionHelper(options, fieldForCondition);
+            this._setNewFieldsetConditionHelper(options, fieldForCondition);
           }
-
-        } else {
-          this.createWarning(`setNewCondition will be ignored for the following field: dependent: ${dependentOptions.formName}, ${dependentOptions.fieldsetName}, ${this.getFormName()}`)
         }
       } else {
-        //create condition accross feature request
+        if (!dependentOptions.hasOwnProperty('formName') || dependentOptions.formName === this.getFormName()) {
+
+          const fieldForCondition = this.getFieldByName(dependentOptions.fieldName, dependentOptions.fieldsetName);
+
+          if (fieldForCondition) {
+            if (!fieldForCondition.hasOwnProperty('conditions')) {
+              fieldForCondition.conditions = [];
+            }
+
+            if (Array.isArray(options.fieldName)) {
+              options.fieldName.forEach((fieldName) => {
+                let optionDup = { ...options };
+                optionDup.fieldName = fieldName;
+                this._setNewFieldConditionHelper(optionDup, fieldForCondition);
+              });
+            } else {
+              this._setNewFieldConditionHelper(options, fieldForCondition);
+            }
+
+          } else {
+            this.createWarning(`setNewCondition will be ignored for the following field: dependent: ${dependentOptions.formName}, ${dependentOptions.fieldsetName}, ${this.getFormName()}`)
+          }
+        }
       }
     }
   }
