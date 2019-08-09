@@ -34,8 +34,13 @@ plugins: [
 ],
 modules: [
 	'@matise/ui-fields'
-]
+],
+build: {
+	transpile: ['@matise/ui-fields']
+}
 ```
+
+Add transpile array with "@matise/ui-fields" as one of the values to the nuxt config build object to prevent it from breaking IE 11 with its arrow functions for example.
 
 #### plugins/uiFields.js
 
