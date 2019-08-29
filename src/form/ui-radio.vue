@@ -50,7 +50,7 @@
 			{{ fieldData.component.content }}
 		</component>
 		<ui-error
-			v-if="fieldData.errors.showErrors && fieldData.errors.validation"
+			v-if="fieldData.errors.showErrors"
 			:form-name="formName"
 			:fieldset-index="fieldsetIndex"
 			:field-index="fieldData.name"
