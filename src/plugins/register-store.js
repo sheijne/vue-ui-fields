@@ -373,9 +373,11 @@ const getters = {
     const form = state.fields.find((form) => form.name === formName);
     if (form) {
       return form.fieldsets.reduce((accum, curr) => {
-        accum = accum.concat(curr.fields.map((field) => ({ ...field, fieldsetName: curr.name, fieldsetShow: curr.conditionValue })));
-        if (fieldsetName) {
-          accum = accum.filter((item) => item.fieldsetName === fieldsetName)
+        if (curr.fields) {
+          accum = accum.concat(curr.fields.map((field) => ({ ...field, fieldsetName: curr.name, fieldsetShow: curr.conditionValue })));
+          if (fieldsetName) {
+            accum = accum.filter((item) => item.fieldsetName === fieldsetName)
+          }
         }
         return accum;
       }, []);
