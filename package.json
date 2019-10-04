@@ -1,14 +1,23 @@
 {
-  "name": "@matise/ui-fields",
-  "version": "2.0.10",
-  "description": "uiFields generator for Vue",
-  "author": "Dennis Dipsaus",
-  "private": false,
-  "main": "src/index.js",
-  "peerDependencies": {
-    "vue": "^2.5.16"
-  },
-  "dependencies": {
-    "validator": "^11.1.0"
-  }
+	"name": "@matise/ui-fields",
+	"version": "2.0.10",
+	"description": "uiFields generator for Vue",
+	"author": "Dennis Dipsaus",
+	"private": false,
+	"main": "dist/index.js",
+	"scripts": {
+		"build": "sh build.sh",
+		"prepublish": "npm run build"
+	},
+	"peerDependencies": {
+		"vue": "^2.5.16"
+	},
+	"dependencies": {
+		"validator": "^11.1.0"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.6.2",
+		"@babel/core": "^7.6.2",
+		"@babel/preset-env": "^7.6.2"
+	}
 }
