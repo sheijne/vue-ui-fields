@@ -3,6 +3,10 @@
 	"version": "2.0.12",
 	"description": "uiFields generator for Vue",
 	"author": "Dennis Dipsaus",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/MatiseAms/vue-ui-fields.git"
+	},
 	"private": false,
 	"main": "dist/index.js",
 	"scripts": {
