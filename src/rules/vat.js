@@ -35,15 +35,12 @@ export default (value, options) => {
 		return true;
 	}
 
-	value = value.split('.').join('');
-	value = value.split(' ').join('');
-
 	const field = options();
-	if (!field) {
+	if (field) {
 		const fieldValue = field.value;
 		const regex = new RegExp(vatRegex[fieldValue]);
 		if (regex) {
-			const valueSplitted = value.split('.').join('').trim();
+			const valueSplitted = value.split('.').join('').split(' ').join();
 			return regex.test(valueSplitted);
 		}
 	}
