@@ -31,11 +31,15 @@ const vatRegex = {
 
 
 export default (value, options) => {
-	if (value) {
+	if (!value) {
 		return true;
 	}
+
+	value = value.split('.').join('');
+	value = value.split(' ').join('');
+
 	const field = options();
-	if (field) {
+	if (!field) {
 		const fieldValue = field.value;
 		const regex = new RegExp(vatRegex[fieldValue]);
 		if (regex) {
