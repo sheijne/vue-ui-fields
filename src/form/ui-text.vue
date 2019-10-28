@@ -61,13 +61,13 @@
   </div>
 </template>
 <script>
-import mixinSettings from '../plugins/ui-fields-functions';
+import mixinSettings from "../plugins/ui-fields-functions";
 export default {
-	mixins: [mixinSettings],
-	data() {
+  mixins: [mixinSettings],
+  data() {
     return {
-			component: 'ui-text'
-		}
-	};
+      component: "ui-text"
+    };
+  }
 };
 </script>
