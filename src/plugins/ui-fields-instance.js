@@ -693,6 +693,9 @@ export default async ({ store }) => {
             }
           }
         }
+        if (options && 'silent' in options && options.silent) {
+          store.dispatch('uiFields/removeErrors');
+        }
         resolve(result);
       });
     },

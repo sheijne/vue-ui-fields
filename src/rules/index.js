@@ -13,6 +13,7 @@ import url from './url.js';
 import equalTo from './equalto.js';
 import notEqualTo from './notequalto.js';
 import vat from './vat.js';
+import phone from './phone.js';
 
 export default {
 	required,
@@ -28,5 +29,6 @@ export default {
 	url,
 	equalTo,
 	notEqualTo,
-	vat
+	vat,
+	phone
 }
