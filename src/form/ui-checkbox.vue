@@ -1,38 +1,46 @@
 <template>
 	<div
 		v-if="fieldData"
-		:id="`${fieldsetName}__${fieldData.name}`"
 		:class="[
-			`uiFields__field ${component} ${fieldData.HTMLProperties.classes}`,
-			!pristine ? `uiFields__field--${fieldData.errors.classes.pristine}` : '',
-			valid === true ? `uiFields__field--${fieldData.errors.classes.valid}` : '',
-			valid === false ? `uiFields__field--${fieldData.errors.classes.error}` : ''
+			`ui-fields__field ui-fields__field--${component} ${fieldData.HTMLProperties.classes}`,
+			!pristine ? `ui-fields__field--${fieldData.errors.classes.pristine}` : '',
+			canBeValid && valid === true ? `ui-fields__field--${fieldData.errors.classes.valid}` : '',
+			valid === false ? `ui-fields__field--${fieldData.errors.classes.error}` : ''
 		]"
 	>
-		<label v-for="(option, index) in fieldData.options" :key="index" :class="`uiFields__element ${component}__element`">
+		<div
+			v-for="(option, index) in fieldData.options"
+			:class="`ui-fields__checkbox-container ${component}__element`"
+			:key="index"
+		>
 			<input
 				v-if="visibleField"
 				v-model="fieldDataValue"
+				:id="`${fieldsetName}__${fieldData.name}_${index + 1}`"
 				@input="checkErrors('input')"
 				@change="checkErrors('change')"
 				@blur="checkErrors('blur')"
 				:value="option.value"
-				:name="fieldData.name"
+				:name="option.name"
 				:type="fieldData.type"
 				v-bind="fieldData.HTMLProperties"
-				:class="`uiFields__input ${component}__input`"
+				:class="`ui-fields__input ${component}__input`"
 			/>
-			<span class="uiFields__label ui-checkbox__label">
-				<span class="ui-checkbox__label-text" v-html="option.label"></span>
-			</span>
-			<component
-				v-if="option.component"
-				:is="option.component.name"
-				v-bind="option.component.props"
-				:class="option.component.classes"
-				>{{ option.component.content }}</component
+			<label
+				:class="`ui-fields__element ${component}__element`"
+				:for="`${fieldsetName}__${fieldData.name}_${index + 1}`"
 			>
-		</label>
+				<span
+					:class="[
+						fieldData.HTMLProperties.required
+							? `${component}__label--is-required ui-fields__label ${component}__label`
+							: `ui-fields__label ${component}__label`
+					]"
+					v-html="option.label"
+				>
+				</span>
+			</label>
+		</div>
 		<component
 			v-if="fieldData.component"
 			:is="fieldData.component.name"

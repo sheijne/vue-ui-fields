@@ -1,6 +1,6 @@
 <template>
-	<client-only>
-		<div v-if="uiFields && uiFields.fieldsets" :class="uiFields.classes">
+	<div v-if="uiFields && uiFields.fieldsets" :class="uiFields.classes">
+		<client-only>
 			<component
 				v-for="(fieldset, i) of uiFields.fieldsets"
 				:is="uiFields.component"
@@ -13,22 +13,23 @@
 				v-show="fieldset.conditionValue"
 			>
 				<template v-for="(field, index) of fieldset.fields" v-if="fieldset.conditionValue">
+					<!-- <component
+						
+
+						:is="fieldset.component"
+					> -->
 					<component
 						v-if="field.uiFieldsData.componentType !== 'component'"
 						v-show="field.conditionValue"
-						:is="fieldset.component"
 						:key="index"
-						:class="['ui-fields__field-container ui-fields__field-container--${type}']"
-					>
-						<component
-							:is="field.uiFieldsData.componentType"
-							:visibleField="field.conditionValue ? true : false"
-							:form-name="fieldName"
-							:fieldset-index="i"
-							:fieldset-name="fieldset.name"
-							:field-index="index"
-						/>
-					</component>
+						:is="field.uiFieldsData.componentType"
+						:visibleField="field.conditionValue ? true : false"
+						:form-name="fieldName"
+						:fieldset-index="i"
+						:fieldset-name="fieldset.name"
+						:field-index="index"
+					/>
+					<!-- </component> -->
 					<component
 						v-else-if="field.conditionValue && field.uiFieldsData.componentType === 'component'"
 						:is="fieldset.component"
@@ -51,8 +52,8 @@
 					</component>
 				</template>
 			</component>
-		</div>
-	</client-only>
+		</client-only>
+	</div>
 </template>
 
 <script>

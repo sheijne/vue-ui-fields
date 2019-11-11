@@ -2,48 +2,48 @@
 	<div
 		v-if="fieldData"
 		:class="[
-			`uiFields__field ${component} ${fieldData.HTMLProperties.classes}`,
-			!pristine ? `uiFields__field--${fieldData.errors.classes.pristine}` : '',
-			valid === true ? `uiFields__field--${fieldData.errors.classes.valid}` : '',
-			valid === false ? `uiFields__field--${fieldData.errors.classes.error}` : ''
+			`ui-fields__field ui-fields__field--${component} ${fieldData.HTMLProperties.classes}`,
+			!pristine ? `ui-fields__field--${fieldData.errors.classes.pristine}` : '',
+			canBeValid && valid === true ? `ui-fields__field--${fieldData.errors.classes.valid}` : '',
+			valid === false ? `ui-fields__field--${fieldData.errors.classes.error}` : ''
 		]"
 	>
-		<label :class="`uiFields__element ${component}__element`">
+		<select
+			v-if="visibleField"
+			:id="`${fieldsetName}__${fieldData.name}`"
+			v-model="fieldDataValue"
+			@input="checkErrors('input')"
+			@change="checkErrors('change')"
+			@blur="checkErrors('blur')"
+			:name="fieldData.name"
+			v-bind="fieldData.HTMLProperties"
+			:class="`ui-fields__input ${component}__input`"
+		>
+			<option
+				v-for="(option, index) in fieldData.options"
+				:key="index"
+				:value="option.value"
+				:disabled="option.disabled"
+			>
+				{{ option.label }}
+			</option>
+		</select>
+		<label :class="`ui-fields__element ${component}__element`" :for="`${fieldsetName}__${fieldData.name}`">
 			<span
 				:class="[
 					fieldData.HTMLProperties.required
-						? `${component}__label--is-required uiFields__label ${component}__label`
-						: `uiFields__label ${component}__label`
+						? `${component}__label--is-required ui-fields__label ${component}__label`
+						: `ui-fields__label ${component}__label`
 				]"
 				v-html="fieldData.label"
 			>
 			</span>
 			<span
 				v-if="fieldData.HTMLProperties.required"
-				:class="`uiFields__label--required ${component}__label ${component}__label--required`"
+				:class="`ui-fields__label--required ${component}__label ${component}__label--required`"
 			>
 				{{ fieldData.uiFieldsData.requiredText }}
 			</span>
-			<select
-				v-if="visibleField"
-				:id="`${fieldsetName}__${fieldData.name}`"
-				v-model="fieldDataValue"
-				@input="checkErrors('input')"
-				@change="checkErrors('change')"
-				@blur="checkErrors('blur')"
-				:name="fieldData.name"
-				v-bind="fieldData.HTMLProperties"
-				:class="`uiFields__input ${component}__select`"
-			>
-				<option
-					v-for="(option, index) in fieldData.options"
-					:key="index"
-					:value="option.value"
-					:disabled="option.disabled"
-				>
-					{{ option.label }}
-				</option>
-			</select>
 		</label>
 		<component
 			v-if="fieldData.component"
