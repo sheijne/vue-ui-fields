@@ -2,7 +2,7 @@
 	<div
 		v-if="fieldData"
 		:class="[
-			`ui-fields__field ui-fields__field--${component} ${fieldData.HTMLProperties.classes}`,
+			`ui-fields__field ui-fields__field--${fieldData.type} ${fieldData.HTMLProperties.classes}`,
 			!pristine ? `ui-fields__field--${fieldData.errors.classes.pristine}` : '',
 			canBeValid && valid === true ? `ui-fields__field--${fieldData.errors.classes.valid}` : '',
 			valid === false ? `ui-fields__field--${fieldData.errors.classes.error}` : ''
@@ -10,7 +10,7 @@
 	>
 		<div
 			v-for="(option, index) in fieldData.options"
-			:class="`ui-fields__checkbox-container ${component}__element`"
+			:class="`ui-fields__checkbox-container ${fieldData.type}__element`"
 			:key="index"
 		>
 			<input
@@ -24,17 +24,17 @@
 				:name="option.name"
 				:type="fieldData.type"
 				v-bind="fieldData.HTMLProperties"
-				:class="`ui-fields__input ${component}__input`"
+				:class="`ui-fields__input ${fieldData.type}__input`"
 			/>
 			<label
-				:class="`ui-fields__element ${component}__element`"
+				:class="`ui-fields__element ${fieldData.type}__element`"
 				:for="`${fieldsetName}__${fieldData.name}_${index + 1}`"
 			>
 				<span
 					:class="[
 						fieldData.HTMLProperties.required
-							? `${component}__label--is-required ui-fields__label ${component}__label`
-							: `ui-fields__label ${component}__label`
+							? `${fieldData.type}__label--is-required ui-fields__label ${fieldData.type}__label`
+							: `ui-fields__label ${fieldData.type}__label`
 					]"
 					v-html="option.label"
 				>

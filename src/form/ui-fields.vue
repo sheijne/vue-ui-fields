@@ -13,11 +13,6 @@
 				v-show="fieldset.conditionValue"
 			>
 				<template v-for="(field, index) of fieldset.fields" v-if="fieldset.conditionValue">
-					<!-- <component
-						
-
-						:is="fieldset.component"
-					> -->
 					<component
 						v-if="field.uiFieldsData.componentType !== 'component'"
 						v-show="field.conditionValue"
@@ -29,7 +24,6 @@
 						:fieldset-name="fieldset.name"
 						:field-index="index"
 					/>
-					<!-- </component> -->
 					<component
 						v-else-if="field.conditionValue && field.uiFieldsData.componentType === 'component'"
 						:is="fieldset.component"
@@ -78,7 +72,9 @@ export default {
 		}
 	},
 	created() {
-		this.$store.dispatch('uiFields/updateFromLocalStorage');
+		if (process.client) {
+			this.$store.dispatch('uiFields/updateFromLocalStorage');
+		}
 	},
 	methods: {
 		findCorrectFields(fields) {
