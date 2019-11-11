@@ -1,7 +1,8 @@
 export default {
   data: () => ({
     pristine: false,
-    valid: null
+    valid: null,
+    canBeValid: false
   }),
   props: {
     formName: {
@@ -87,6 +88,7 @@ export default {
     },
     checkErrors(event) {
       if (this.fieldData.errors.event === event) {
+        this.canBeValid = true;
         const validation = this.fieldData.errors.validation;
         if (validation) {
           validation.forEach(async (item) => {

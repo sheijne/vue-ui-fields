@@ -95,6 +95,9 @@ const mutations = {
 
     state.errors = stateDup;
   },
+  removeErrors(state) {
+    state.errors = [];
+  },
 };
 
 const actions = {
@@ -190,6 +193,9 @@ const actions = {
     }
     commit('removeError', fieldOptions);
   },
+  removeErrors({ commit }) {
+    commit('removeErrors');
+  },
   validate({ dispatch, getters }, { formName, options }) {
     return new Promise(async (resolve) => {
       const fields = getters.flattenFields(formName);
@@ -224,13 +230,12 @@ const actions = {
           if (field.fieldsetShow !== true || field.conditionValue !== true) {
             validate = false;
           }
-          if ((options && options.fieldsetName !== field.fieldsetName)) {
+          if ((options && 'fieldsetName' in options && options.fieldsetName !== field.fieldsetName)) {
             validate = false;
           }
-          if ((options && options.fieldName !== field.name)) {
+          if ((options && 'fieldName' in options && options.fieldName !== field.name)) {
             validate = false;
           }
-
           if (!validate) {
             dispatch('removeError', {
               formName: formName,

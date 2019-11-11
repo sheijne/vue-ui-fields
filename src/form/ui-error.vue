@@ -1,23 +1,14 @@
 <template>
 	<div
-		v-if="
-			uiFieldsErrors.length &&
-				uiFieldsErrors.some((error) => error.name === 'required')
-		"
+		v-if="uiFieldsErrors.length && uiFieldsErrors.some((error) => error.name === 'required')"
 		:class="`uiFields__errors ${componentName}__errors`"
 	>
 		<span :class="`uiFields__error ${componentName}__error`">
 			{{ uiFieldsErrors.find((error) => error.name === 'required').message }}
 		</span>
 	</div>
-	<div
-		v-else-if="uiFieldsErrors.length"
-		:class="`uiFields__errors ${componentName}__errors`"
-	>
-		<span
-			:class="`uiFields__error ${componentName}__error`"
-			v-for="error in uiFieldsErrors"
-		>
+	<div v-else-if="uiFieldsErrors.length" :class="`uiFields__errors ${componentName}__errors`">
+		<span :class="`uiFields__error ${componentName}__error`" v-for="error in uiFieldsErrors">
 			{{ error.message }}
 		</span>
 	</div>
