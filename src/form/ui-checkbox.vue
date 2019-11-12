@@ -10,7 +10,7 @@
 	>
 		<div
 			v-for="(option, index) in fieldData.options"
-			:class="`ui-fields__checkbox-container ${fieldData.type}__element`"
+			:class="[`ui-fields__checkbox-container ${fieldData.type}__element`, option.classes]"
 			:key="index"
 		>
 			<input

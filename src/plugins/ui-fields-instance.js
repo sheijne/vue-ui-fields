@@ -75,6 +75,7 @@ class uiFieldsInstance {
     { key: 'selected', type: 'boolean', default: false },
     { key: 'value', type: 'any', value: '' },
     { key: 'disabled', type: 'boolean' },
+    { key: 'classes', type: 'any' }
   ]
 
   defaultRemainingDataValues = [
