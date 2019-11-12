@@ -1,6 +1,6 @@
 <template>
-	<div :class="uiFields.classes">
-		<client-only v-if="uiFields && uiFields.fieldsets">
+	<client-only>
+		<div v-if="uiFields && uiFields.fieldsets" :class="uiFields.classes">
 			<component
 				v-for="(fieldset, i) of uiFields.fieldsets"
 				:is="uiFields.component"
@@ -46,8 +46,8 @@
 					</component>
 				</template>
 			</component>
-		</client-only>
-	</div>
+		</div>
+	</client-only>
 </template>
 
 <script>

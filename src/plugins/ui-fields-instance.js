@@ -245,7 +245,7 @@ class uiFieldsInstance {
 
       let newField = {};
 
-      let value = remainingProperties.hasOwnProperty('value') ? remainingProperties.value : '';
+      let value = remainingProperties.hasOwnProperty('value') ? remainingProperties.value : componentProperties.type === 'checkbox' ? [] : '';
 
       //we need options for these elements
       //format things when select or radio
