@@ -53,6 +53,9 @@ export default {
       },
       set(newValue) {
         this.pristine = true;
+        if (this.fieldData.type === 'number') {
+          newValue = Number(newValue);
+        }
         this.$store.dispatch("uiFields/updateFieldValue", {
           formName: this.$props.formName,
           fieldsetIndex: this.$props.fieldsetIndex,

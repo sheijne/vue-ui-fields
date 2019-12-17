@@ -149,7 +149,7 @@ const actions = {
               fieldsetIndex: index,
               fieldIndex: i,
               persistent: field.uiFieldsData.persistent,
-              value: Array.isArray(field.value) ? [] : ""
+              value: Array.isArray(field.value) ? [] : typeof field.value === 'string' ? '' : Number(field.customData.value)
             });
           });
         });
