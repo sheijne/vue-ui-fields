@@ -148,6 +148,7 @@ const actions = {
               formName: formName,
               fieldsetIndex: index,
               fieldIndex: i,
+              persistent: field.uiFieldsData.persistent,
               value: Array.isArray(field.value) ? [] : ""
             });
           });
