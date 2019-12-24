@@ -65,8 +65,8 @@ const mutations = {
       const form2 = state.fields.find((form) => form.name === conditionObj.formName);
       const field2 = form2.fieldsets[conditionObj.fieldsetIndex].fields[conditionObj.fieldIndex];
       if (typeof conditionObj.condition !== 'function') {
-      } else if (typeof conditionObj.condition === 'function') {
         field2.conditionValue = field.value === conditionObj.condition;
+      } else if (typeof conditionObj.condition === 'function') {
         field2.conditionValue = conditionObj.condition(field.value);
       }
     }
@@ -300,7 +300,7 @@ const actions = {
             });
             if (fieldSetForCondition2 > -1) {
               const fieldForCondition2 = form2.fieldsets[fieldSetForCondition2].fields.findIndex((field) => field.name === options.fieldName);
-              if (fieldForCondition > -1) {
+              if (fieldForCondition2 > -1) {
                 const conditionObj = {
                   formName: options.formName,
                   fieldsetIndex: fieldSetForCondition2,
