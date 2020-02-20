@@ -567,6 +567,8 @@ class uiFieldsInstance {
     switch (type) {
       case "text":
         return "uiText";
+      case "hidden":
+        return "uiText";
       case "select":
         return "uiSelect";
       case "checkbox":
