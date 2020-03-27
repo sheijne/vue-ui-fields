@@ -215,6 +215,8 @@ export default class {
 	formatComponentType(type) {
 		switch (type) {
 			case 'text':
+			case 'phone':
+			case 'date':
 				return 'uiText';
 			case 'select':
 				return 'uiSelect';
