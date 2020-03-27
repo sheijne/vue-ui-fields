@@ -1,27 +1,19 @@
 {
 	"name": "@matise/ui-fields",
-	"version": "3.0.10",
-	"description": "uiFields generator for Vue",
+	"version": "4.0.0",
+	"description": "UiFields plugin for VueJS",
 	"author": "Dennis Dipsaus",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/MatiseAms/vue-ui-fields.git"
 	},
 	"private": false,
-	"main": "dist/index.js",
-	"scripts": {
-		"build": "sh build.sh",
-		"prepublish": "npm run build"
-	},
+	"main": "./index.js",
 	"peerDependencies": {
-		"vue": "^2.6.10"
+		"vue": "^2.6.11"
 	},
 	"dependencies": {
-		"validator": "^11.1.0"
-	},
-	"devDependencies": {
-		"@babel/cli": "^7.6.2",
-		"@babel/core": "^7.6.2",
-		"@babel/preset-env": "^7.6.2"
+		"simple-crypto-js": "^2.2.0",
+		"validator": "^12.2.0"
 	}
 }

@@ -7,15 +7,5 @@ npm-debug.log
 # Editors
 .vscode
 
-# Misc
-.DS_Store
-.eslintrc.js
-
-src
-
-build.sh
-
-.babelrc
 .git
-
 .gitignore
