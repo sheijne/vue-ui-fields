@@ -361,10 +361,10 @@ export default class {
 				rules = await import('./rules/url.js');
 				break;
 			case 'equalTo':
-				rules = await import('./rules/equalTo.js');
+				rules = await import('./rules/equalto.js');
 				break;
 			case 'notEqualTo':
-				rules = await import('./rules/notEqualTo.js');
+				rules = await import('./rules/notequalto.js');
 				break;
 			case 'vat':
 				rules = await import('./rules/vat.js');
