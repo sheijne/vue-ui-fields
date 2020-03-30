@@ -210,6 +210,18 @@ export default class {
 	}
 
 	/**
+	 * Returns formatted data
+	 */
+	getFormattedValues() {
+		const values = this.values;
+		let obj = Object.create(null);
+		for (let [k, v] of values) {
+			obj[k] = v;
+		}
+		return obj;
+	}
+
+	/**
 		* Get component type
 		* @param {String} type
 		*/

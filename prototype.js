@@ -105,6 +105,23 @@ export default function(options) {
 		},
 
 		/**
+		* Get all values mapped
+		*/
+		getFormattedValues(formName) {
+			if (!formName) {
+				return;
+			}
+
+			const form = this.getForm(formName);
+			if (!form) {
+				console.log('No form found');
+				return;
+			}
+			return form.getFormattedValues();
+
+		},
+
+		/**
 		* Set new field
 		* @param {String} name
 		* @param {Object} options
