@@ -410,7 +410,8 @@ export default function(options) {
 		validate(formName){
 			this.errorListeners.forEach((data , key) => {
 				if (key.includes(formName)) {
-					const [newFormName, fieldName] = key.split('_');
+					const [newFormName, ...rest] = key.split('_');
+					const fieldName = rest.join('_');
 					this.checkError(newFormName, fieldName, this.getValue(newFormName, fieldName));
 				}
 			});
@@ -418,7 +419,9 @@ export default function(options) {
 			if (errors.size) {
 				const mappedErrors = errors.keys();
 				const first = mappedErrors.next();
-				const [field] = first.value.split('_');
+				const fields = first.value.split('_');
+				fields.pop()
+				const field = fields.join('_');
 				const element = document.getElementById(`${formName}_${field}`);
 				if (element) {
 					element.focus();
