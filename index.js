@@ -5,7 +5,8 @@ const uiFields = {
 		if (!options) {
 			options = {
 				projectName: 'VueUiFields',
-				persistentTime: 1000 * 60 * 60 * 12
+				persistentTime: 1000 * 60 * 60 * 12,
+				lang: 'en'
 			};
 		} else {
 			if (!Object.prototype.hasOwnProperty.call(options, 'projectName')) {
@@ -13,6 +14,9 @@ const uiFields = {
 			}
 			if (!Object.prototype.hasOwnProperty.call(options, 'persistentTime')) {
 				options.persistentTime = 1000 * 60 * 60 * 12;
+			}
+			if (!Object.prototype.hasOwnProperty.call(options, 'lang')) {
+				options.lang = 'en';
 			}
 		}
 

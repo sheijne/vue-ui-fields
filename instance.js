@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import formatProperties from './helpers/formatProperties.js';
 import messagesNL from './messages/nl.json';
+import messagesEN from './messages/en.json';
 import SimpleCrypto from 'simple-crypto-js';
 
 const time = new Date();
@@ -405,7 +406,11 @@ export default class {
 				}
 			} else {
 				if (validationType && validationType !== 'custom') {
-					message = () => messagesNL[validationType];
+					if (this.options.lang === 'nl') {
+						message = () => messagesNL[validationType];
+					} else {
+						message = () => messagesEN[validationType];
+					}
 				} else {
 					message = () => '';
 				}
