@@ -32,15 +32,15 @@ export default {
 	},
 	computed: {
 		uiFields() {
-			return this.$uiFields.getFieldKeys(this.id);
+			return this.$uiFields.getFieldKeys(String(this.id));
 		}
 	},
 	async created() {
-		const formData = await fetch('/wp-json/matise/utilities/gfapi/1').then((response) => response.json())
+		const formData = await fetch(`/wp-json/matise/utilities/gfapi/${this.formId}`).then((response) => response.json())
 		if (formData) {
-			this.id = formData.id;
-			this.$uiFields.new(formData.id)
-			this.$uiFields.setFields(formData.id, [...formData.fields])
+			this.id = String(formData.id);
+			this.$uiFields.new(String(formData.id))
+			this.$uiFields.setFields(String(formData.id), [...formData.fields])
 		}
 	}
 };
