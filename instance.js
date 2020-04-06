@@ -77,18 +77,19 @@ export default class {
 		];
 
 		const defaultHTMLSettings = [
-			{ key: 'autocomplete', type: 'string' },
-			{ key: 'disabled', type: 'boolean' },
-			{ key: 'max', type: 'number' },
-			{ key: 'maxlength', type: 'number' },
-			{ key: 'min', type: 'number' },
-			{ key: 'minlength', type: 'number' },
-			{ key: 'multiple', type: 'boolean' },
-			{ key: 'placeholder', type: 'string' },
-			{ key: 'required', type: 'boolean' },
-			{ key: 'step', type: 'number' },
-			{ key: 'autofocus', type: 'boolean' },
-		];
+      { key: 'autocomplete', type: 'string' },
+      { key: 'accept', type: 'string', default: '*' },
+      { key: 'disabled', type: 'boolean' },
+      { key: 'max', type: 'number' },
+      { key: 'maxlength', type: 'number' },
+      { key: 'min', type: 'number' },
+      { key: 'minlength', type: 'number' },
+      { key: 'multiple', type: 'boolean' },
+      { key: 'placeholder', type: 'string' },
+      { key: 'required', type: 'boolean' },
+      { key: 'step', type: 'number' },
+      { key: 'autofocus', type: 'boolean' },
+    ];
 
 		const defaultOptionsSettings = [
 			{ key: 'selected', type: 'boolean', default: false },
@@ -230,8 +231,9 @@ export default class {
 			case 'text':
 			case 'phone':
 			case 'date':
-			case 'file':
 				return 'uiText';
+			case 'file':
+				return 'uiFile';
 			case 'select':
 				return 'uiSelect';
 			case 'checkbox':

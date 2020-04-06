@@ -1,6 +1,7 @@
 <template>
+<div>
 	<component :is="field.componentType"
-		v-if="field && field.componentType" :class="[
+		v-if="field && field.componentType && field.componentType !== 'section' " :class="[
 			`ui-fields__field ui-fields__field--${field.type}`,
 			field.classes,
 			{ 'ui-fields__field--pristine' : pristine },
@@ -8,6 +9,10 @@
 			{ 'ui-fields__field--invalid' : !pristine && !error }
 		]" :name="name" :form="form" :field-value="field.value"
 	/>
+	<component :is="sectionComponent" v-else-if="field && field.componentType && field.componentType === 'section'">
+		{{ field.label }}
+	</component>
+	</div>
 </template>
 
 <script>
@@ -28,6 +33,10 @@ export default {
 		form: {
 			type: String,
 			default: ''
+		},
+		sectionComponent: {
+			type: String,
+			default: 'h2'
 		}
 	},
 	data() {
