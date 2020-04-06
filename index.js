@@ -6,7 +6,8 @@ const uiFields = {
 			options = {
 				projectName: 'VueUiFields',
 				persistentTime: 1000 * 60 * 60 * 12,
-				lang: 'en'
+				lang: 'en',
+				className: 'ui-fields'
 			};
 		} else {
 			if (!Object.prototype.hasOwnProperty.call(options, 'projectName')) {
@@ -18,6 +19,10 @@ const uiFields = {
 			if (!Object.prototype.hasOwnProperty.call(options, 'lang')) {
 				options.lang = 'en';
 			}
+			
+			if (!Object.prototype.hasOwnProperty.call(options, 'className')) {
+        options.className = 'ui-fields';
+      }
 		}
 
 		//Global mixin functions

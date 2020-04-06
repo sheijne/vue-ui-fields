@@ -5,6 +5,7 @@ export default function(options, Vue) {
 		/**
 		* Current form instance
 		*/
+		className: options.className,
 		forms: new Map(),
 		formListeners: new Map(),
 		fieldListeners: new Map(),

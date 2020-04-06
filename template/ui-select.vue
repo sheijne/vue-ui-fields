@@ -6,26 +6,26 @@
 			:name="fieldData.name"
 			:type="fieldData.type"
 			v-bind="fieldData.htmlSettings"
-			:class="`ui-fields__input ${fieldData.type}__input`"
+			:class="`${className}__input ${fieldData.type}__input`"
 			@blur="setValue"
 		>
 			<option v-for="(option, key) in fieldData.options" :key="key" :value="option.value" :disabled="option.disabled">
 				{{ option.label }}
 			</option>
 		</select>
-		<label :class="`ui-fields__element ${fieldData.type}__element`" :for="`${form}_${name}`">
+		<label :class="`${className}__element ${fieldData.type}__element`" :for="`${form}_${name}`">
 			<span
 				:class="[
 					fieldData.htmlSettings.required
-						? `${fieldData.type}__label--is-required ui-fields__label ${fieldData.type}__label`
-						: `ui-fields__label ${fieldData.type}__label`
+						? `${fieldData.type}__label--is-required ${className}__label ${fieldData.type}__label`
+						: `${className}__label ${fieldData.type}__label`
 				]"
 				v-html="fieldData.label"
 			>
 			</span>
 			<span
 				v-if="fieldData.htmlSettings.required && fieldData.requiredText"
-				:class="`ui-fields__label--required ui-fields__label ${fieldData.type}__label ${fieldData.type}__label--required`"
+				:class="`${className}__label--required ${className}__label ${fieldData.type}__label ${fieldData.type}__label--required`"
 			>
 				{{ fieldData.requiredText }}
 			</span>
@@ -41,6 +41,11 @@ export default {
 		return {
 			component: 'ui-select'
 		};
+	},
+	computed: {
+		className() {
+			return this.$uiFields.className
+		}
 	}
 };
 </script>

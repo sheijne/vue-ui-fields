@@ -19,7 +19,6 @@ export default class {
 		this.fields = new Map();
 		this.values = new Map();
 		this.errors = new Map();
-
 	}
 
 	/**

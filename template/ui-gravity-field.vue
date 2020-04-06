@@ -1,13 +1,15 @@
 <template>
 <div>
 	<component :is="field.componentType"
-		v-if="field && field.componentType && field.componentType !== 'section' " :class="[
-			`ui-fields__field ui-fields__field--${field.type}`,
+		v-if="field && field.componentType && field.componentType !== 'section' " 
+		:class="[
+			`${className}__field ${className}__field--${field.type}`,
 			field.classes,
-			{ 'ui-fields__field--pristine' : pristine },
-			{ 'ui-fields__field--valid' : error },
-			{ 'ui-fields__field--invalid' : !pristine && !error }
-		]" :name="name" :form="form" :field-value="field.value"
+			pristine ? `${className}__field--pristine` : '',
+			error ? `${className}__field--valid` : '',
+			(!pristine && !error) ? `${className}__field--invalid` : ''
+		]"
+		:name="name" :form="form" :field-value="field.value"
 	/>
 	<component :is="sectionComponent" v-else-if="field && field.componentType && field.componentType === 'section'">
 		{{ field.label }}
@@ -46,6 +48,9 @@ export default {
 		};
 	},
 	computed: {
+		className() {
+			return this.$uiFields.className
+		},
 		field() {
 			return this.$uiFields.getField(this.form, this.name);
 		}

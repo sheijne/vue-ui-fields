@@ -1,5 +1,5 @@
 <template>
-	<span :class="`uiFields__error uiFields__error--${error.name}`">
+	<span :class="`${className}__error ${className}__error--${error.name}`">
 		{{ error.message }}
 	</span>
 </template>
@@ -11,6 +11,11 @@ export default {
 			default: () => {
 				return {};
 			}
+		}
+	},
+	computed: {
+		className() {
+			return this.$uiFields.className
 		}
 	}
 };
