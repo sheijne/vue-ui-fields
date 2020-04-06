@@ -1,5 +1,4 @@
 <template>
-<div>
 	<component :is="field.componentType"
 		v-if="field && field.componentType && field.componentType !== 'section' " 
 		:class="[
@@ -14,7 +13,6 @@
 	<component :is="sectionComponent" v-else-if="field && field.componentType && field.componentType === 'section'">
 		{{ field.label }}
 	</component>
-	</div>
 </template>
 
 <script>
