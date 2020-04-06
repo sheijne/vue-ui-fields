@@ -1,6 +1,6 @@
 import uiFieldsInstance  from './instance.js';
 
-export default function(options) {
+export default function(options, Vue) {
 	return {
 		/**
 		* Current form instance
@@ -19,7 +19,7 @@ export default function(options) {
 				return;
 			}
 
-			const form = new uiFieldsInstance(options, name);
+			const form = new uiFieldsInstance(options, name, Vue);
 			this.forms.set(name, form);
 			return form;
 		},

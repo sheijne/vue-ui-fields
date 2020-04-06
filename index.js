@@ -27,7 +27,7 @@ const uiFields = {
 		Vue.component('uiField', () => import('./template/ui-field.vue'));
 
 		
-		Vue.prototype.$uiFields = prototype(options);
+		Vue.prototype.$uiFields = prototype(options, Vue);
 		
 	}
 };

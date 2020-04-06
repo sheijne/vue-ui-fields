@@ -1,4 +1,4 @@
-import Vue from 'vue';
+// import Vue from 'vue';
 import formatProperties from './helpers/formatProperties.js';
 import messagesNL from './messages/nl.json';
 import messagesEN from './messages/en.json';
@@ -12,10 +12,10 @@ export default class {
 		*
 		* @param {String} name
 	*/
-	constructor(options, name) {
+	constructor(options, name, Vue) {
 		this.options = options;
 		this.name = name;
-
+		this.vue = Vue;
 		this.fields = new Map();
 		this.values = new Map();
 		this.errors = new Map();
@@ -230,6 +230,7 @@ export default class {
 			case 'text':
 			case 'phone':
 			case 'date':
+			case 'file':
 				return 'uiText';
 			case 'select':
 				return 'uiSelect';
@@ -259,7 +260,7 @@ export default class {
 	 * @param {Function} listener
 	 */
 	subscribe(listener) {
-		Vue.prototype.$uiFields.subscribe(this.getFormName(), listener);
+		this.vue.prototype.$uiFields.subscribe(this.getFormName(), listener);
 	}
 
 	/**
@@ -268,7 +269,7 @@ export default class {
 	 * @param {Function} listener
 	 */
 	subscribeField(fieldName, listener) {
-		Vue.prototype.$uiFields.subscribeField(this.getFormName(), fieldName, listener);
+		this.vue.$uiFields.subscribeField(this.getFormName(), fieldName, listener);
 	}
 
 	/**
@@ -277,21 +278,21 @@ export default class {
  * @param {Function} listener
  */
 	subscribeError(fieldName, listener) {
-		Vue.prototype.$uiFields.subscribeError(this.getFormName(), fieldName, listener);
+		this.vue.prototype.$uiFields.subscribeError(this.getFormName(), fieldName, listener);
 	}
 
 	/**
 	 * Unsubscribe form
 	 */
 	unsubscribe(){
-		Vue.prototype.$uiFields.unsubscribe(this.getFormName());
+		this.vue.prototype.$uiFields.unsubscribe(this.getFormName());
 	}
 
 	/**
 	 * Unsubscribe field
 	 */
 	unsubscribeField(fieldName) {
-		Vue.prototype.$uiFields.unsubscribe(this.getFormName(), fieldName);
+		this.vue.prototype.$uiFields.unsubscribe(this.getFormName(), fieldName);
 	}
 
 	/**
@@ -429,7 +430,7 @@ export default class {
 			}
 			if (validationType && validationType !== 'custom') {
 				this.validator(validationType).then((validationChecker) => {
-					Vue.prototype.$uiFields._subscribeError(`${this.getFormName()}_${name}`, {
+					this.vue.prototype.$uiFields._subscribeError(`${this.getFormName()}_${name}`, {
 						validation: validationChecker,
 						options,
 						validationType: validationType,
@@ -441,7 +442,7 @@ export default class {
 				if (Object.prototype.hasOwnProperty.call(validator, 'validation')) {
 					validationFunction = validator.validation;
 				}
-				Vue.prototype.$uiFields._subscribeError(`${this.getFormName()}_${name}`, {
+				this.vue.prototype.$uiFields._subscribeError(`${this.getFormName()}_${name}`, {
 					validation: validationFunction,
 					options,
 					validationType: validationType,
