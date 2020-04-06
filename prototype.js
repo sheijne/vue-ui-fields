@@ -165,7 +165,6 @@ export default function(options, Vue) {
 		* @param {Boolean} checkError
 		*/
 		setValue(formName, name, value, checkError = true) {
-			// console.log(value);
 			if (!formName || !name) {
 				return;
 			}
