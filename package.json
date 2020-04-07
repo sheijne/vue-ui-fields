@@ -1,6 +1,6 @@
 {
 	"name": "@matise/ui-fields",
-	"version": "4.0.11",
+	"version": "4.0.12",
 	"description": "UiFields plugin for VueJS",
 	"author": "Dennis Dipsaus",
 	"repository": {
