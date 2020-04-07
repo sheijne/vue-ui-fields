@@ -7,21 +7,29 @@ const uiFields = {
 				projectName: 'VueUiFields',
 				persistentTime: 1000 * 60 * 60 * 12,
 				lang: 'en',
-				className: 'ui-fields'
+				className: 'ui-fields',
+				baseURL: ''
 			};
 		} else {
+
 			if (!Object.prototype.hasOwnProperty.call(options, 'projectName')) {
 				options.projectName = 'VueUiFields';
 			}
+
 			if (!Object.prototype.hasOwnProperty.call(options, 'persistentTime')) {
 				options.persistentTime = 1000 * 60 * 60 * 12;
 			}
+
 			if (!Object.prototype.hasOwnProperty.call(options, 'lang')) {
 				options.lang = 'en';
 			}
-			
+
 			if (!Object.prototype.hasOwnProperty.call(options, 'className')) {
-        options.className = 'ui-fields';
+				options.className = 'ui-fields';
+			}
+
+			if (!Object.prototype.hasOwnProperty.call(options, 'baseUrl')) {
+        options.baseUrl = '';
       }
 		}
 
@@ -30,10 +38,7 @@ const uiFields = {
 		Vue.component('uiError', () => import('./template/ui-error.vue'));
 		Vue.component('uiFields', () => import('./template/ui-fields.vue'));
 		Vue.component('uiField', () => import('./template/ui-field.vue'));
-
-		
 		Vue.prototype.$uiFields = prototype(options, Vue);
-		
 	}
 };
 

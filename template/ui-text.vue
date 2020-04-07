@@ -40,7 +40,7 @@ export default {
 	},
 	computed: {
 		className() {
-			return this.$uiFields.className
+			return this.$uiFields.getClassName(this.form)
 		}
 	}
 };

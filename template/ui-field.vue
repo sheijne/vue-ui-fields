@@ -16,6 +16,7 @@
 export default {
 	components: {
 		'uiText': () => import('./ui-text.vue'),
+		'uiHidden': () => import('./ui-hidden.vue'),
 		'uiFile': () => import('./ui-file.vue'),
 		'uiCheckbox': () => import('./ui-checkbox.vue'),
 		'uiSelect': () => import('./ui-select.vue'),
