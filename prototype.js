@@ -516,37 +516,71 @@ export default function(options, Vue) {
 			async submit(formID) {
 				const result = Vue.prototype.$uiFields.validate(formID);
 				if (result.valid) {
-					const data = Vue.prototype.$uiFields.getFormattedValues(String(formID))
-					const response = await fetch(
-            `${options.baseURL}/wp-json/matise/utilities/gfapi/${formID}?path=${window.location.pathname}&${window.location.search.substr(1)}`, {
-              method: 'POST', // *GET, POST, PUT, DELETE, etc.
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ fields: data }),
-            }
-          ).then((response) => response.json());
-					if (response && response.is_valid) {
-						switch (response.confirmation_type) {
-							case 'redirect':
-								window.location = response.confirmation_redirect;
-								break;
-							case 'message':
-								return response.confirmation_message;
-						}
+					const form = Vue.prototype.$uiFields.getForm(formID);
+					if (!form) {
+						console.log('No form found');
+						return;
 					}
+					if (form.includesFile) {
+						return this.submitFiles(formID, form);
+					}
+
+
+					const data = Vue.prototype.$uiFields.getFormattedValues(String(formID));
+					const response = await fetch(
+						`${options.baseURL}/wp-json/matise/utilities/gfapi/${formID}?path=${window.location.pathname}&${window.location.search.substr(1)}`, {
+							method: 'POST', // *GET, POST, PUT, DELETE, etc.
+							headers: {
+								'Content-Type': 'application/json',
+							},
+							body: JSON.stringify(data),
+						}
+					).then((response) => response.json());
+					return this.handleFormSubmission(response);
 				}
+			},
+			async submitFiles(formID, form) {
+				const data = Vue.prototype.$uiFields.getFormattedValues(String(formID));
+				const formData = new FormData();
+				
+				Object.keys(data).forEach((key) => {
+					const field = form.getField(key);
+					const value = data[key];
+					if (field.type !== 'file') {
+						formData.append(key + '_field', value);
+					} else {
+						formData.append(key, value);
+					}
+				});
+
+				const response = await fetch(
+					`${options.baseURL}/wp-json/matise/utilities/gfapi/${formID}?path=${window.location.pathname}&${window.location.search.substr(1)}`, {
+					method: 'POST', // *GET, POST, PUT, DELETE, etc.
+					body: formData
+				}).then((response) => response.json());
+				return this.handleFormSubmission(response);
+			},
+			handleFormSubmission(response) {
+				if (response && response.is_valid) {
+          switch (response.confirmation_type) {
+            case 'redirect':
+              window.location = response.confirmation_redirect;
+              break;
+            case 'message':
+              return response.confirmation_message;
+          }
+        }
 			},
 			async new(formID) {
 				const formData = await fetch(`${options.baseURL}/wp-json/matise/utilities/gfapi/${formID}?path=${window.location.pathname}&${window.location.search.substr(1)}`).then((response) => response.json());
 				if (formData) {
 					const id = String(formData.id);
 					formData.id = String(id); //Falback for old wp core
-					Vue.prototype.$uiFields.new(id)
-					Vue.prototype.$uiFields.setFields(id, [...formData.fields])
+					Vue.prototype.$uiFields.new(id);
+					Vue.prototype.$uiFields.setFields(id, [...formData.fields]);
 					return formData;
 				}
-			}	
+			}
 		}
 	};
 }

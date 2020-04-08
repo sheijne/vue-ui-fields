@@ -13,6 +13,7 @@ export default (options, Vue) => {
 		this.fields = new Map();
 		this.values = new Map();
 		this.errors = new Map();
+		this.includesFile = false;
 
 		if (className) {
 			this.className = className;
@@ -194,7 +195,7 @@ export default (options, Vue) => {
 		this.setValue = function(fieldName, value, addToStorage = true) {
 			const field = this.getField(fieldName);
 			this.values.set(fieldName, value);
-			if (field.type !== 'checkbox' && field.dependentSettings.persistent && addToStorage) {
+			if (field.type !== 'checkbox' && field.type !== 'file' && field.dependentSettings.persistent && addToStorage) {
 				this.addToLocalStorage(fieldName, value);
 			}
 		};
@@ -232,6 +233,7 @@ export default (options, Vue) => {
 				case 'hidden':
 					return 'uiHidden';
 				case 'file':
+					this.includesFile = true;
 					return 'uiFile';
 				case 'select':
 					return 'uiSelect';

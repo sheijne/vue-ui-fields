@@ -5,6 +5,7 @@
 			:name="fieldData.name"
 			type="file"
 			v-bind="fieldData.htmlSettings"
+			@change="onFileChange($event)"
 			:class="`${className}__input ${fieldData.type}__input`"
 		/>
 		<label :class="`${className}__element ${fieldData.type}__element`" :for="`${form}_${name}`">
@@ -39,6 +40,11 @@ export default {
 	computed: {
 		className() {
 			return this.$uiFields.className
+		}
+	},
+	methods: {
+		onFileChange(event) {
+			this.$uiFields.setValue(this.form, this.name, event.target.files[0]);
 		}
 	}
 };

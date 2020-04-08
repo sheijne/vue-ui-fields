@@ -29,8 +29,8 @@ const uiFields = {
 			}
 
 			if (!Object.prototype.hasOwnProperty.call(options, 'baseUrl')) {
-        options.baseUrl = '';
-      }
+				options.baseUrl = '';
+			}
 		}
 
 		//Global mixin functions
