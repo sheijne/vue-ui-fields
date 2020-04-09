@@ -29,8 +29,8 @@
 			>
 				{{ fieldData.requiredText }}
 			</span>
-			<uiErrors :form="form" :name="name" />
 		</label>
+		<uiErrors :form="form" :name="name" />
 	</div>
 </template>
 <script>
