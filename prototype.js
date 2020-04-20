@@ -542,7 +542,7 @@ export default function(options, Vue) {
 			async submitFiles(formID, form) {
 				const data = Vue.prototype.$uiFields.getFormattedValues(String(formID));
 				const formData = new FormData();
-				
+
 				Object.keys(data).forEach((key) => {
 					const field = form.getField(key);
 					const value = data[key];
@@ -552,9 +552,11 @@ export default function(options, Vue) {
 						formData.append(key, value);
 					}
 				});
-
-				const response = await fetch(
-					`${options.baseURL}/wp-json/matise/utilities/gfapi/${formID}?path=${window.location.pathname}&${window.location.search.substr(1)}`, {
+				const URL = `${options.baseURL}/wp-json/matise/utilities/gfapi/${formID}?path=${window.location.pathname}`;
+				if (window.location.search.substr(1)) {
+					URL += `&${window.location.search.substr(1)}`;
+				}
+				const response = await fetch(URL, {
 					method: 'POST', // *GET, POST, PUT, DELETE, etc.
 					body: formData
 				}).then((response) => response.json());
@@ -562,17 +564,21 @@ export default function(options, Vue) {
 			},
 			handleFormSubmission(response) {
 				if (response && response.is_valid) {
-          switch (response.confirmation_type) {
-            case 'redirect':
-              window.location = response.confirmation_redirect;
-              break;
-            case 'message':
-              return response.confirmation_message;
-          }
-        }
+					switch (response.confirmation_type) {
+						case 'redirect':
+							window.location = response.confirmation_redirect;
+							break;
+						case 'message':
+							return response.confirmation_message;
+					}
+				}
 			},
 			async new(formID) {
-				const formData = await fetch(`${options.baseURL}/wp-json/matise/utilities/gfapi/${formID}?path=${window.location.pathname}&${window.location.search.substr(1)}`).then((response) => response.json());
+				const URL = `${options.baseURL}/wp-json/matise/utilities/gfapi/${formID}?path=${window.location.pathname}`;
+				if (window.location.search.substr(1)) {
+					URL += `&${window.location.search.substr(1)}`;
+				}
+				const formData = await fetch(URL).then((response) => response.json());
 				if (formData) {
 					const id = String(formData.id);
 					formData.id = String(id); //Falback for old wp core

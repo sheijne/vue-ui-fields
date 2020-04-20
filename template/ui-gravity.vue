@@ -22,7 +22,7 @@ export default {
 		},
 		sectionComponent: {
 			type: String,
-			default: 'h2'
+			default: 'h3'
 		}
 	},
 	data() {
