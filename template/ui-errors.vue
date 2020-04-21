@@ -1,7 +1,7 @@
 <template>
-	<div v-if="errors && errors.length">
+	<p v-if="errors && errors.length" class="ui-fields__error-message">
 		<uiError v-for="(error, index) of errors" :key="index" :error="error" />
-	</div>
+	</p>
 </template>
 <script>
 export default {
