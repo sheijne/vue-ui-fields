@@ -3,7 +3,9 @@
 		<template v-for="field of uiFields">
 			<GravityField :key="field" :name="field" :form="formData.id" :sectionComponent="sectionComponent" />
 		</template>
-		<input type="submit" :value="formData.button.text">
+		<button type="submit">
+			{{ formData.button.text }}
+		</button>
 	</form>
 	<div v-else-if="formData && response" v-html="response">
 	</div>
