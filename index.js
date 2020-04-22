@@ -28,8 +28,8 @@ const uiFields = {
 				options.className = 'ui-fields';
 			}
 
-			if (!Object.prototype.hasOwnProperty.call(options, 'baseUrl')) {
-				options.baseUrl = '';
+			if (!Object.prototype.hasOwnProperty.call(options, 'baseURL')) {
+				options.baseURL = '';
 			}
 		}
 
