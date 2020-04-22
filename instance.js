@@ -229,6 +229,11 @@ export default (options, Vue) => {
 				case 'text':
 				case 'phone':
 				case 'date':
+				case 'number':
+				case 'email':
+				case 'tel':
+				case 'password':
+				case 'range':
 					return 'uiText';
 				case 'hidden':
 					return 'uiHidden';
@@ -241,18 +246,8 @@ export default (options, Vue) => {
 					return 'uiCheckbox';
 				case 'radio':
 					return 'uiRadio';
-				case 'number':
-					return 'uiText';
 				case 'textarea':
 					return 'uiTextarea';
-				case 'email':
-					return 'uiText';
-				case 'tel':
-					return 'uiText';
-				case 'password':
-					return 'uiText';
-				case 'range':
-					return 'uiText';
 				default:
 					return type;
 			}
