@@ -28,6 +28,11 @@ const vatRegex = {
 	SK: '^(SK)?[0-9]{10}$'
 };
 
+/**
+ * Check if value is a valid VAT number
+ * @param {String} value
+ * @param {Array} locale
+ */
 export default (value, locale) => {
 	if (!value) {
 		return true;

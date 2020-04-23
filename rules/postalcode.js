@@ -1,5 +1,10 @@
 import isPostalCode from 'validator/lib/isPostalCode';
 
+/**
+ * Check if value is a valid postalcode
+ * @param {String} value
+ * @param {Arrary} allLocale
+ */
 export default (value, allLocale) => {
 	if(allLocale.length > 1) {
 		let isPostcode = false
