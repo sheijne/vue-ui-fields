@@ -4,15 +4,16 @@
 			{{ fieldData.label }}
 		</p>
 		<template v-for="(option, key) in fieldData.options">
+			<p>{{option}}</p>
 			<input
 				:id="`${form}_${name}_${key}`"
+				v-model="value"
 				:key="key"
 				:value="option.value"
 				:name="fieldData.name"
 				:type="fieldData.type"
 				v-bind="fieldData.htmlSettings"
 				:class="`${className}__input ${fieldData.type}__input`"
-				:checked="option.selected ? 'checked' : ''"
 				@blur="setValue"
 			/>
 			<label :key="`label_${key}`" :class="`${className}__element ${fieldData.type}__element`" :for="`${form}_${name}_${key}`">
