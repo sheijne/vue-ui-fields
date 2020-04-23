@@ -28,24 +28,24 @@ const vatRegex = {
 	SK: '^(SK)?[0-9]{10}$'
 };
 
-export default (value, options) => {
+export default (value, locale) => {
 	if (!value) {
 		return true;
 	}
-
-	const field = options();
-	if (field) {
-		const fieldValue = field.value;
-		const regex = new RegExp(vatRegex[fieldValue]);
-		if (regex) {
-			const valueSplitted = value
-				.split('.')
-				.join('')
-				.split(' ')
-
-				.join();
-			return regex.test(valueSplitted);
-		}
+	if (locale) {
+		let isVat = false
+		locale.forEach(vatLocale => {
+			const regex = new RegExp(vatRegex[vatLocale]);
+			if (regex) {
+				const valueSplitted = value
+					.split('.')
+					.join('')
+					.split(' ')
+					.join();
+				isVat =  regex.test(valueSplitted);
+			}
+		})	
+		return isVat
 	}
 	return false;
 };
