@@ -31,7 +31,7 @@ const vatRegex = {
 /**
  * Check if value is a valid VAT number
  * @param {String} value
- * @param {Array} locale
+ * @param {Array, String} locale
  */
 export default (value, locale) => {
 	if (!value) {
