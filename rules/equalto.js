@@ -1,3 +1,4 @@
+
 export default (value, otherField) => {
 	const field = otherField();
 	if (field) {

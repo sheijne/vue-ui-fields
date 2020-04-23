@@ -37,20 +37,25 @@ export default (value, locale) => {
 	if (!value) {
 		return true;
 	}
-	if (locale) {
-		let isVat = false
-		locale.forEach(vatLocale => {
-			const regex = new RegExp(vatRegex[vatLocale]);
-			if (regex) {
-				const valueSplitted = value
-					.split('.')
-					.join('')
-					.split(' ')
-					.join();
-				isVat =  regex.test(valueSplitted);
-			}
+	if (Array.isArray(locale)) {
+		let isVat = locale.filter(newLocale => {
+			return regEx(value, newLocale);
 		})	
-		return isVat
+		return isVat.length != 0;
+	} else {
+		return regEx(value, locale);
 	}
-	return false;
 };
+
+const regEx = (value, locale) => {
+	const regex = new RegExp(vatRegex[locale]);
+
+	if (regex) {
+		const valueSplitted = value
+			.split('.')
+			.join('')
+			.split(' ')
+			.join();
+		return regex.test(valueSplitted);
+	}
+}
