@@ -4,7 +4,6 @@
 			{{ fieldData.label }}
 		</p>
 		<template v-for="(option, key) in fieldData.options">
-			<p>{{option}}</p>
 			<input
 				:id="`${form}_${name}_${key}`"
 				v-model="value"
