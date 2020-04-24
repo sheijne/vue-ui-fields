@@ -25,6 +25,17 @@
 				{{ fieldData.requiredText }}
 			</span>
 		</label>
+		<p :class="`${className}__fileinfo`">
+			<span :class="[`${className}__filename`, { `${className}__filename--placeholder` : pristine }]">
+				{{ fieldData.htmlSettings.placeholder }}
+			</span>
+			<span :class="`${className}__filesize`">
+				(0MB)
+			</span>
+			<span :class="`${className}__max-filesize`">
+				Maximaal 50MB
+			</span>
+		</p>
 		<uiErrors :form="form" :name="name" />
 	</div>
 </template>
