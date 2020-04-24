@@ -4,6 +4,5 @@
  * @param {Function} otherFieldValue
  */
 export default (value, otherFieldValue) => {
-	const otherValue = otherFieldValue()
-	return otherValue !== value;
+	return otherFieldValue() !== value;
 };
