@@ -8,6 +8,10 @@ const isNullOrUndefined = (...values) => {
 	});
 };
 
+/**
+ * Check if there's a value in de input
+ * @param {String} value
+ */
 export default (value) => {
 	if (isNullOrUndefined(value) || isEmptyArray(value)) {
 		return false;

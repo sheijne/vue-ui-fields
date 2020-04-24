@@ -1,5 +1,9 @@
 import isURL from 'validator/lib/isURL';
 
-export default (value, options = {}) => {
-	return isURL(value, options);
+/**
+ * Check if value is a valid URL
+ * @param {String} value
+ */
+export default (value) => {
+	return isURL(value);
 };
