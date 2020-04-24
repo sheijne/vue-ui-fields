@@ -3,7 +3,6 @@
  * @param {String} value
  */
 export default (value) => {
-	const regex = new RegExp(/^[A-Za-z]+$/);
-	console.log(regex.test(value))
+	const regex = new RegExp('^[A-Za-z]+$');
 	return regex.test(value)
 };

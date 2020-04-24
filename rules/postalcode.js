@@ -7,7 +7,7 @@ import isPostalCode from 'validator/lib/isPostalCode';
  */
 export default (value, locale) => {
 	if(Array.isArray(locale)) {
-		return locale.find(singeLocale => isPostalCode(value, singeLocale))
+		return !!locale.find(singeLocale => isPostalCode(value, singeLocale))
 	} else {
 		return isPostalCode(value, locale)
 	}

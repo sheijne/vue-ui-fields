@@ -38,7 +38,7 @@ export default (value, locale) => {
 		return true;
 	}
 	if (Array.isArray(locale)) {
-		return locale.find(singleLocale => regEx(value, singleLocale))
+		return !!locale.find(singleLocale => regEx(value, singleLocale))
 	} else {
 		return regEx(value, locale)
 	}
