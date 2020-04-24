@@ -9,6 +9,6 @@ export default (value, locale) => {
 	if(Array.isArray(locale)) {
 		return locale.find(singeLocale => isPostalCode(value, singeLocale))
 	} else {
-		return isPostalCode(value, singeLocale)
+		return isPostalCode(value, locale)
 	}
 };

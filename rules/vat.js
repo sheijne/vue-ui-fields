@@ -40,7 +40,7 @@ export default (value, locale) => {
 	if (Array.isArray(locale)) {
 		return locale.find(singleLocale => regEx(value, singleLocale))
 	} else {
-		return regEx(value, singleLocale)
+		return regEx(value, locale)
 	}
 };
 
