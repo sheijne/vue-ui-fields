@@ -385,6 +385,9 @@ export default (options, Vue) => {
 				case 'phone':
 					rules = await import('./rules/phone.js');
 					break;
+				case 'text':
+					rules = await import('./rules/text.js');
+					break;
 			}
 			if (rules) {
 				return rules.default;

@@ -13,5 +13,6 @@
 	"required": "Dit veld is verplicht",
 	"url": "Url is niet geldig",
 	"vat": "VAT nummer is niet geldig",
-	"phone": "Telefoonnummer is niet geldig"
+	"phone": "Telefoonnummer is niet geldig",
+	"text": "Dit veld mogen alleen maar letters bevatten"
 }
