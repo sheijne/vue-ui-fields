@@ -38,12 +38,9 @@ export default (value, locale) => {
 		return true;
 	}
 	if (Array.isArray(locale)) {
-		let isVat = locale.filter(newLocale => {
-			return regEx(value, newLocale);
-		})	
-		return isVat.length != 0;
+		return locale.find(singleLocale => regEx(value, singleLocale))
 	} else {
-		return regEx(value, locale);
+		return regEx(value, singleLocale)
 	}
 };
 
