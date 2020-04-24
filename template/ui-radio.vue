@@ -6,8 +6,8 @@
 		<template v-for="(option, key) in fieldData.options">
 			<input
 				:id="`${form}_${name}_${key}`"
-				:key="key"
 				v-model="value"
+				:key="key"
 				:value="option.value"
 				:name="fieldData.name"
 				:type="fieldData.type"

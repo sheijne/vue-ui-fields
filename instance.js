@@ -163,7 +163,7 @@ export default (options, Vue) => {
 							value = [];
 						}
 					}
-				} else if (type === 'select') {
+				} else if (type === 'select' || type ==='radio') {
 					if (!value) {
 						const selectedIndex = formattedOptions.findIndex((option) => option.selected);
 						if (selectedIndex > -1) {
