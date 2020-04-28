@@ -11,7 +11,7 @@ export default function(options, Vue) {
 		formListeners: new Map(),
 		fieldListeners: new Map(),
 		errorListeners: new Map(),
-
+		waitedListeners: new Map(),
 		/**
 		 * Create a new form
 		 * @param {String} name
@@ -213,6 +213,16 @@ export default function(options, Vue) {
 			} else {
 				this.errorListeners.set(name, { functions: [], data: [data] });
 			}
+
+			if (this.waitedListeners.has(name)) {
+				const awaitedListeners = this.waitedListeners.get(name);
+				awaitedListeners.forEach((listener) => {
+					const [formName, ...rest] = name.split('_');
+					const fieldName = rest.join('_');
+					this.subscribeError(formName, fieldName, listener);
+				});
+				this.waitedListeners.delete(name);
+			}
 		},
 
 		/**
@@ -238,6 +248,12 @@ export default function(options, Vue) {
 				const error = this.errorListeners.get(`${formName}_${fieldName}`);
 				error.functions.push(listener);
 				this.errorListeners.set(`${formName}_${fieldName}`, error);
+			} else {
+				if (this.waitedListeners.has(`${formName}_${fieldName}`)) {
+					this.waitedListeners.set(`${formName}_${fieldName}`, [...this.waitedListeners.get(`${formName}_${fieldName}`), listener]);
+				} else {
+					this.waitedListeners.set(`${formName}_${fieldName}`, [listener])
+				}
 			}
 		},
 
