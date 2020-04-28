@@ -4,5 +4,5 @@
  * @param {Function} otherFieldValue
  */
 export default (value, otherFieldValue) => {
-	return otherFieldValue() !== value;
+	return otherFieldValue() != value;
 };
