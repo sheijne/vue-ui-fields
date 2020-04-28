@@ -5,5 +5,5 @@
  */
 export default (val, min) => {
 	const length = Number(val);
-	return length >= min;
+	return length != NaN ? length>=length : false;
 };
