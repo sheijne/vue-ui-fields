@@ -295,7 +295,7 @@ export default function(options, Vue) {
 		},
 
 		/**
-		 * Unsubscribe all Fields from form
+		 * Unsubscribe all Fields of form
 		 * @param {String} formName
 		 */
 		unsubscribeFields(formName) {
