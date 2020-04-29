@@ -6,16 +6,6 @@ import toDate from 'validator/lib/toDate';
  * @param {String} value
  */
 export default (value) => {
-	// const valueRemoveCharacters = value
-	// .split('-')
-	// .join('')
-	// .split(' ')
-	// .join('')
-
-	// const newValue = 
-	// `${valueSplitted.substr(0,2)}/${valueSplitted.substr(2,2)}/${valueSplitted.substr(4,valueSplitted.length)}`
-
-	// return isDate(newValue, 'DD/MM/YYYY');
 	return toDate(value);
 };
 
