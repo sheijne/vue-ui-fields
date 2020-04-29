@@ -1,4 +1,3 @@
-// import isDate from 'validator/lib/isDate';
 import toDate from 'validator/lib/toDate';
 
 /**
