@@ -299,11 +299,34 @@ export default function(options, Vue) {
 		 * @param {String} formname
 		 */
 		unsubscribeFields(formName) {
-			for (let listener of this.fieldListeners.keys()) {
-				if(listener.startsWith(formName)) {
-					this.fieldListeners.delete(`${listener}`);
+			let fieldNames = [];
+
+
+			console.log(1, this.fieldListeners);
+			console.log(2, this.formListeners);
+
+			// Get form and get listeners
+			if (this.forms.has(formName)) {
+				const form = this.forms.get(formName);
+
+				for (let name of form.fields.keys()) {
+					fieldNames.push(name)
 				}
+				this.formListeners.delete(formName)
 			}
+
+			// Delete all listeners of fields
+			fieldNames.forEach((fieldName) => {
+				if (this.fieldListeners.has(`${formName}_${fieldName}`)) {
+					this.fieldListeners.delete(`${formName}_${fieldName}`);
+				}
+				if (this.errorListeners.has(`${formName}_${fieldName}`)) {
+					this.errorListeners.delete(`${formName}_${fieldName}`)
+				}
+			})
+
+			console.log(3, this.fieldListeners);
+			console.log(4, this.formListeners);
 		},
 
 		/**
