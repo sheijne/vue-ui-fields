@@ -299,9 +299,9 @@ export default function(options, Vue) {
 		 * @param {String} formName
 		 */
 		unsubscribeFields(formName) {
-			for(let fieldName of this.getFields(formName).keys()) {
+			this.getFieldKeys(formName).forEach((fieldName) => {
 				this.unsubscribeField(formName, fieldName);
-			}
+			})
 		},
 
 		/**
@@ -320,22 +320,19 @@ export default function(options, Vue) {
 		 * @param {String} formName
 		 */
 		unsubscribeErrors(formName) {
-			for(let fieldName of this.getFields(formName).keys()) {
-				console.log(fieldName)
+			this.getFieldKeys(formName).forEach((fieldName) => {
 				this.unsubscribeError(formName, fieldName)
-			}
+			})
 		},
 
 		/**
 		 * Delete all forms and listeners
 		 */
-		delete() {
-			this.forms.forEach(form => {
-				this.unsubscribeErrors(form.name);
-				this.unsubscribeFields(form.name);
-				this.unsubscribe(form.name);
-				this.forms.clear();
-			})
+		delete(formName) {
+			this.unsubscribeErrors(formName);
+			this.unsubscribeFields(formName);
+			this.unsubscribe(formName);
+			this.forms.delete(formName);
 		},
 
 		/**
