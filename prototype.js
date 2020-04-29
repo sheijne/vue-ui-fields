@@ -296,7 +296,7 @@ export default function(options, Vue) {
 
 		/**
 		 * Unsubscribe all Fields from form
-		 * @param {String} formname
+		 * @param {String} formName
 		 */
 		unsubscribeFields(formName) {
 			let fieldNames = [];
@@ -308,14 +308,12 @@ export default function(options, Vue) {
 				for (let name of form.fields.keys()) {
 					fieldNames.push(name)
 				}
-				this.formListeners.delete(formName)
+				this.unsubscribe(formName);
 			}
 
 			// Delete all listeners of fields
 			fieldNames.forEach((fieldName) => {
-				if (this.fieldListeners.has(`${formName}_${fieldName}`)) {
-					this.fieldListeners.delete(`${formName}_${fieldName}`);
-				}
+				this.unsubscribeField(formName, fieldName);
 				if (this.errorListeners.has(`${formName}_${fieldName}`)) {
 					this.errorListeners.delete(`${formName}_${fieldName}`)
 				}
