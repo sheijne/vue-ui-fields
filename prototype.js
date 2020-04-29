@@ -300,7 +300,6 @@ export default function(options, Vue) {
 		 */
 		unsubscribeFields(formName) {
 			let fieldNames = [];
-
 			// Get form and get listeners
 			if (this.forms.has(formName)) {
 				const form = this.forms.get(formName);
@@ -310,7 +309,6 @@ export default function(options, Vue) {
 				}
 				this.unsubscribe(formName);
 			}
-
 			// Delete all listeners of fields
 			fieldNames.forEach((fieldName) => {
 				this.unsubscribeField(formName, fieldName);
