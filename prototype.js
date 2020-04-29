@@ -301,10 +301,6 @@ export default function(options, Vue) {
 		unsubscribeFields(formName) {
 			let fieldNames = [];
 
-
-			console.log(1, this.fieldListeners);
-			console.log(2, this.formListeners);
-
 			// Get form and get listeners
 			if (this.forms.has(formName)) {
 				const form = this.forms.get(formName);
@@ -324,9 +320,6 @@ export default function(options, Vue) {
 					this.errorListeners.delete(`${formName}_${fieldName}`)
 				}
 			})
-
-			console.log(3, this.fieldListeners);
-			console.log(4, this.formListeners);
 		},
 
 		/**
