@@ -5,6 +5,6 @@
  */
 export default (val, max) => {
 	const length = Number(val);
-	const maxNumber = typeof(max) == 'function' ? max() : max;
-	return length != NaN ? length <= maxNumber : false;
+	const maxNumber = typeof(max) === 'function' ? max() : max;
+	return length !== NaN ? length <= maxNumber : false;
 };

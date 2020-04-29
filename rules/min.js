@@ -5,7 +5,7 @@
  */
 export default (val, min) => {
 	const length = Number(val);
-	const minNumber = typeof(min) == 'function' ? min() : min;
-	return length != NaN ? length >= minNumber : false;
+	const minNumber = typeof(min) === 'function' ? min() : min;
+	return length !== NaN ? length >= minNumber : false;
 };
 
