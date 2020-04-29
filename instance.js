@@ -86,7 +86,7 @@ export default (options, Vue) => {
 				{ key: 'placeholder', type: 'string' },
 				{ key: 'required', type: 'boolean' },
 				{ key: 'step', type: 'number' },
-				{ key: 'autofocus', type: 'boolean' },
+				{ key: 'autofocus', type: 'boolean' }
 			];
 
 			const defaultOptionsSettings = [
