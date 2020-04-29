@@ -326,13 +326,19 @@ export default function(options, Vue) {
 		},
 
 		/**
-		 * Delete all forms and listeners
+		 * Delete listeners of a single form
+		 * @param {String} formName
 		 */
 		delete(formName) {
-			this.unsubscribeErrors(formName);
-			this.unsubscribeFields(formName);
-			this.unsubscribe(formName);
-			this.forms.delete(formName);
+			if (this.forms.has(formName)) {
+				this.unsubscribeErrors(formName);
+				this.unsubscribeFields(formName);
+				this.unsubscribe(formName);
+				this.forms.delete(formName);
+			} else {
+				console.log('No form found');
+				return;
+			}
 		},
 
 		/**
