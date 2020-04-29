@@ -285,7 +285,7 @@ export default function(options, Vue) {
 
 		/**
 		 * Unsubscribe Field
-		 * @param {String} formname
+		 * @param {String} formName
 		 * @param {String} fieldName
 		 */
 		unsubscribeField(formName, fieldName) {
@@ -295,26 +295,46 @@ export default function(options, Vue) {
 		},
 
 		/**
-		 * Unsubscribe all Fields of form
+		 * Unsubscribe all Fields
 		 * @param {String} formName
 		 */
 		unsubscribeFields(formName) {
-			let fieldNames = [];
-			// Get form and get listeners
-			if (this.forms.has(formName)) {
-				const form = this.forms.get(formName);
-
-				for (let name of form.fields.keys()) {
-					fieldNames.push(name)
-				}
-				this.unsubscribe(formName);
-			}
-			// Delete all listeners of fields
-			fieldNames.forEach((fieldName) => {
+			for(let fieldName of this.getFields(formName).keys()) {
 				this.unsubscribeField(formName, fieldName);
-				if (this.errorListeners.has(`${formName}_${fieldName}`)) {
-					this.errorListeners.delete(`${formName}_${fieldName}`)
-				}
+			}
+		},
+
+		/**
+		 * Unsubscribe single Error
+		 * @param {String} formName
+		 * @param {String} fieldname
+		 */
+		unsubscribeError(formName, fieldname) {
+			if (this.errorListeners.has(`${formName}_${fieldname}`)) {
+				this.errorListeners.delete(`${formName}_${fieldname}`)
+			}
+		},
+		
+		/**
+		 * Unsubscribe all Errors
+		 * @param {String} formName
+		 */
+		unsubscribeErrors(formName) {
+			for(let fieldName of this.getFields(formName).keys()) {
+				console.log(fieldName)
+				this.unsubscribeError(formName, fieldName)
+			}
+		},
+
+		/**
+		 * Delete all forms and listeners
+		 */
+		delete() {
+			this.forms.forEach(form => {
+				this.unsubscribeErrors(form.name);
+				this.unsubscribeFields(form.name);
+				this.unsubscribe(form.name);
+				this.forms.clear();
 			})
 		},
 
