@@ -5,5 +5,5 @@
  */
 export default (val, max) => {
 	const length = Number(val);
-	return length !== NaN ? length <= max : false;
+	return length <= max;
 };
