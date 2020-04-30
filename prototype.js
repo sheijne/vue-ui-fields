@@ -566,11 +566,14 @@ export default function(options, Vue) {
 		},
 		/**
 		 * Set new condition used in any page
-		 * @param  {...any} args 
+		 * @param {...any} args 
+		 * @param required {String} depFormName
+		 * @param required {String} depFieldName
+		 * @param required {String} formName
+		 * @param required {String, Function} valueFunction
+		 * @param optional {String} fieldName
 		 */
 		setCondition(...args) {
-			console.log(args);
-			return;
 			let [
 				depFormName, //required
 				depFieldName, //required
@@ -579,15 +582,18 @@ export default function(options, Vue) {
 				fieldName //optional
 			] = args;
 
+			// Check if fieldname is undefined, if it's not set a empty string to it
 			if (!fieldName) {
 				fieldName = '';
 			}
 
+			// If the type of variable valuefunction is a string then make a function of this string
 			if (typeof valueFunction === 'string') {
 				const val = valueFunction;
 				valueFunction = (value) => val === value
 			}
 
+			// Check if the listener allready exists in conditionListeners, if it's not set condition
 			if (!this.conditionListeners.has(`${formName}_${fieldName}`)) {
 				this.conditionListeners.set(`${formName}_${fieldName}`, {
 					depFormName,
@@ -596,6 +602,7 @@ export default function(options, Vue) {
 				});
 			}
 
+			// Subscribe to this field when page is loaded, if it's not the subscribe will work when field value changed
 			this.subscribeField(depFormName, depFieldName, (value) => {
 				const result = valueFunction(value);
 				const events = this.conditionListeners.get(`${formName}_${fieldName}`);
@@ -609,15 +616,18 @@ export default function(options, Vue) {
 		 * @param  {Function} listener - Function that has to be evoked
 		 */
 		subscribeCondition(name, listener) {
+			
+			// if condition already exists in conditionListeners, get condition and push listener to this condition
 			if (this.conditionListeners.has(name)) {
-				
 				const conditions = this.conditionListeners.get(name);
 				conditions.functions.push(listener)
 				this.conditionListeners.set(name, conditions);
 
-				this._listen(conditions.depFormName, conditions.depFieldName, this.getValue(conditions.depFormName, conditions.depFieldName), false);
+				// makes a listener for a specific field
+				this._listen(conditions.depFormName, conditions.depFieldName, this.getValue(conditions.depFormName));
 			}
 		},
+
 		gfapi: {
 			async submit(formID) {
 				const result = Vue.prototype.$uiFields.validate(formID);
