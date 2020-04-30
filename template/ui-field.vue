@@ -1,15 +1,18 @@
 <template>
-	<component :is="field.componentType"
-		v-if="field && field.componentType" 
-		:class="[
-			`${className}__field ${className}__field--${field.type}`,
-			field.classes,
-			pristine ? `${className}__field--pristine` : '',
-			error ? `${className}__field--valid` : '',
-			(!pristine && !error) ? `${className}__field--invalid` : ''
-		]"
-		:name="name" :form="form" :field-value="field.value"
-	/>
+	<div>
+		<p>{{condition}}</p>
+		<component :is="field.componentType"
+			v-if="field && field.componentType" 
+			:class="[
+				`${className}__field ${className}__field--${field.type}`,
+				field.classes,
+				pristine ? `${className}__field--pristine` : '',
+				error ? `${className}__field--valid` : '',
+				(!pristine && !error) ? `${className}__field--invalid` : ''
+			]"
+			:name="name" :form="form" :field-value="field.value"
+		/>
+	</div>
 </template>
 
 <script>
@@ -45,6 +48,9 @@ export default {
 		},
 		field() {
 			return this.$uiFields.getField(this.form, this.name);
+		},
+		condition() {
+			this.$uiFields.checkCondition(this.form, this.name)
 		}
 	},
 	created() {

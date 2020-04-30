@@ -71,7 +71,8 @@ export default (options, Vue) => {
 				{ key: 'type', type: 'string' },
 				{ key: 'label', type: 'string', default: '' },
 				{ key: 'requiredText', type: 'string', default: '*' },
-				{ key: 'classes', type: 'array', default: [] }
+				{ key: 'classes', type: 'array', default: [] },
+				{ key: 'visible', type: 'boolean', default: true }
 			];
 
 			const defaultHTMLSettings = [

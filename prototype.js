@@ -10,6 +10,7 @@ export default function(options, Vue) {
 		forms: new Map(),
 		formListeners: new Map(),
 		fieldListeners: new Map(),
+		conditionListeners: new Map(),
 		errorListeners: new Map(),
 		waitedListeners: new Map(),
 		/**
@@ -31,17 +32,17 @@ export default function(options, Vue) {
 		 * @param {String} formName
 		 * @param {String || Array} value
 		 */
-		getValue(formName, name) {
-			if (!formName || !name) {
+		getValue(formName, fieldName) {
+			if (!formName || !fieldName) {
 				return;
 			}
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
-			return form.getValue(name);
+
+			return form.getValue(fieldName);
 		},
 
 		/**
@@ -85,8 +86,8 @@ export default function(options, Vue) {
 		 * Get form
 		 * @param {String} name
 		 */
-		getForm(name) {
-			return this.forms.get(name);
+		getForm(formName) {
+			return this.forms.get(formName);
 		},
 
 		/**
@@ -99,7 +100,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			return [...form.values.values()];
@@ -115,7 +115,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			return form.getFormattedValues();
@@ -133,7 +132,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(name);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			form.setField(options);
@@ -151,7 +149,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(name);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			form.setFields(options);
@@ -170,7 +167,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			form.setValue(name, value, checkError);
@@ -181,6 +177,40 @@ export default function(options, Vue) {
 
 			this._listen(formName, name, value);
 		},
+
+
+
+
+
+		conditionToggle(depFormName, depFieldName, value, controlFormName, controlFieldName) {
+			if(this.getCondition(controlFieldName)) {
+				this.conditionListeners.delete(controlFieldName)
+			} else {
+				this.setCondition(depFormName, depFieldName, value, controlFormName, controlFieldName)
+			}
+		},
+
+		setCondition(depFormName, depFieldName, value, controlFormName, controlFieldName) {
+			this.conditionListeners.set(controlFieldName, { 
+				name: controlFieldName, 
+				value: value(),
+				triggerForm: depFormName,
+				triggerField: depFieldName 
+			})
+		},
+
+		getCondition(fieldName) {
+			if(this.conditionListeners.has(fieldName)) {
+				return this.conditionListeners.get(fieldName);
+			}
+		},
+
+		checkCondition(formName, fieldName) {
+			console.log(1, formName, 2, fieldName)
+		},
+
+
+
 
 		/**
 		 * Subscriber
@@ -330,15 +360,14 @@ export default function(options, Vue) {
 		 * @param {String} formName
 		 */
 		delete(formName) {
-			if (this.forms.has(formName)) {
-				this.unsubscribeErrors(formName);
-				this.unsubscribeFields(formName);
-				this.unsubscribe(formName);
-				this.forms.delete(formName);
-			} else {
-				console.log('No form found');
+			if (!this.forms.has(formName)) {
 				return;
-			}
+			} 
+			
+			this.unsubscribeErrors(formName);
+			this.unsubscribeFields(formName);
+			this.unsubscribe(formName);
+			this.forms.delete(formName);
 		},
 
 		/**
@@ -413,7 +442,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			form._setError(fieldName, errorName, error);
@@ -433,7 +461,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			this._subscribeError(`${formName}_${fieldName}`, {
@@ -458,7 +485,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			form.removeError(fieldName, errorName);
@@ -476,7 +502,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			return form.getError(fieldName);
@@ -493,7 +518,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			return form.getErrors();
@@ -544,7 +568,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			return form.className;
@@ -583,7 +606,6 @@ export default function(options, Vue) {
 				if (result.valid) {
 					const form = Vue.prototype.$uiFields.getForm(formID);
 					if (!form) {
-						console.log('No form found');
 						return;
 					}
 					if (form.includesFile) {
