@@ -71,13 +71,12 @@ export default (options, Vue) => {
 				{ key: 'type', type: 'string' },
 				{ key: 'label', type: 'string', default: '' },
 				{ key: 'requiredText', type: 'string', default: '*' },
-				{ key: 'classes', type: 'array', default: [] },
-				{ key: 'visible', type: 'boolean', default: true }
+				{ key: 'classes', type: 'array', default: [] }
 			];
 
 			const defaultHTMLSettings = [
 				{ key: 'autocomplete', type: 'string' },
-				{ key: 'accept', type: 'string', default: '*' },
+				{ key: 'accept', type: 'string' },
 				{ key: 'disabled', type: 'boolean' },
 				{ key: 'max', type: 'number' },
 				{ key: 'maxlength', type: 'number' },
