@@ -174,44 +174,8 @@ export default function(options, Vue) {
 				this.removeCustomErrors(formName, name);
 				this.checkError(formName, name, value);
 			}
-
 			this._listen(formName, name, value);
 		},
-
-
-
-
-
-		conditionToggle(depFormName, depFieldName, value, controlFormName, controlFieldName) {
-			if(this.getCondition(controlFieldName)) {
-				this.conditionListeners.delete(controlFieldName)
-			} else {
-				this.setCondition(depFormName, depFieldName, value, controlFormName, controlFieldName)
-			}
-		},
-
-		setCondition(depFormName, depFieldName, value, controlFormName, controlFieldName) {
-			this.conditionListeners.set(controlFieldName, { 
-				name: controlFieldName, 
-				value: value(),
-				triggerForm: depFormName,
-				triggerField: depFieldName 
-			})
-		},
-
-		getCondition(fieldName) {
-			if(this.conditionListeners.has(fieldName)) {
-				return this.conditionListeners.get(fieldName);
-			}
-		},
-
-		checkCondition(formName, fieldName) {
-			console.log(1, formName, 2, fieldName)
-		},
-
-
-
-
 		/**
 		 * Subscriber
 		 * @param {String} formName
@@ -598,6 +562,60 @@ export default function(options, Vue) {
 				fieldEvents.functions.forEach((customFunction) => {
 					customFunction(value, result);
 				});
+			}
+		},
+		/**
+		 * Set new condition used in any page
+		 * @param  {...any} args 
+		 */
+		setCondition(...args) {
+			console.log(args);
+			return;
+			let [
+				depFormName, //required
+				depFieldName, //required
+				valueFunction, //Can be string or function
+				formName, //required
+				fieldName //optional
+			] = args;
+
+			if (!fieldName) {
+				fieldName = '';
+			}
+
+			if (typeof valueFunction === 'string') {
+				const val = valueFunction;
+				valueFunction = (value) => val === value
+			}
+
+			if (!this.conditionListeners.has(`${formName}_${fieldName}`)) {
+				this.conditionListeners.set(`${formName}_${fieldName}`, {
+					depFormName,
+					depFieldName,
+					functions: []
+				});
+			}
+
+			this.subscribeField(depFormName, depFieldName, (value) => {
+				const result = valueFunction(value);
+				const events = this.conditionListeners.get(`${formName}_${fieldName}`);
+				events.functions.forEach((event) => event(result));
+			});
+		},
+
+		/**
+		 * Subscribe to a condition, used in ui-fields
+		 * @param  {String} name - Name of the listener
+		 * @param  {Function} listener - Function that has to be evoked
+		 */
+		subscribeCondition(name, listener) {
+			if (this.conditionListeners.has(name)) {
+				
+				const conditions = this.conditionListeners.get(name);
+				conditions.functions.push(listener)
+				this.conditionListeners.set(name, conditions);
+
+				this._listen(conditions.depFormName, conditions.depFieldName, this.getValue(conditions.depFormName, conditions.depFieldName), false);
 			}
 		},
 		gfapi: {
