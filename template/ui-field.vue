@@ -1,17 +1,16 @@
 <template>
-	<div v-show="visible">
-		<component :is="field.componentType"
-			v-if="field && field.componentType" 
-			:class="[
-				`${className}__field ${className}__field--${field.type}`,
-				field.classes,
-				pristine ? `${className}__field--pristine` : '',
-				error ? `${className}__field--valid` : '',
-				(!pristine && !error) ? `${className}__field--invalid` : ''
-			]"
-			:name="name" :form="form" :field-value="field.value"
-		/>
-	</div>
+	<component :is="field.componentType"
+		v-show="visible"
+		v-if="field && field.componentType" 
+		:class="[
+			`${className}__field ${className}__field--${field.type}`,
+			field.classes,
+			pristine ? `${className}__field--pristine` : '',
+			error ? `${className}__field--valid` : '',
+			(!pristine && !error) ? `${className}__field--invalid` : ''
+		]"
+		:name="name" :form="form" :field-value="field.value"
+	/>
 </template>
 
 <script>

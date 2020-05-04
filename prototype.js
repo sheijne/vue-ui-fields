@@ -613,8 +613,8 @@ export default function(options, Vue) {
 				this.subscribeField(depFormName, depFieldName, (value) => {
 					const result = valueFunction(value);
 					const events = this.conditionListeners.get(`${formName}_${name}`);
-					if(events) {
-						if(Array.isArray(events.functions)) {
+					if (events) {
+						if (Array.isArray(events.functions)) {
 							events.functions.forEach((event) => {
 								event(result);
 							});
@@ -630,7 +630,6 @@ export default function(options, Vue) {
 		 * @param  {Function} listener - Function that has to be evoked
 		 */
 		subscribeCondition(name, listener) {
-			
 			// if condition already exists in conditionListeners, get condition and push listener to this condition
 			if (this.conditionListeners.has(name)) {
 				const conditions = this.conditionListeners.get(name);
@@ -649,15 +648,19 @@ export default function(options, Vue) {
 		 * @param  {String} formName - name of form from condition
 		 * @param  {Array, String} fieldName - name of field from condition
 		 */
-		removeCondition(depFormName, depFieldName, formName, fieldName) {
+		removeCondition(formName, fieldName) {
+			if (!fieldName) {
+				fieldName = '';
+			}
+
 			// If fieldName is an String, convert to Array
-			if(!Array.isArray(fieldName)) {
+			if (!Array.isArray(fieldName)) {
 				fieldName = [fieldName];
 			}
-			
+
 			// Loop through all elements in fieldName and remove them from the conditionListeners Array if they exists
-			fieldName.forEach(name => {
-				if(this.conditionListeners.has(`${formName}_${name}`)) {
+			fieldName.forEach((name) => {
+				if (this.conditionListeners.has(`${formName}_${name}`)) {
 					this.conditionListeners.delete(`${formName}_${name}`);
 				}
 			})
