@@ -643,27 +643,19 @@ export default function(options, Vue) {
 
 		/**
 		 * Unsubscribe to a condition, used in ui-fields
-		 * @param  {String} depFormName - name of form of fieldListener
-		 * @param  {String} depFieldName - name of field of fieldListener
-		 * @param  {String} formName - name of form from condition
-		 * @param  {Array, String} fieldName - name of field from condition
+		 * @param required {String} formName - name of form from condition
+		 * @param optional {Array, String} fieldName - name of field from condition
 		 */
 		removeCondition(formName, fieldName) {
+			// Check if fieldName is empty, if it is empty make an empty string 
 			if (!fieldName) {
 				fieldName = '';
 			}
 
-			// If fieldName is an String, convert to Array
-			if (!Array.isArray(fieldName)) {
-				fieldName = [fieldName];
+			// If conditionListener is in this.conditionListeners then remove from the list
+			if (this.conditionListeners.has(`${formName}_${fieldName}`)) {
+				this.conditionListeners.delete(`${formName}_${fieldName}`);
 			}
-
-			// Loop through all elements in fieldName and remove them from the conditionListeners Array if they exists
-			fieldName.forEach((name) => {
-				if (this.conditionListeners.has(`${formName}_${name}`)) {
-					this.conditionListeners.delete(`${formName}_${name}`);
-				}
-			})
 		},
 
 		gfapi: {
