@@ -661,20 +661,7 @@ export default function(options, Vue) {
 					this.conditionListeners.delete(`${formName}_${name}`);
 				}
 			})
-
-			// Remove fieldListener from the fieldListener list if it exist.
-			// if(this.fieldListeners.has(`${depFormName}_${depFieldName}`)) {
-			// 	this.fieldListeners.delete(`${depFormName}_${depFieldName}`);
-			// }
 		},
-
-		removeConditions(formName, depFieldName) {
-			console.log(1, this.fieldListeners);
-			console.log(2, this.conditionListeners);
-
-		},
-
-		
 
 		gfapi: {
 			async submit(formID) {
