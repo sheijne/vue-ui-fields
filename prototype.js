@@ -571,7 +571,7 @@ export default function(options, Vue) {
 		 * @param required {String} depFieldName
 		 * @param required {String} formName
 		 * @param required {String, Function} valueFunction
-		 * @param optional {String} fieldName
+		 * @param optional {String, Array} fields
 		 */
 		setCondition(...args) {
 			let [
@@ -592,22 +592,36 @@ export default function(options, Vue) {
 				const val = valueFunction;
 				valueFunction = (value) => val === value
 			}
-
-			// Check if the listener allready exists in conditionListeners, if it's not set condition
-			if (!this.conditionListeners.has(`${formName}_${fieldName}`)) {
-				this.conditionListeners.set(`${formName}_${fieldName}`, {
-					depFormName,
-					depFieldName,
-					functions: []
-				});
+			
+			if (!Array.isArray(fieldName)) {
+				fieldName = [fieldName]
 			}
 
+			// Check if the listener allready exists in conditionListeners, if it's not set condition
+			fieldName.forEach((name) => {
+				if (!this.conditionListeners.has(`${formName}_${name}`)) {
+					this.conditionListeners.set(`${formName}_${name}`, {
+						depFormName,
+						depFieldName,
+						functions: []
+					});
+				}
+			})
+
 			// Subscribe to this field when page is loaded, if it's not the subscribe will work when field value changed
-			this.subscribeField(depFormName, depFieldName, (value) => {
-				const result = valueFunction(value);
-				const events = this.conditionListeners.get(`${formName}_${fieldName}`);
-				events.functions.forEach((event) => event(result));
-			});
+			fieldName.forEach((name) => {
+				this.subscribeField(depFormName, depFieldName, (value) => {
+					const result = valueFunction(value);
+					const events = this.conditionListeners.get(`${formName}_${name}`);
+					if(events) {
+						if(Array.isArray(events.functions)) {
+							events.functions.forEach((event) => {
+								event(result);
+							});
+						}
+					}
+				})
+			})
 		},
 
 		/**
@@ -627,6 +641,40 @@ export default function(options, Vue) {
 				this._listen(conditions.depFormName, conditions.depFieldName, this.getValue(conditions.depFormName));
 			}
 		},
+
+		/**
+		 * Unsubscribe to a condition, used in ui-fields
+		 * @param  {String} depFormName - name of form of fieldListener
+		 * @param  {String} depFieldName - name of field of fieldListener
+		 * @param  {String} formName - name of form from condition
+		 * @param  {Array, String} fieldName - name of field from condition
+		 */
+		removeCondition(depFormName, depFieldName, formName, fieldName) {
+			// If fieldName is an String, convert to Array
+			if(!Array.isArray(fieldName)) {
+				fieldName = [fieldName];
+			}
+			
+			// Loop through all elements in fieldName and remove them from the conditionListeners Array if they exists
+			fieldName.forEach(name => {
+				if(this.conditionListeners.has(`${formName}_${name}`)) {
+					this.conditionListeners.delete(`${formName}_${name}`);
+				}
+			})
+
+			// Remove fieldListener from the fieldListener list if it exist.
+			// if(this.fieldListeners.has(`${depFormName}_${depFieldName}`)) {
+			// 	this.fieldListeners.delete(`${depFormName}_${depFieldName}`);
+			// }
+		},
+
+		removeConditions(formName, depFieldName) {
+			console.log(1, this.fieldListeners);
+			console.log(2, this.conditionListeners);
+
+		},
+
+		
 
 		gfapi: {
 			async submit(formID) {
