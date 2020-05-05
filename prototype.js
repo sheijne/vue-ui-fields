@@ -719,7 +719,7 @@ export default function(options, Vue) {
 				}
 			},
 			async new(formID) {
-				const URL = `${options.baseURL}/wp-json/matise/utilities/gfapi/${formID}?path=${window.location.pathname}`;
+				let URL = `${options.baseURL}/wp-json/matise/utilities/gfapi/${formID}?path=${window.location.pathname}`;
 				if (window.location.search.substr(1)) {
 					URL += `&${window.location.search.substr(1)}`;
 				}
