@@ -76,7 +76,7 @@ export default (options, Vue) => {
 
 			const defaultHTMLSettings = [
 				{ key: 'autocomplete', type: 'string' },
-				{ key: 'accept', type: 'string', default: '*' },
+				{ key: 'accept', type: 'string' },
 				{ key: 'disabled', type: 'boolean' },
 				{ key: 'max', type: 'number' },
 				{ key: 'maxlength', type: 'number' },

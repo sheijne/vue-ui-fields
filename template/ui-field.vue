@@ -1,5 +1,6 @@
 <template>
 	<component :is="field.componentType"
+		v-show="visible"
 		v-if="field && field.componentType" 
 		:class="[
 			`${className}__field ${className}__field--${field.type}`,
@@ -36,7 +37,8 @@ export default {
 	data() {
 		return {
 			error: false,
-			pristine: true
+			pristine: true,
+			visible: true
 		};
 	},
 	computed: {
@@ -52,6 +54,7 @@ export default {
 			this.pristine = false;
 			this.error = errorObject.valid;
 		});
+		this.$uiFields.subscribeCondition(`${this.form}_${this.name}`, (result) => this.visible = result);
 	}
 };
 </script>
