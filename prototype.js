@@ -646,7 +646,7 @@ export default function(options, Vue) {
 		 * @param required {String} formName - name of form from condition
 		 * @param optional {Array, String} fieldName - name of field from condition
 		 */
-		removeCondition(formName, fieldName) {
+		unsubscribeCondition(formName, fieldName) {
 			// Check if fieldName is empty, if it is empty make an empty string 
 			if (!fieldName) {
 				fieldName = '';
