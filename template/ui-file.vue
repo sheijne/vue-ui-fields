@@ -25,6 +25,22 @@
 				{{ fieldData.requiredText }}
 			</span>
 		</label>
+		<p :class="`${className}__fileinfo`">
+			<span :class="[
+				pristine ? `${className}__filename--placeholder` : '',
+				`${className}__filename`,
+				
+				]" 
+				>
+				{{ pristine ? fieldData.htmlSettings.placeholder : fileName }}
+			</span>
+			<span :class="`${className}__filesize`" v-if="!pristine">
+				{{ size }}MB
+			</span>
+			<span :class="`${className}__max-filesize`" v-if="fieldData.htmlSettings.maxUploadSize && pristine">
+				Max. {{ fieldData.htmlSettings.maxUploadSize }}MB
+			</span>
+		</p>
 		<uiErrors :form="form" :name="name" />
 	</div>
 </template>
@@ -34,7 +50,10 @@ export default {
 	mixins: [mixinSettings],
 	data() {
 		return {
-			component: 'ui-file'
+			component: 'ui-file',
+			pristine: true,
+			fileName: '',
+			size: 0
 		};
 	},
 	computed: {
@@ -44,6 +63,9 @@ export default {
 	},
 	methods: {
 		onFileChange(event) {
+			this.size = Math.round(event.target.files[0].size / 1000);
+			this.pristine = false;
+			this.fileName = event.target.files[0].name;
 			this.$uiFields.setValue(this.form, this.name, event.target.files[0]);
 		}
 	}
