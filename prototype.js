@@ -10,8 +10,9 @@ export default function(options, Vue) {
 		forms: new Map(),
 		formListeners: new Map(),
 		fieldListeners: new Map(),
+		conditionListeners: new Map(),
 		errorListeners: new Map(),
-
+		waitedListeners: new Map(),
 		/**
 		 * Create a new form
 		 * @param {String} name
@@ -31,17 +32,17 @@ export default function(options, Vue) {
 		 * @param {String} formName
 		 * @param {String || Array} value
 		 */
-		getValue(formName, name) {
-			if (!formName || !name) {
+		getValue(formName, fieldName) {
+			if (!formName || !fieldName) {
 				return;
 			}
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
-			return form.getValue(name);
+
+			return form.getValue(fieldName);
 		},
 
 		/**
@@ -85,8 +86,8 @@ export default function(options, Vue) {
 		 * Get form
 		 * @param {String} name
 		 */
-		getForm(name) {
-			return this.forms.get(name);
+		getForm(formName) {
+			return this.forms.get(formName);
 		},
 
 		/**
@@ -99,7 +100,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			return [...form.values.values()];
@@ -115,7 +115,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			return form.getFormattedValues();
@@ -133,7 +132,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(name);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			form.setField(options);
@@ -151,7 +149,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(name);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			form.setFields(options);
@@ -170,7 +167,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			form.setValue(name, value, checkError);
@@ -178,10 +174,8 @@ export default function(options, Vue) {
 				this.removeCustomErrors(formName, name);
 				this.checkError(formName, name, value);
 			}
-
 			this._listen(formName, name, value);
 		},
-
 		/**
 		 * Subscriber
 		 * @param {String} formName
@@ -213,6 +207,16 @@ export default function(options, Vue) {
 			} else {
 				this.errorListeners.set(name, { functions: [], data: [data] });
 			}
+
+			if (this.waitedListeners.has(name)) {
+				const awaitedListeners = this.waitedListeners.get(name);
+				awaitedListeners.forEach((listener) => {
+					const [formName, ...rest] = name.split('_');
+					const fieldName = rest.join('_');
+					this.subscribeError(formName, fieldName, listener);
+				});
+				this.waitedListeners.delete(name);
+			}
 		},
 
 		/**
@@ -238,6 +242,12 @@ export default function(options, Vue) {
 				const error = this.errorListeners.get(`${formName}_${fieldName}`);
 				error.functions.push(listener);
 				this.errorListeners.set(`${formName}_${fieldName}`, error);
+			} else {
+				if (this.waitedListeners.has(`${formName}_${fieldName}`)) {
+					this.waitedListeners.set(`${formName}_${fieldName}`, [...this.waitedListeners.get(`${formName}_${fieldName}`), listener]);
+				} else {
+					this.waitedListeners.set(`${formName}_${fieldName}`, [listener])
+				}
 			}
 		},
 
@@ -268,8 +278,9 @@ export default function(options, Vue) {
 		},
 
 		/**
-		 * Unsubscribe
-		 * @param {String} formname
+		 * Unsubscribe Field
+		 * @param {String} formName
+		 * @param {String} fieldName
 		 */
 		unsubscribeField(formName, fieldName) {
 			if (this.fieldListeners.has(`${formName}_${fieldName}`)) {
@@ -278,9 +289,56 @@ export default function(options, Vue) {
 		},
 
 		/**
+		 * Unsubscribe all Fields
+		 * @param {String} formName
+		 */
+		unsubscribeFields(formName) {
+			this.getFieldKeys(formName).forEach((fieldName) => {
+				this.unsubscribeField(formName, fieldName);
+			})
+		},
+
+		/**
+		 * Unsubscribe single Error
+		 * @param {String} formName
+		 * @param {String} fieldname
+		 */
+		unsubscribeError(formName, fieldname) {
+			if (this.errorListeners.has(`${formName}_${fieldname}`)) {
+				this.errorListeners.delete(`${formName}_${fieldname}`)
+			}
+		},
+		
+		/**
+		 * Unsubscribe all Errors
+		 * @param {String} formName
+		 */
+		unsubscribeErrors(formName) {
+			this.getFieldKeys(formName).forEach((fieldName) => {
+				this.unsubscribeError(formName, fieldName)
+			})
+		},
+
+		/**
+		 * Delete listeners of a single form
+		 * @param {String} formName
+		 */
+		delete(formName) {
+			if (!this.forms.has(formName)) {
+				return;
+			} 
+			
+			this.unsubscribeErrors(formName);
+			this.unsubscribeFields(formName);
+			this.unsubscribe(formName);
+			this.forms.delete(formName);
+		},
+
+		/**
 		 * Listen to event
 		 * @param {String} formName
-		 * @param {String} fieldName* @param {String} value
+		 * @param {String} fieldName
+		 * @param {String} value
 		 */
 		_listen(formName, fieldName, value) {
 			//form event
@@ -348,7 +406,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			form._setError(fieldName, errorName, error);
@@ -368,7 +425,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			this._subscribeError(`${formName}_${fieldName}`, {
@@ -393,7 +449,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			form.removeError(fieldName, errorName);
@@ -411,7 +466,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			return form.getError(fieldName);
@@ -428,7 +482,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			return form.getErrors();
@@ -479,7 +532,6 @@ export default function(options, Vue) {
 
 			const form = this.getForm(formName);
 			if (!form) {
-				console.log('No form found');
 				return;
 			}
 			return form.className;
@@ -512,13 +564,106 @@ export default function(options, Vue) {
 				});
 			}
 		},
+		/**
+		 * Set new condition used in any page
+		 * @param {...any} args 
+		 * @param required {String} depFormName
+		 * @param required {String} depFieldName
+		 * @param required {String} formName
+		 * @param required {String, Function} valueFunction
+		 * @param optional {String, Array} fields
+		 */
+		setCondition(...args) {
+			let [
+				depFormName, //required
+				depFieldName, //required
+				valueFunction, //Can be string or function
+				formName, //required
+				fieldName //optional
+			] = args;
+
+			// Check if fieldname is undefined, if it's not set a empty string to it
+			if (!fieldName) {
+				fieldName = '';
+			}
+
+			// If the type of variable valuefunction is a string then make a function of this string
+			if (typeof valueFunction === 'string') {
+				const val = valueFunction;
+				valueFunction = (value) => val === value
+			}
+			
+			if (!Array.isArray(fieldName)) {
+				fieldName = [fieldName]
+			}
+
+			// Check if the listener allready exists in conditionListeners, if it's not set condition
+			fieldName.forEach((name) => {
+				if (!this.conditionListeners.has(`${formName}_${name}`)) {
+					this.conditionListeners.set(`${formName}_${name}`, {
+						depFormName,
+						depFieldName,
+						functions: []
+					});
+				}
+			})
+
+			// Subscribe to this field when page is loaded, if it's not the subscribe will work when field value changed
+			fieldName.forEach((name) => {
+				this.subscribeField(depFormName, depFieldName, (value) => {
+					const result = valueFunction(value);
+					const events = this.conditionListeners.get(`${formName}_${name}`);
+					if (events) {
+						if (Array.isArray(events.functions)) {
+							events.functions.forEach((event) => {
+								event(result);
+							});
+						}
+					}
+				})
+			})
+		},
+
+		/**
+		 * Subscribe to a condition, used in ui-fields
+		 * @param  {String} name - Name of the listener
+		 * @param  {Function} listener - Function that has to be evoked
+		 */
+		subscribeCondition(name, listener) {
+			// if condition already exists in conditionListeners, get condition and push listener to this condition
+			if (this.conditionListeners.has(name)) {
+				const conditions = this.conditionListeners.get(name);
+				conditions.functions.push(listener)
+				this.conditionListeners.set(name, conditions);
+
+				// makes a listener for a specific field
+				this._listen(conditions.depFormName, conditions.depFieldName, this.getValue(conditions.depFormName));
+			}
+		},
+
+		/**
+		 * Unsubscribe to a condition, used in ui-fields
+		 * @param required {String} formName - name of form from condition
+		 * @param optional {Array, String} fieldName - name of field from condition
+		 */
+		unsubscribeCondition(formName, fieldName) {
+			// Check if fieldName is empty, if it is empty make an empty string 
+			if (!fieldName) {
+				fieldName = '';
+			}
+
+			// If conditionListener is in this.conditionListeners then remove from the list
+			if (this.conditionListeners.has(`${formName}_${fieldName}`)) {
+				this.conditionListeners.delete(`${formName}_${fieldName}`);
+			}
+		},
+
 		gfapi: {
 			async submit(formID) {
 				const result = Vue.prototype.$uiFields.validate(formID);
 				if (result.valid) {
 					const form = Vue.prototype.$uiFields.getForm(formID);
 					if (!form) {
-						console.log('No form found');
 						return;
 					}
 					if (form.includesFile) {
@@ -552,7 +697,7 @@ export default function(options, Vue) {
 						formData.append(key, value);
 					}
 				});
-				const URL = `${options.baseURL}/wp-json/matise/utilities/gfapi/${formID}?path=${window.location.pathname}`;
+				let URL = `${options.baseURL}/wp-json/matise/utilities/gfapi/${formID}?path=${window.location.pathname}`;
 				if (window.location.search.substr(1)) {
 					URL += `&${window.location.search.substr(1)}`;
 				}
@@ -574,7 +719,7 @@ export default function(options, Vue) {
 				}
 			},
 			async new(formID) {
-				const URL = `${options.baseURL}/wp-json/matise/utilities/gfapi/${formID}?path=${window.location.pathname}`;
+				let URL = `${options.baseURL}/wp-json/matise/utilities/gfapi/${formID}?path=${window.location.pathname}`;
 				if (window.location.search.substr(1)) {
 					URL += `&${window.location.search.substr(1)}`;
 				}

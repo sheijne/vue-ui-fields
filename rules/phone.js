@@ -1,7 +1,10 @@
-export default (value) => {
-	const strVal = String(value)
-		.split(' ')
-		.join('');
-	/* eslint-disable */
-	return /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(strVal);
+import isMobilePhone from 'validator/lib/isMobilePhone';
+
+/**
+ * Check if value is a valid phonenumber
+ * @param {String} value
+ * @param {Array, String} locale
+ */
+export default (value, locale) => {	
+	return isMobilePhone(value, locale);
 };

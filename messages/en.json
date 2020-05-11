@@ -13,5 +13,6 @@
 	"required": "This field is required",
 	"url": "URL not valid",
 	"vat": "VAT number is not valid",
-	"phone": "Phonenumber is not valid"
+	"phone": "Phonenumber is not valid",
+	"text": "Use alphabetical characters"
 }

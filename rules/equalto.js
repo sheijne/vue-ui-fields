@@ -1,7 +1,8 @@
-export default (value, otherField) => {
-	const field = otherField();
-	if (field) {
-		return field.value === value;
-	}
-	return false;
+/**
+ * Check if value is equal to another field
+ * @param {String} value
+ * @param {Function} otherFieldValue
+ */
+export default (value, otherFieldValue) => {
+	return otherFieldValue() === value;
 };

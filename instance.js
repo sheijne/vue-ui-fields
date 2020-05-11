@@ -76,7 +76,7 @@ export default (options, Vue) => {
 
 			const defaultHTMLSettings = [
 				{ key: 'autocomplete', type: 'string' },
-				{ key: 'accept', type: 'string', default: '*' },
+				{ key: 'accept', type: 'string' },
 				{ key: 'disabled', type: 'boolean' },
 				{ key: 'max', type: 'number' },
 				{ key: 'maxlength', type: 'number' },
@@ -86,7 +86,7 @@ export default (options, Vue) => {
 				{ key: 'placeholder', type: 'string' },
 				{ key: 'required', type: 'boolean' },
 				{ key: 'step', type: 'number' },
-				{ key: 'autofocus', type: 'boolean' },
+				{ key: 'autofocus', type: 'boolean' }
 			];
 
 			const defaultOptionsSettings = [
@@ -163,7 +163,7 @@ export default (options, Vue) => {
 							value = [];
 						}
 					}
-				} else if (type === 'select') {
+				} else if (type === 'select' || type ==='radio') {
 					if (!value) {
 						const selectedIndex = formattedOptions.findIndex((option) => option.selected);
 						if (selectedIndex > -1) {
@@ -229,6 +229,11 @@ export default (options, Vue) => {
 				case 'text':
 				case 'phone':
 				case 'date':
+				case 'number':
+				case 'email':
+				case 'tel':
+				case 'password':
+				case 'range':
 					return 'uiText';
 				case 'hidden':
 					return 'uiHidden';
@@ -241,18 +246,8 @@ export default (options, Vue) => {
 					return 'uiCheckbox';
 				case 'radio':
 					return 'uiRadio';
-				case 'number':
-					return 'uiText';
 				case 'textarea':
 					return 'uiTextarea';
-				case 'email':
-					return 'uiText';
-				case 'tel':
-					return 'uiText';
-				case 'password':
-					return 'uiText';
-				case 'range':
-					return 'uiText';
 				default:
 					return type;
 			}
@@ -389,6 +384,9 @@ export default (options, Vue) => {
 					break;
 				case 'phone':
 					rules = await import('./rules/phone.js');
+					break;
+				case 'text':
+					rules = await import('./rules/text.js');
 					break;
 			}
 			if (rules) {

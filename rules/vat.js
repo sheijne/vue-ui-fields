@@ -28,24 +28,31 @@ const vatRegex = {
 	SK: '^(SK)?[0-9]{10}$'
 };
 
-export default (value, options) => {
+/**
+ * Check if value is a valid VAT number
+ * @param {String} value
+ * @param {Array, String} locale
+ */
+export default (value, locale) => {
 	if (!value) {
 		return true;
 	}
-
-	const field = options();
-	if (field) {
-		const fieldValue = field.value;
-		const regex = new RegExp(vatRegex[fieldValue]);
-		if (regex) {
-			const valueSplitted = value
-				.split('.')
-				.join('')
-				.split(' ')
-
-				.join();
-			return regex.test(valueSplitted);
-		}
+	if (Array.isArray(locale)) {
+		return !!locale.find(singleLocale => regEx(value, singleLocale))
+	} else {
+		return regEx(value, locale)
 	}
-	return false;
 };
+
+const regEx = (value, locale) => {
+	const regex = new RegExp(vatRegex[locale]);
+
+	if (regex) {
+		const valueSplitted = value
+			.split('.')
+			.join('')
+			.split(' ')
+			.join();
+		return regex.test(valueSplitted);
+	}
+}
