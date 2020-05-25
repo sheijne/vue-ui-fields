@@ -71,7 +71,8 @@ export default (options, Vue) => {
 				{ key: 'type', type: 'string' },
 				{ key: 'label', type: 'string', default: '' },
 				{ key: 'requiredText', type: 'string', default: '*' },
-				{ key: 'classes', type: 'array', default: [] }
+				{ key: 'classes', type: 'array', default: [] },
+				{ key: 'datalist', type: 'array' }
 			];
 
 			const defaultHTMLSettings = [
@@ -114,7 +115,7 @@ export default (options, Vue) => {
 				{ key: 'dependentSettings', values: defaultDependentSettings }
 			);
 
-			let { name, value, type, label, requiredText, classes } = baseSettings;
+			let { name, value, type, label, requiredText, classes, datalist } = baseSettings;
 			const componentType = this.formatComponentType(type);
 			const formattedField = {
 				customData: remaining,
@@ -125,7 +126,8 @@ export default (options, Vue) => {
 				name,
 				label,
 				classes,
-				requiredText
+				requiredText,
+				datalist
 			};
 
 			if (!value) {
@@ -388,6 +390,9 @@ export default (options, Vue) => {
 					break;
 				case 'text':
 					rules = await import('./rules/text.js');
+					break;
+				case 'includes':
+					rules = await import('./rules/includes.js');
 					break;
 			}
 			if (rules) {

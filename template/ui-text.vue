@@ -8,7 +8,11 @@
 			v-bind="fieldData.htmlSettings"
 			:class="`${className}__input ${fieldData.type}__input`"
 			@blur="setValue"
+			:list="fieldData.datalist ? `${form}_${name}_list` : ''"
 		/>
+		<datalist v-if="fieldData.datalist" :id="`${form}_${name}_list`">
+			<option v-for="(item, list) of fieldData.datalist" :key="list" :value="item" />
+		</datalist>
 		<label :class="`${className}__element ${fieldData.type}__element`" :for="`${form}_${name}`">
 			<span
 				:class="[
