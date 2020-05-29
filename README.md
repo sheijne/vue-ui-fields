@@ -8,4 +8,4 @@ You can find the documentation on [https://vue-ui-fields.matise.nl](https://vue-
 
 
 ## Author
-UI Fields is created by [https://github.com/dipsaus9](@dipsaus9). The project is open source so feel free to submit a PR.
+UI Fields is created by [@dipsaus9](https://github.com/dipsaus9). The project is open source so feel free to submit a PR.
