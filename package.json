@@ -3,6 +3,9 @@
 	"version": "4.1.1",
 	"description": "Ui Fields plugin for VueJS",
 	"author": "Dennis Dipsaus",
+	"scripts": {
+		"dokkie": "npx dokkie"
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/MatiseAms/vue-ui-fields.git"
@@ -10,6 +13,7 @@
 	"private": false,
 	"main": "./index.js",
 	"dependencies": {
+		"dokkie": "0.0.13",
 		"simple-crypto-js": "^2.2.0",
 		"validator": "^13.0.0"
 	},
