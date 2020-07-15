@@ -1,6 +1,6 @@
-import uiFieldsInstance	from './instance.js';
+import uiFieldsInstance from './instance.js';
 
-export default function(options, Vue) {
+export default function (options, Vue) {
 	const uiFieldsInstanceClass = uiFieldsInstance(options, Vue);
 	return {
 		/**
@@ -244,9 +244,12 @@ export default function(options, Vue) {
 				this.errorListeners.set(`${formName}_${fieldName}`, error);
 			} else {
 				if (this.waitedListeners.has(`${formName}_${fieldName}`)) {
-					this.waitedListeners.set(`${formName}_${fieldName}`, [...this.waitedListeners.get(`${formName}_${fieldName}`), listener]);
+					this.waitedListeners.set(`${formName}_${fieldName}`, [
+						...this.waitedListeners.get(`${formName}_${fieldName}`),
+						listener,
+					]);
 				} else {
-					this.waitedListeners.set(`${formName}_${fieldName}`, [listener])
+					this.waitedListeners.set(`${formName}_${fieldName}`, [listener]);
 				}
 			}
 		},
@@ -295,7 +298,7 @@ export default function(options, Vue) {
 		unsubscribeFields(formName) {
 			this.getFieldKeys(formName).forEach((fieldName) => {
 				this.unsubscribeField(formName, fieldName);
-			})
+			});
 		},
 
 		/**
@@ -305,18 +308,18 @@ export default function(options, Vue) {
 		 */
 		unsubscribeError(formName, fieldname) {
 			if (this.errorListeners.has(`${formName}_${fieldname}`)) {
-				this.errorListeners.delete(`${formName}_${fieldname}`)
+				this.errorListeners.delete(`${formName}_${fieldname}`);
 			}
 		},
-		
+
 		/**
 		 * Unsubscribe all Errors
 		 * @param {String} formName
 		 */
 		unsubscribeErrors(formName) {
 			this.getFieldKeys(formName).forEach((fieldName) => {
-				this.unsubscribeError(formName, fieldName)
-			})
+				this.unsubscribeError(formName, fieldName);
+			});
 		},
 
 		/**
@@ -326,8 +329,8 @@ export default function(options, Vue) {
 		delete(formName) {
 			if (!this.forms.has(formName)) {
 				return;
-			} 
-			
+			}
+
 			this.unsubscribeErrors(formName);
 			this.unsubscribeFields(formName);
 			this.unsubscribe(formName);
@@ -566,7 +569,7 @@ export default function(options, Vue) {
 		},
 		/**
 		 * Set new condition used in any page
-		 * @param {...any} args 
+		 * @param {...any} args
 		 * @param required {String} depFormName
 		 * @param required {String} depFieldName
 		 * @param required {String} formName
@@ -579,7 +582,7 @@ export default function(options, Vue) {
 				depFieldName, //required
 				valueFunction, //Can be string or function
 				formName, //required
-				fieldName //optional
+				fieldName, //optional
 			] = args;
 
 			// Check if fieldname is undefined, if it's not set a empty string to it
@@ -590,11 +593,11 @@ export default function(options, Vue) {
 			// If the type of variable valuefunction is a string then make a function of this string
 			if (typeof valueFunction === 'string') {
 				const val = valueFunction;
-				valueFunction = (value) => val === value
+				valueFunction = (value) => val === value;
 			}
-			
+
 			if (!Array.isArray(fieldName)) {
-				fieldName = [fieldName]
+				fieldName = [fieldName];
 			}
 
 			// Check if the listener allready exists in conditionListeners, if it's not set condition
@@ -603,10 +606,10 @@ export default function(options, Vue) {
 					this.conditionListeners.set(`${formName}_${name}`, {
 						depFormName,
 						depFieldName,
-						functions: []
+						functions: [],
 					});
 				}
-			})
+			});
 
 			// Subscribe to this field when page is loaded, if it's not the subscribe will work when field value changed
 			fieldName.forEach((name) => {
@@ -620,8 +623,8 @@ export default function(options, Vue) {
 							});
 						}
 					}
-				})
-			})
+				});
+			});
 		},
 
 		/**
@@ -633,11 +636,15 @@ export default function(options, Vue) {
 			// if condition already exists in conditionListeners, get condition and push listener to this condition
 			if (this.conditionListeners.has(name)) {
 				const conditions = this.conditionListeners.get(name);
-				conditions.functions.push(listener)
+				conditions.functions.push(listener);
 				this.conditionListeners.set(name, conditions);
 
 				// makes a listener for a specific field
-				this._listen(conditions.depFormName, conditions.depFieldName, this.getValue(conditions.depFormName));
+				this._listen(
+					conditions.depFormName,
+					conditions.depFieldName,
+					this.getValue(conditions.depFormName)
+				);
 			}
 		},
 
@@ -647,7 +654,7 @@ export default function(options, Vue) {
 		 * @param optional {Array, String} fieldName - name of field from condition
 		 */
 		unsubscribeCondition(formName, fieldName) {
-			// Check if fieldName is empty, if it is empty make an empty string 
+			// Check if fieldName is empty, if it is empty make an empty string
 			if (!fieldName) {
 				fieldName = '';
 			}
@@ -657,81 +664,5 @@ export default function(options, Vue) {
 				this.conditionListeners.delete(`${formName}_${fieldName}`);
 			}
 		},
-
-		gfapi: {
-			async submit(formID) {
-				const result = Vue.prototype.$uiFields.validate(formID);
-				if (result.valid) {
-					const form = Vue.prototype.$uiFields.getForm(formID);
-					if (!form) {
-						return;
-					}
-					if (form.includesFile) {
-						return this.submitFiles(formID, form);
-					}
-
-
-					const data = Vue.prototype.$uiFields.getFormattedValues(String(formID));
-					const response = await fetch(
-						`${options.baseURL}/wp-json/matise/utilities/gfapi/${formID}?path=${window.location.pathname}&${window.location.search.substr(1)}`, {
-							method: 'POST', // *GET, POST, PUT, DELETE, etc.
-							headers: {
-								'Content-Type': 'application/json',
-							},
-							body: JSON.stringify(data),
-						}
-					).then((response) => response.json());
-					return this.handleFormSubmission(response);
-				}
-			},
-			async submitFiles(formID, form) {
-				const data = Vue.prototype.$uiFields.getFormattedValues(String(formID));
-				const formData = new FormData();
-
-				Object.keys(data).forEach((key) => {
-					const field = form.getField(key);
-					const value = data[key];
-					if (field.type !== 'file') {
-						formData.append(key + '_field', value);
-					} else {
-						formData.append(key, value);
-					}
-				});
-				let URL = `${options.baseURL}/wp-json/matise/utilities/gfapi/${formID}?path=${window.location.pathname}`;
-				if (window.location.search.substr(1)) {
-					URL += `&${window.location.search.substr(1)}`;
-				}
-				const response = await fetch(URL, {
-					method: 'POST', // *GET, POST, PUT, DELETE, etc.
-					body: formData
-				}).then((response) => response.json());
-				return this.handleFormSubmission(response);
-			},
-			handleFormSubmission(response) {
-				if (response && response.is_valid) {
-					switch (response.confirmation_type) {
-						case 'redirect':
-							window.location = response.confirmation_redirect;
-							break;
-						case 'message':
-							return response.confirmation_message;
-					}
-				}
-			},
-			async new(formID) {
-				let URL = `${options.baseURL}/wp-json/matise/utilities/gfapi/${formID}?path=${window.location.pathname}`;
-				if (window.location.search.substr(1)) {
-					URL += `&${window.location.search.substr(1)}`;
-				}
-				const formData = await fetch(URL).then((response) => response.json());
-				if (formData) {
-					const id = String(formData.id);
-					formData.id = String(id); //Falback for old wp core
-					Vue.prototype.$uiFields.new(id);
-					Vue.prototype.$uiFields.setFields(id, [...formData.fields]);
-					return formData;
-				}
-			}
-		}
 	};
 }
