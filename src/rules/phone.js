@@ -5,6 +5,6 @@ import isMobilePhone from 'validator/lib/isMobilePhone';
  * @param {String} value
  * @param {Array, String} locale
  */
-export default (value, locale) => {	
+export default (value, locale) => {
 	return isMobilePhone(value, locale);
 };

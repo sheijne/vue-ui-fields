@@ -25,7 +25,7 @@ const vatRegex = {
 	RO: '^(RO)?[0-9]{2,10}$',
 	SE: '^(SE)?[0-9]{12}$',
 	SI: '^(SI)?[0-9]{8}$',
-	SK: '^(SK)?[0-9]{10}$'
+	SK: '^(SK)?[0-9]{10}$',
 };
 
 /**
@@ -38,9 +38,9 @@ export default (value, locale) => {
 		return true;
 	}
 	if (Array.isArray(locale)) {
-		return !!locale.find(singleLocale => regEx(value, singleLocale))
+		return !!locale.find((singleLocale) => regEx(value, singleLocale));
 	} else {
-		return regEx(value, locale)
+		return regEx(value, locale);
 	}
 };
 
@@ -48,11 +48,7 @@ const regEx = (value, locale) => {
 	const regex = new RegExp(vatRegex[locale]);
 
 	if (regex) {
-		const valueSplitted = value
-			.split('.')
-			.join('')
-			.split(' ')
-			.join();
+		const valueSplitted = value.split('.').join('').split(' ').join();
 		return regex.test(valueSplitted);
 	}
-}
+};

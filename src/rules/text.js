@@ -4,5 +4,5 @@
  */
 export default (value) => {
 	const regex = new RegExp('^[A-Za-z]+$');
-	return regex.test(value)
+	return regex.test(value);
 };

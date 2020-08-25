@@ -16,11 +16,7 @@ const formatProperties = (object, ...args) => {
 			properties[defaultProp.key] = defaultProp.default;
 		}
 		if (defaultProp.type === 'array') {
-			if (
-				prop !== 'undefined' &&
-        prop !== null &&
-        (Array.isArray(prop))
-			) {
+			if (prop !== 'undefined' && prop !== null && Array.isArray(prop)) {
 				properties[defaultProp.key] = prop;
 				delete object[defaultProp.key];
 			}

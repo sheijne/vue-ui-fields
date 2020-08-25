@@ -183,10 +183,7 @@ export default function (options, Vue) {
 		 */
 		subscribe(formName, listener) {
 			if (this.formListeners.has(formName)) {
-				this.formListeners.set(formName, [
-					...this.formListeners.get(formName),
-					listener,
-				]);
+				this.formListeners.set(formName, [...this.formListeners.get(formName), listener]);
 			} else {
 				this.formListeners.set(formName, [listener]);
 			}
@@ -373,12 +370,7 @@ export default function (options, Vue) {
 					.map((event) => {
 						const validationResult = event.validation(value, event.options);
 						if (!validationResult) {
-							this._setError(
-								formName,
-								fieldName,
-								event.validationType,
-								event.message
-							);
+							this._setError(formName, fieldName, event.validationType, event.message);
 						} else {
 							this.removeError(formName, fieldName, event.validationType);
 						}
@@ -499,11 +491,7 @@ export default function (options, Vue) {
 				if (key.includes(formName)) {
 					const [newFormName, ...rest] = key.split('_');
 					const fieldName = rest.join('_');
-					this.checkError(
-						newFormName,
-						fieldName,
-						this.getValue(newFormName, fieldName)
-					);
+					this.checkError(newFormName, fieldName, this.getValue(newFormName, fieldName));
 				}
 			});
 			const errors = this.getErrors(formName);
@@ -640,11 +628,7 @@ export default function (options, Vue) {
 				this.conditionListeners.set(name, conditions);
 
 				// makes a listener for a specific field
-				this._listen(
-					conditions.depFormName,
-					conditions.depFieldName,
-					this.getValue(conditions.depFormName)
-				);
+				this._listen(conditions.depFormName, conditions.depFieldName, this.getValue(conditions.depFormName));
 			}
 		},
 

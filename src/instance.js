@@ -3,7 +3,6 @@ import messagesNL from './messages/nl.json';
 import messagesEN from './messages/en.json';
 import SimpleCrypto from 'simple-crypto-js';
 
-
 export default (options, Vue) => {
 	const time = new Date();
 	const simpleCrypto = new SimpleCrypto('VueUIFields');
@@ -21,50 +20,50 @@ export default (options, Vue) => {
 			this.className = Vue.prototype.$uiFields.className;
 		}
 		/**
-			* Return formname
-		*/
-		this.getFormName = function() {
+		 * Return formname
+		 */
+		this.getFormName = function () {
 			return this.name;
 		};
 
 		/**
-			* Return Formatted fields
-		*/
-		this.getFieldKeys = function() {
+		 * Return Formatted fields
+		 */
+		this.getFieldKeys = function () {
 			return [...this.fields.keys()];
 		};
 
 		/**
-			* Return fields map
-		*/
-		this.getFields = function() {
+		 * Return fields map
+		 */
+		this.getFields = function () {
 			return this.fields;
 		};
 
 		/**
-			* Return fields map
-		*/
-		this.getField = function(name) {
+		 * Return fields map
+		 */
+		this.getField = function (name) {
 			return this.fields.get(name);
 		};
 
 		/**
-			*
-			* @param {Array} options - Setfields -> array to setField
-		*/
-		this.setFields = function(fields) {
+		 *
+		 * @param {Array} options - Setfields -> array to setField
+		 */
+		this.setFields = function (fields) {
 			if (!Array.isArray(fields)) {
 				return;
 			}
 
-			fields.forEach(field => this.setField(field));
+			fields.forEach((field) => this.setField(field));
 		};
 
 		/**
-			*
-			* @param {Object} field - Set a field
-		*/
-		this.setField = async function(field) {
+		 *
+		 * @param {Object} field - Set a field
+		 */
+		this.setField = async function (field) {
 			const defaultSettings = [
 				{ key: 'name', type: 'string' },
 				{ key: 'value', type: 'string' },
@@ -72,7 +71,7 @@ export default (options, Vue) => {
 				{ key: 'label', type: 'string', default: '' },
 				{ key: 'requiredText', type: 'string', default: '*' },
 				{ key: 'classes', type: 'array', default: [] },
-				{ key: 'datalist', type: 'array' }
+				{ key: 'datalist', type: 'array' },
 			];
 
 			const defaultHTMLSettings = [
@@ -88,27 +87,22 @@ export default (options, Vue) => {
 				{ key: 'required', type: 'boolean' },
 				{ key: 'step', type: 'number' },
 				{ key: 'autofocus', type: 'boolean' },
-				{ key: 'maxUploadSize', type: 'number' }
+				{ key: 'maxUploadSize', type: 'number' },
 			];
 
 			const defaultOptionsSettings = [
 				{ key: 'selected', type: 'boolean', default: false },
 				{ key: 'disabled', type: 'boolean' },
 				{ key: 'label', type: 'string', default: '' },
-				{ key: 'value', type: 'string', default: '' }
+				{ key: 'value', type: 'string', default: '' },
 			];
 
 			const defaultDependentSettings = [
 				{ key: 'validation', type: 'any', default: [] },
-				{ key: 'persistent', type: 'boolean', default: true }
+				{ key: 'persistent', type: 'boolean', default: true },
 			];
 
-			let {
-				baseSettings,
-				dependentSettings,
-				htmlSettings,
-				...remaining
-			} = formatProperties(
+			let { baseSettings, dependentSettings, htmlSettings, ...remaining } = formatProperties(
 				field,
 				{ key: 'baseSettings', values: defaultSettings },
 				{ key: 'htmlSettings', values: defaultHTMLSettings },
@@ -127,7 +121,7 @@ export default (options, Vue) => {
 				label,
 				classes,
 				requiredText,
-				datalist
+				datalist,
 			};
 
 			if (!value) {
@@ -147,7 +141,7 @@ export default (options, Vue) => {
 					remaining.options.forEach((opt) => {
 						const { option, ...rest } = formatProperties(opt, {
 							key: 'option',
-							values: defaultOptionsSettings
+							values: defaultOptionsSettings,
 						});
 						option.customData = rest;
 						formattedOptions.push(option);
@@ -157,16 +151,14 @@ export default (options, Vue) => {
 
 				if (type === 'checkbox') {
 					if (!value) {
-						const selectedIndex = formattedOptions.findIndex(
-							option => option.selected
-						);
+						const selectedIndex = formattedOptions.findIndex((option) => option.selected);
 						if (selectedIndex > -1) {
 							value = [formattedOptions[selectedIndex].value];
 						} else {
 							value = [];
 						}
 					}
-				} else if (type === 'select' || type ==='radio') {
+				} else if (type === 'select' || type === 'radio') {
 					if (!value) {
 						const selectedIndex = formattedOptions.findIndex((option) => option.selected);
 						if (selectedIndex > -1) {
@@ -195,7 +187,7 @@ export default (options, Vue) => {
 		 * @param {String} fieldName
 		 * @param {*} value
 		 */
-		this.setValue = function(fieldName, value, addToStorage = true) {
+		this.setValue = function (fieldName, value, addToStorage = true) {
 			const field = this.getField(fieldName);
 			this.values.set(fieldName, value);
 			if (field.type !== 'checkbox' && field.type !== 'file' && field.dependentSettings.persistent && addToStorage) {
@@ -207,14 +199,14 @@ export default (options, Vue) => {
 		 * Set single value
 		 * @param {String} fieldName
 		 */
-		this.getValue = function(fieldName) {
+		this.getValue = function (fieldName) {
 			return this.values.get(fieldName);
 		};
 
 		/**
 		 * Returns formatted data
 		 */
-		this.getFormattedValues = function() {
+		this.getFormattedValues = function () {
 			const values = this.values;
 			let obj = Object.create(null);
 			for (let [k, v] of values) {
@@ -224,10 +216,10 @@ export default (options, Vue) => {
 		};
 
 		/**
-			* Get component type
-			* @param {String} type
-			*/
-		this.formatComponentType = function(type) {
+		 * Get component type
+		 * @param {String} type
+		 */
+		this.formatComponentType = function (type) {
 			switch (type) {
 				case 'text':
 				case 'phone':
@@ -260,7 +252,7 @@ export default (options, Vue) => {
 		 * Subscribe form
 		 * @param {Function} listener
 		 */
-		this.subscribe = function(listener) {
+		this.subscribe = function (listener) {
 			Vue.prototype.$uiFields.subscribe(this.getFormName(), listener);
 		};
 
@@ -269,30 +261,30 @@ export default (options, Vue) => {
 		 * @param {String} fieldName
 		 * @param {Function} listener
 		 */
-		this.subscribeField = function(fieldName, listener) {
+		this.subscribeField = function (fieldName, listener) {
 			Vue.$uiFields.subscribeField(this.getFormName(), fieldName, listener);
 		};
 
 		/**
-		* Subscribe field
-		* @param {String} fieldName
-		* @param {Function} listener
-		*/
-		this.subscribeError = function(fieldName, listener) {
+		 * Subscribe field
+		 * @param {String} fieldName
+		 * @param {Function} listener
+		 */
+		this.subscribeError = function (fieldName, listener) {
 			Vue.prototype.$uiFields.subscribeError(this.getFormName(), fieldName, listener);
 		};
 
 		/**
 		 * Unsubscribe form
 		 */
-		this.unsubscribe = function(){
+		this.unsubscribe = function () {
 			Vue.prototype.$uiFields.unsubscribe(this.getFormName());
 		};
 
 		/**
 		 * Unsubscribe field
 		 */
-		this.unsubscribeField = function(fieldName) {
+		this.unsubscribeField = function (fieldName) {
 			Vue.prototype.$uiFields.unsubscribe(this.getFormName(), fieldName);
 		};
 
@@ -302,7 +294,7 @@ export default (options, Vue) => {
 		 * @param {String} errorName
 		 * @param {String} error
 		 */
-		this._setError = function(fieldName, errorName, error) {
+		this._setError = function (fieldName, errorName, error) {
 			this.errors.set(`${fieldName}_${errorName}`, error);
 		};
 
@@ -310,21 +302,21 @@ export default (options, Vue) => {
 		 * get error on field
 		 * @param {String} fieldName
 		 */
-		this.getError = function(fieldName, errorName) {
+		this.getError = function (fieldName, errorName) {
 			return this.errors.get(`${fieldName}_${errorName}`);
 		};
 
 		/**
 		 * get all errors
 		 */
-		this.getErrors = function() {
+		this.getErrors = function () {
 			return this.errors;
 		};
 
 		/**
 		 * Get error keys
 		 */
-		this.getErrorKeys = function() {
+		this.getErrorKeys = function () {
 			return [...this.errors.keys()];
 		};
 
@@ -333,14 +325,14 @@ export default (options, Vue) => {
 		 * @param {String} fieldName
 		 * @param {String} errorName
 		 */
-		this.removeError = function(fieldName, errorName) {
+		this.removeError = function (fieldName, errorName) {
 			this.errors.delete(`${fieldName}_${errorName}`);
 		};
 
 		/**
 		 * Validator Object
 		 */
-		this.validator = async function(type) {
+		this.validator = async function (type) {
 			let rules;
 			switch (type) {
 				case 'required':
@@ -405,7 +397,7 @@ export default (options, Vue) => {
 		 * Add valiation subscriber
 		 * @param {Array} validation
 		 */
-		this.defineValidation = function(validation, name) {
+		this.defineValidation = function (validation, name) {
 			validation.forEach((validator) => {
 				let validationType = '';
 				if (typeof validator === 'string') {
@@ -443,7 +435,7 @@ export default (options, Vue) => {
 							validation: validationChecker,
 							options,
 							validationType: validationType,
-							message
+							message,
 						});
 					});
 				} else {
@@ -455,13 +447,13 @@ export default (options, Vue) => {
 						validation: validationFunction,
 						options,
 						validationType: validationType,
-						message
+						message,
 					});
 				}
 			});
 		};
 
-		this.addToLocalStorage = function(name, value) {
+		this.addToLocalStorage = function (name, value) {
 			if (typeof window !== 'undefined' && window.localStorage) {
 				const oldData = localStorage.getItem(this.options.projectName);
 				let data = null;
@@ -472,12 +464,13 @@ export default (options, Vue) => {
 				}
 				data.set(`${this.getFormName()}_${name}`, simpleCrypto.encrypt(value));
 				localStorage.setItem(
-					this.options.projectName, JSON.stringify({ time: time.getTime(), data: Array.from(data.entries()) })
+					this.options.projectName,
+					JSON.stringify({ time: time.getTime(), data: Array.from(data.entries()) })
 				);
 			}
 		};
 
-		this.getOldValue = function(name) {
+		this.getOldValue = function (name) {
 			if (typeof window !== 'undefined' && window.localStorage) {
 				const oldData = localStorage.getItem(this.options.projectName);
 				let data = null;
@@ -485,7 +478,7 @@ export default (options, Vue) => {
 					const allData = JSON.parse(oldData);
 					data = new Map(allData.data);
 					const uiFieldsTime = allData.time;
-					if ((time.getTime() - uiFieldsTime) > this.options.persistentTime) {
+					if (time.getTime() - uiFieldsTime > this.options.persistentTime) {
 						localStorage.removeItem(this.options.projectName);
 						return false;
 					}

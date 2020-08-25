@@ -13,8 +13,8 @@ export const DEFAULT_OPTIONS = {
 		classes: {
 			error: 'invalid',
 			valid: 'valid',
-			pristine: 'pristine'
-		}
+			pristine: 'pristine',
+		},
 	},
-	persistentTime: 1000 * 60 * 60 * 12 //half a day
+	persistentTime: 1000 * 60 * 60 * 12, //half a day
 };

@@ -8,10 +8,9 @@ const uiFields = {
 				persistentTime: 1000 * 60 * 60 * 12,
 				lang: 'en',
 				className: 'ui-fields',
-				baseURL: ''
+				baseURL: '',
 			};
 		} else {
-
 			if (!Object.prototype.hasOwnProperty.call(options, 'projectName')) {
 				options.projectName = 'VueUiFields';
 			}
@@ -39,7 +38,7 @@ const uiFields = {
 		Vue.component('uiFields', () => import('./template/ui-fields.vue'));
 		Vue.component('uiField', () => import('./template/ui-field.vue'));
 		Vue.prototype.$uiFields = prototype(options, Vue);
-	}
+	},
 };
 
 export default uiFields;
