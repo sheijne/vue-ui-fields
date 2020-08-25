@@ -219,7 +219,7 @@ export default (options, Vue) => {
 		 * Get component type
 		 * @param {String} type
 		 */
-		this.formatComponentType = function (type) {
+		this.formatComponentType = function (type = 'text') {
 			switch (type) {
 				case 'text':
 				case 'phone':
