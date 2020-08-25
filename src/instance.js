@@ -229,20 +229,20 @@ export default (options, Vue) => {
 				case 'tel':
 				case 'password':
 				case 'range':
-					return 'uiText';
+					return 'UiText';
 				case 'hidden':
-					return 'uiHidden';
+					return 'UiHidden';
 				case 'file':
 					this.includesFile = true;
-					return 'uiFile';
+					return 'UiFile';
 				case 'select':
-					return 'uiSelect';
+					return 'UiSelect';
 				case 'checkbox':
-					return 'uiCheckbox';
+					return 'UiCheckbox';
 				case 'radio':
-					return 'uiRadio';
+					return 'UiRadio';
 				case 'textarea':
-					return 'uiTextarea';
+					return 'UiTextarea';
 				default:
 					return type;
 			}

@@ -10,13 +10,13 @@ export default {
 			type: Object,
 			default: () => {
 				return {};
-			}
-		}
+			},
+		},
 	},
 	computed: {
 		className() {
-			return this.$uiFields.className
-		}
-	}
+			return this.$uiFields.className;
+		},
+	},
 };
 </script>

@@ -14,13 +14,13 @@ export default {
 	mixins: [mixinSettings],
 	data() {
 		return {
-			component: 'ui-hidden'
+			component: 'ui-hidden',
 		};
 	},
 	computed: {
 		className() {
-			return this.$uiFields.getClassName(this.form)
-		}
-	}
+			return this.$uiFields.getClassName(this.form);
+		},
+	},
 };
 </script>

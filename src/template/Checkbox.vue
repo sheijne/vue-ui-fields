@@ -15,12 +15,16 @@
 				:class="`${className}__input ${fieldData.type}__input`"
 				@change="setCheckboxValue"
 			/>
-			<label :key="`label_${key}`" :class="`${className}__element ${fieldData.type}__element`" :for="`${form}_${name}_${key}`">
+			<label
+				:key="`label_${key}`"
+				:class="`${className}__element ${fieldData.type}__element`"
+				:for="`${form}_${name}_${key}`"
+			>
 				<span
 					:class="[
 						fieldData.htmlSettings.required
 							? `${fieldData.type}__label--is-required ${className}__label ${fieldData.type}__label`
-							: `${className}__label ${fieldData.type}__label`
+							: `${className}__label ${fieldData.type}__label`,
 					]"
 					v-html="option.label"
 				>
@@ -37,18 +41,18 @@ export default {
 	data() {
 		return {
 			component: 'ui-checkbox',
-			firstValue: []
+			firstValue: [],
 		};
+	},
+	computed: {
+		className() {
+			return this.$uiFields.className;
+		},
 	},
 	methods: {
 		setCheckboxValue() {
 			this.$uiFields.setValue(this.form, this.name, this.firstValue);
-		}
+		},
 	},
-	computed: {
-		className() {
-			return this.$uiFields.className
-		}
-	}
 };
 </script>
