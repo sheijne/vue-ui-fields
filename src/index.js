@@ -8,10 +8,9 @@ const uiFields = {
 				persistentTime: 1000 * 60 * 60 * 12,
 				lang: 'en',
 				className: 'ui-fields',
-				baseURL: ''
+				baseURL: '',
 			};
 		} else {
-
 			if (!Object.prototype.hasOwnProperty.call(options, 'projectName')) {
 				options.projectName = 'VueUiFields';
 			}
@@ -34,12 +33,12 @@ const uiFields = {
 		}
 
 		//Global mixin functions
-		Vue.component('uiErrors', () => import('./template/ui-errors.vue'));
-		Vue.component('uiError', () => import('./template/ui-error.vue'));
-		Vue.component('uiFields', () => import('./template/ui-fields.vue'));
-		Vue.component('uiField', () => import('./template/ui-field.vue'));
+		Vue.component('UiErrors', () => import('./template/Errors.vue'));
+		Vue.component('UiError', () => import('./template/Error.vue'));
+		Vue.component('UiFields', () => import('./template/Fields.vue'));
+		Vue.component('UiField', () => import('./template/Field.vue'));
 		Vue.prototype.$uiFields = prototype(options, Vue);
-	}
+	},
 };
 
 export default uiFields;

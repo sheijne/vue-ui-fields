@@ -10,8 +10,8 @@ export default (value, locale) => {
 		return true;
 	}
 	if (Array.isArray(locale)) {
-		return !!locale.find(singeLocale => isPostalCode(value, singeLocale))
+		return !!locale.find((singeLocale) => isPostalCode(value, singeLocale));
 	} else {
-		return isPostalCode(value, locale)
+		return isPostalCode(value, locale);
 	}
 };

@@ -2,16 +2,16 @@ export default {
 	props: {
 		name: {
 			type: String,
-			default: ''
+			default: '',
 		},
 		form: {
 			type: String,
-			default: ''
+			default: '',
 		},
 		fieldValue: {
 			type: [String, Array],
-			default: ''
-		}
+			default: '',
+		},
 	},
 	computed: {
 		fieldData() {
@@ -25,12 +25,12 @@ export default {
 				if (this.fieldData !== 'chekcbox') {
 					this.$uiFields.setValue(this.form, this.name, value, false);
 				}
-			}
-		}
+			},
+		},
 	},
 	methods: {
 		setValue($event) {
 			this.$uiFields.setValue(this.form, this.name, $event.target.value);
-		}
-	}
+		},
+	},
 };

@@ -1,6 +1,6 @@
 <template>
 	<p v-if="errors && errors.length" class="ui-fields__error-message">
-		<uiError v-for="(error, index) of errors" :key="index" :error="error" />
+		<UiError v-for="(error, index) of errors" :key="index" :error="error" />
 	</p>
 </template>
 <script>
@@ -8,16 +8,16 @@ export default {
 	props: {
 		form: {
 			type: String,
-			default: 'null'
+			default: 'null',
 		},
 		name: {
 			type: String,
-			default: ''
-		}
+			default: '',
+		},
 	},
 	data() {
 		return {
-			errors: []
+			errors: [],
 		};
 	},
 	created() {
@@ -28,6 +28,6 @@ export default {
 				this.errors.length = 1;
 			}
 		});
-	}
+	},
 };
 </script>

@@ -5,15 +5,15 @@
 			:name="fieldData.name"
 			type="file"
 			v-bind="fieldData.htmlSettings"
-			@change="onFileChange($event)"
 			:class="`${className}__input ${fieldData.type}__input`"
+			@change="onFileChange($event)"
 		/>
 		<label :class="`${className}__element ${fieldData.type}__element`" :for="`${form}_${name}`">
 			<span
 				:class="[
 					fieldData.htmlSettings.required
 						? `${fieldData.type}__label--is-required ${className}__label ${fieldData.type}__label`
-						: `${className}__label ${fieldData.type}__label`
+						: `${className}__label ${fieldData.type}__label`,
 				]"
 				v-html="fieldData.label"
 			>
@@ -26,18 +26,11 @@
 			</span>
 		</label>
 		<p :class="`${className}__fileinfo`">
-			<span :class="[
-				pristine ? `${className}__filename--placeholder` : '',
-				`${className}__filename`,
-				
-				]" 
-				>
+			<span :class="[pristine ? `${className}__filename--placeholder` : '', `${className}__filename`]">
 				{{ pristine ? fieldData.htmlSettings.placeholder : fileName }}
 			</span>
-			<span :class="`${className}__filesize`" v-if="!pristine">
-				{{ size }}MB
-			</span>
-			<span :class="`${className}__max-filesize`" v-if="fieldData.htmlSettings.maxUploadSize && pristine">
+			<span v-if="!pristine" :class="`${className}__filesize`"> {{ size }}MB </span>
+			<span v-if="fieldData.htmlSettings.maxUploadSize && pristine" :class="`${className}__max-filesize`">
 				Max. {{ fieldData.htmlSettings.maxUploadSize }}MB
 			</span>
 		</p>
@@ -53,13 +46,13 @@ export default {
 			component: 'ui-file',
 			pristine: true,
 			fileName: '',
-			size: 0
+			size: 0,
 		};
 	},
 	computed: {
 		className() {
-			return this.$uiFields.className
-		}
+			return this.$uiFields.className;
+		},
 	},
 	methods: {
 		onFileChange(event) {
@@ -67,7 +60,7 @@ export default {
 			this.pristine = false;
 			this.fileName = event.target.files[0].name;
 			this.$uiFields.setValue(this.form, this.name, event.target.files[0]);
-		}
-	}
+		},
+	},
 };
 </script>

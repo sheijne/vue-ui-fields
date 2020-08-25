@@ -18,7 +18,7 @@
 				:class="[
 					fieldData.htmlSettings.required
 						? `${fieldData.type}__label--is-required ${className}__label ${fieldData.type}__label`
-						: `${className}__label ${fieldData.type}__label`
+						: `${className}__label ${fieldData.type}__label`,
 				]"
 				v-html="fieldData.label"
 			>
@@ -39,13 +39,13 @@ export default {
 	mixins: [mixinSettings],
 	data() {
 		return {
-			component: 'ui-select'
+			component: 'ui-select',
 		};
 	},
 	computed: {
 		className() {
-			return this.$uiFields.className
-		}
-	}
+			return this.$uiFields.className;
+		},
+	},
 };
 </script>
