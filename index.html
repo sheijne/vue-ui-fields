@@ -250,24 +250,37 @@
           form.
         </p>
         <p>
-          The idea of UI Fields started a long time ago. For multiple projects
-          some people at Matise created some component based forms to manage the
-          checkout of a ecommerce website. As these componenents progressed we
-          found multiple issues regarding the state management of Vue. This is
-          why we created a global Vuex state management that can create forms.
-          This was the first version of UI Fields.
+          The idea of UI Fields started in 2018. For multiple projects Dennis
+          created some component based forms to manage the checkout of a
+          ecommerce website. As these componenents progressed we found multiple
+          issues regarding the state management of Vue. This is why we created a
+          plugin using the Vuex state management that can create forms. This was
+          the first version of UI Fields.
         </p>
         <p>
-          Vue UI Fields has progressed from a Vuex dependend plugin to a full
-          lightweight component plugin with some reactive ES6 state management.
-          This way the plugin doesn’t use too much JavaScript and all data will
-          be removed on destroy events. This prevents JS memomery issues.
+          UI Fields was made to create forms with the same layout along a larger
+          development team. UI Fields consisted of multiple single field
+          options, like a text input. These componenents could be included
+          anywhere in your project. The main problem was that a single component
+          could not manipulate data over other components. This resulted in a
+          complex strucutre using the emit functions from Vue with a lot of
+          chaos among the developers.
         </p>
         <p>
-          UI Fields creates a form based on a two steps. First you need to
-          create a new form so UI Fields knows you are creating html. After this
-          you can add fields to the form with the setField function. Now you are
-          ready to go, this will render all the html you need for your form.
+          When creating larger forms in Vue you often use Vuex to solve the
+          problem described above. This is a good solution as Vue offers this
+          with the help of computed getters and setters. But as your form grows
+          the Vuex increases in mutation listeners. If you use a computed value
+          with some watchers this can result in some slow feedback along your
+          website and a decrease in performance.
+        </p>
+        <p>
+          From this point of view and many iterations UI Fields was created to
+          solve these problems. UI Fields now offers the ability to create
+          faster forms with logic among the components. UI Fields uses data
+          manipulation based on Vue prototype wich has a much faster resolving
+          as it skips a lot of mutation handlers by Vue. You can subscribe and
+          listen to these events programmatically if needed.
         </p>
         <h2 id="documentation">Documentation</h2>
         <p>
