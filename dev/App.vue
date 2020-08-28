@@ -16,14 +16,14 @@ export default {
 				options: [
 					{
 						value: 'true',
-						label: 'Do you want to ship your order to a different address?'
-					}
-				]
+						label: 'Do you want to ship your order to a different address?',
+					},
+				],
 			},
 			{
 				name: 'shipping_address',
-				label: 'Address'
-			}
+				label: 'Address',
+			},
 		]);
 
 		this.$uiFields.setCondition(
@@ -38,7 +38,7 @@ export default {
 			'checkout',
 			'shipping_address'
 		);
-	}
+	},
 };
 </script>
 
