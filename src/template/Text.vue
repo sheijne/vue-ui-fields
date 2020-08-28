@@ -33,19 +33,17 @@
 		<uiErrors :form="form" :name="name" />
 	</div>
 </template>
-<script>
-import mixinSettings from '../helpers/mixin';
-export default {
-	mixins: [mixinSettings],
-	data() {
-		return {
-			component: 'ui-text',
-		};
-	},
-	computed: {
-		className() {
-			return this.$uiFields.getClassName(this.form);
-		},
-	},
-};
+<script lang="ts">
+import { mixins } from 'vue-class-component';
+import { Vue, Component } from 'vue-property-decorator';
+import { UIFieldsMixin } from '../helpers/mixin';
+
+@Component
+export class UIText extends mixins(UIFieldsMixin) {
+	public component: string = 'ui-text';
+
+	get className() {
+		return this.$uiFields.getClassName(this.form);
+	}
+}
 </script>

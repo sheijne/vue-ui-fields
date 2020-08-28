@@ -1,11 +1,11 @@
 import uiFieldsInstance from './instance';
 
 import type { UIFieldsOptions } from './types/options';
-import type { Field } from './types/field';
+import type { Field, UIFields } from './types/field';
 
 import type _Vue from 'vue';
 
-export default function (options: UIFieldsOptions) {
+export default function (options: UIFieldsOptions): UIFields {
 	return {
 		/**
 		 * Current form instance
@@ -20,11 +20,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Create a new form
 		 */
-		new(name: string) {
-			if (!name) {
-				return;
-			}
-
+		new(name) {
 			const form = new uiFieldsInstance(options);
 			this.forms.set(name, form);
 			return form;
@@ -33,14 +29,14 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Set value to array
 		 */
-		getValue(formName: string, fieldName: string | string[]): string {
+		getValue(formName, fieldName) {
 			if (!formName || !fieldName) {
-				return '';
+				return;
 			}
 
 			const form = this.getForm(formName);
 			if (!form) {
-				return '';
+				return;
 			}
 
 			return form.getValue(fieldName);
@@ -49,7 +45,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Get all fields of formname
 		 */
-		getFieldKeys(formName: string): string[] {
+		getFieldKeys(formName) {
 			const form = this.getForm(formName);
 			if (!form) {
 				return [];
@@ -60,7 +56,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Get single field
 		 */
-		getField(formName: string, fieldName: string): Field | undefined {
+		getField(formName, fieldName) {
 			const form = this.getForm(formName);
 			if (!form) {
 				return;
@@ -71,7 +67,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Get all fields
 		 */
-		getFields(formName: string) {
+		getFields(formName) {
 			const form = this.getForm(formName);
 			if (!form) {
 				return;
@@ -82,21 +78,17 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Get form
 		 */
-		getForm(formName: string) {
+		getForm(formName) {
 			return this.forms.get(formName);
 		},
 
 		/**
 		 * Get all values mapped
 		 */
-		getValues(formName: string) {
-			if (!formName) {
-				return;
-			}
-
+		getValues(formName) {
 			const form = this.getForm(formName);
 			if (!form) {
-				return;
+				return [];
 			}
 			return [...form.values.values()];
 		},
@@ -120,11 +112,7 @@ export default function (options: UIFieldsOptions) {
 		 * Set new field
 		 * @param {Object} options
 		 */
-		setField(name: string, options: any) {
-			if (!name) {
-				return;
-			}
-
+		setField(name, options) {
 			const form = this.getForm(name);
 			if (!form) {
 				return;
@@ -134,9 +122,8 @@ export default function (options: UIFieldsOptions) {
 
 		/**
 		 * Set multiple fields
-		 * @param {Array} options
 		 */
-		setFields(name: string, options: any) {
+		setFields(name, options) {
 			if (!name) {
 				return;
 			}
@@ -150,11 +137,8 @@ export default function (options: UIFieldsOptions) {
 
 		/**
 		 * Set value to array
-		 * @param {String} name
-		 * @param {String || Array} value
-		 * @param {Boolean} checkError
 		 */
-		setValue(formName: string, name: string, value: string | string[], checkError: boolean = true) {
+		setValue(formName, name, value, checkError = true) {
 			if (!formName || !name) {
 				return;
 			}
@@ -173,7 +157,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Subscriber
 		 */
-		subscribe(formName: string, listener: void) {
+		subscribe(formName, listener) {
 			if (this.formListeners.has(formName)) {
 				this.formListeners.set(formName, [...this.formListeners.get(formName), listener]);
 			} else {
@@ -183,9 +167,8 @@ export default function (options: UIFieldsOptions) {
 
 		/**
 		 * Subscriber prototype, only used by fields
-		 * @param {Object} data
 		 */
-		_subscribeError(name: string, data: any) {
+		_subscribeError(name, data) {
 			if (this.errorListeners.has(name)) {
 				const oldError = this.errorListeners.get(name);
 				this.errorListeners.set(name, {
@@ -210,7 +193,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Unsubscriber custom errors prototype, only used by fields
 		 */
-		_unsubscribeCustomErrors(name: string) {
+		_unsubscribeCustomErrors(name) {
 			if (this.errorListeners.has(name)) {
 				const oldError = this.errorListeners.get(name);
 				const data = oldError.data.filter((error: any) => !error.custom);
@@ -220,9 +203,8 @@ export default function (options: UIFieldsOptions) {
 
 		/**
 		 * Subscriber
-		 * @param {Function} listener
 		 */
-		subscribeError(formName: string, fieldName: string, listener: void) {
+		subscribeError(formName, fieldName, listener) {
 			if (this.errorListeners.has(`${formName}_${fieldName}`)) {
 				const error = this.errorListeners.get(`${formName}_${fieldName}`);
 				error.functions.push(listener);
@@ -242,7 +224,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Subscriber
 		 */
-		subscribeField(formName: string, fieldName: string, listener: any) {
+		subscribeField(formName, fieldName, listener) {
 			if (this.fieldListeners.has(`${formName}_${fieldName}`)) {
 				this.fieldListeners.set(`${formName}_${fieldName}`, [
 					...this.fieldListeners.get(`${formName}_${fieldName}`),
@@ -256,7 +238,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Unsubscribe
 		 */
-		unsubscribe(formname: string) {
+		unsubscribe(formname) {
 			if (this.formListeners.has(formname)) {
 				this.formListeners.delete(formname);
 			}
@@ -265,7 +247,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Unsubscribe Field
 		 */
-		unsubscribeField(formName: string, fieldName: string) {
+		unsubscribeField(formName, fieldName) {
 			if (this.fieldListeners.has(`${formName}_${fieldName}`)) {
 				this.fieldListeners.delete(`${formName}_${fieldName}`);
 			}
@@ -274,7 +256,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Unsubscribe all Fields
 		 */
-		unsubscribeFields(formName: string) {
+		unsubscribeFields(formName) {
 			this.getFieldKeys(formName).forEach((fieldName) => {
 				this.unsubscribeField(formName, fieldName);
 			});
@@ -283,7 +265,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Unsubscribe single Error
 		 */
-		unsubscribeError(formName: string, fieldname: string) {
+		unsubscribeError(formName, fieldname) {
 			if (this.errorListeners.has(`${formName}_${fieldname}`)) {
 				this.errorListeners.delete(`${formName}_${fieldname}`);
 			}
@@ -292,7 +274,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Unsubscribe all Errors
 		 */
-		unsubscribeErrors(formName: string) {
+		unsubscribeErrors(formName) {
 			this.getFieldKeys(formName).forEach((fieldName) => {
 				this.unsubscribeError(formName, fieldName);
 			});
@@ -301,7 +283,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Delete listeners of a single form
 		 */
-		delete(formName: string) {
+		delete(formName) {
 			if (!this.forms.has(formName)) {
 				return;
 			}
@@ -315,7 +297,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Listen to event
 		 */
-		_listen(formName: string, fieldName: string, value: string | string[]) {
+		_listen(formName, fieldName, value) {
 			//form event
 			if (this.formListeners.has(formName)) {
 				const events = this.formListeners.get(formName);
@@ -335,7 +317,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Listen to event
 		 */
-		checkError(formName: string, fieldName: string, value: string | string[]) {
+		checkError(formName, fieldName, value) {
 			//Field event
 			if (this.errorListeners.has(`${formName}_${fieldName}`)) {
 				const fieldEvents = this.errorListeners.get(`${formName}_${fieldName}`);
@@ -363,7 +345,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Set error
 		 */
-		_setError(formName: string, fieldName: string, errorName: string, error: string) {
+		_setError(formName, fieldName, errorName, error) {
 			if (!formName || !fieldName || !errorName) {
 				return;
 			}
@@ -378,7 +360,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Set error
 		 */
-		setError(formName: string, fieldName: string, error: string) {
+		setError(formName, fieldName, error) {
 			if (!formName || !fieldName) {
 				return;
 			}
@@ -399,7 +381,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Set error
 		 */
-		removeError(formName: string, fieldName: string, errorName: string) {
+		removeError(formName, fieldName, errorName) {
 			if (!formName || !fieldName || !errorName) {
 				return;
 			}
@@ -414,7 +396,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 *
 		 */
-		getError(formName: string, fieldName: string) {
+		getError(formName, fieldName) {
 			if (!formName || !fieldName) {
 				return;
 			}
@@ -429,7 +411,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Get all errors of a form
 		 */
-		getErrors(formName: string) {
+		getErrors(formName) {
 			if (!formName) {
 				return;
 			}
@@ -444,8 +426,8 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Validate form
 		 */
-		validate(formName: string) {
-			this.errorListeners.forEach((data, key) => {
+		validate(formName) {
+			this.errorListeners.forEach((data: any, key: string) => {
 				if (key.includes(formName)) {
 					const [newFormName, ...rest] = key.split('_');
 					const fieldName = rest.join('_');
@@ -473,7 +455,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Get classname of the form
 		 */
-		getClassName(formName: string) {
+		getClassName(formName) {
 			if (!formName) {
 				return;
 			}
@@ -488,7 +470,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Remove all custom errors
 		 */
-		removeCustomErrors(formName: string, fieldName: string) {
+		removeCustomErrors(formName, fieldName) {
 			this._unsubscribeCustomErrors(`${formName}_${fieldName}`);
 			if (this.errorListeners.has(`${formName}_${fieldName}`)) {
 				const fieldEvents = this.errorListeners.get(`${formName}_${fieldName}`);
@@ -513,7 +495,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Set new condition used in any page
 		 */
-		setCondition(...args: [string, string, any, string, string | string[]]) {
+		setCondition(...args) {
 			let [
 				depFormName, //required
 				depFieldName, //required
@@ -567,7 +549,7 @@ export default function (options: UIFieldsOptions) {
 		/**
 		 * Subscribe to a condition, used in ui-fields
 		 */
-		subscribeCondition(name: string, listener: void) {
+		subscribeCondition(name, listener) {
 			// if condition already exists in conditionListeners, get condition and push listener to this condition
 			if (this.conditionListeners.has(name)) {
 				const conditions = this.conditionListeners.get(name);
@@ -585,10 +567,8 @@ export default function (options: UIFieldsOptions) {
 
 		/**
 		 * Unsubscribe to a condition, used in ui-fields
-		 * @param required {String} formName - name of form from condition
-		 * @param optional {Array, String} fieldName - name of field from condition
 		 */
-		unsubscribeCondition(formName: string, fieldName: string) {
+		unsubscribeCondition(formName, fieldName) {
 			// Check if fieldName is empty, if it is empty make an empty string
 			if (!fieldName) {
 				fieldName = '';

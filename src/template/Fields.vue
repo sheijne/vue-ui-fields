@@ -6,30 +6,21 @@
 	</component>
 </template>
 
-<script>
-export default {
-	props: {
-		name: {
-			type: String,
-			default: '',
-		},
-		component: {
-			type: String,
-			default: 'div',
-		},
-	},
-	data() {
-		return {
-			visible: true,
-		};
-	},
-	computed: {
-		uiFields() {
-			return this.$uiFields.getFieldKeys(this.$props.name);
-		},
-	},
+<script lang="ts">
+import { Vue, Component, Prop } from 'vue-property-decorator';
+
+@Component
+export default class Fields extends Vue {
+	@Prop({ type: String, default: '' }) readonly name!: string;
+	@Prop({ type: String, default: 'div' }) readonly component!: string;
+
+	public visible: boolean = true;
+
+	get uiFields() {
+		return this.$uiFields.getFieldKeys(this.$props.name);
+	}
 	created() {
-		this.$uiFields.subscribeCondition(this.$props.name + '_', (result) => (this.visible = result));
-	},
-};
+		this.$uiFields.subscribeCondition(this.$props.name + '_', (result: boolean) => (this.visible = result));
+	}
+}
 </script>

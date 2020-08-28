@@ -16,8 +16,10 @@
 	/>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { Vue, Component, Prop } from 'vue-property-decorator';
+
+@Component({
 	components: {
 		UiText: () => import('./Text.vue'),
 		UiHidden: () => import('./Hidden.vue'),
@@ -26,37 +28,27 @@ export default {
 		UiRadio: () => import('./Radio.vue'),
 		UiTextarea: () => import('./Textarea.vue'),
 	},
-	props: {
-		name: {
-			type: String,
-			default: '',
-		},
-		form: {
-			type: String,
-			default: '',
-		},
-	},
-	data() {
-		return {
-			error: false,
-			pristine: true,
-			visible: true,
-		};
-	},
-	computed: {
-		className() {
-			return this.$uiFields.className;
-		},
-		field() {
-			return this.$uiFields.getField(this.form, this.name);
-		},
-	},
+})
+export default class Fields extends Vue {
+	@Prop({ type: String, default: '' }) readonly name!: string;
+	@Prop({ type: String, default: '' }) readonly form!: string;
+
+	public error: boolean = false;
+	public pristine: boolean = true;
+	public visible: boolean = true;
+
+	get className() {
+		return this.$uiFields.className;
+	}
+	get field() {
+		return this.$uiFields.getField(this.form, this.name);
+	}
 	created() {
 		this.$uiFields.subscribeError(this.form, this.name, (value, errorObject) => {
 			this.pristine = false;
 			this.error = errorObject.valid;
 		});
 		this.$uiFields.subscribeCondition(`${this.form}_${this.name}`, (result) => (this.visible = result));
-	},
-};
+	}
+}
 </script>

@@ -1,3 +1,5 @@
+import { UIFieldsOptions } from './options';
+
 export type FieldDependentSettings = {
 	persistent: boolean;
 	validation: any; //Fix this
@@ -50,24 +52,26 @@ export interface Field {
 
 export type ComponentType = 'UiText' | 'UiHidden' | 'UiSelect' | 'UiFile' | 'UiCheckbox' | 'UiRadio' | 'UiTextarea';
 
+export type FieldTypes =
+	| 'text'
+	| 'phone'
+	| 'date'
+	| 'number'
+	| 'email'
+	| 'tel'
+	| 'password'
+	| 'range'
+	| 'hidden'
+	| 'file'
+	| 'select'
+	| 'radio'
+	| 'checkbox'
+	| 'textarea';
+
 export type SetField = {
 	name: string;
 	value: string | string[];
-	type:
-		| 'text'
-		| 'phone'
-		| 'date'
-		| 'number'
-		| 'email'
-		| 'tel'
-		| 'password'
-		| 'range'
-		| 'hidden'
-		| 'file'
-		| 'select'
-		| 'radio'
-		| 'checkbox'
-		| 'textarea';
+	type: FieldTypes;
 	label: string;
 	requiredText: string;
 	classes: string | string[];
@@ -156,3 +160,84 @@ export type ValidationSettings = {
 	options?: any;
 	validation?: any;
 };
+
+export interface Form {
+	options: UIFieldsOptions;
+	name: string;
+	fields: Map;
+	values: Map;
+	errors: Map;
+	includesFile: boolean;
+	className: string;
+	getFormName: () => string;
+	getFieldKeys: () => string[];
+	getFields: () => Map<string, Field>;
+	getField: (name: string) => Field;
+	setFields: (fields: SetField[]) => void;
+	setField: (field: SetField) => void;
+	setValue: (fieldName: string, value: any, addToStorage = true) => void;
+	getValue: (fieldName: string) => string;
+	getFormattedValues: () => any;
+	formatComponentType: (type: FieldTypes = 'text') => ComponentType;
+	subscribe: (listener: (...args: any) => void) => void;
+	subscribeField: (fieldName: string, listener: (...args: any) => void) => void;
+	subscribeError: (fieldName: string, listener: (...args: any) => void) => void;
+	unsubscribe: () => void;
+	unsubscribeField: (fieldName: string) => void;
+	_setError: (fieldName: string, errorName: string, error: string) => void;
+	getError: (fieldName: string, errorName: string) => string;
+	getErrors: () => Record<string, any>;
+	getErrorKeys: () => string[];
+	removeError: (fieldName: string, errorName: string) => void;
+	validator: (type: ValidationOptions) => void;
+	defineValidation: (validation: ValidationSettings[], name: string) => void;
+	addToLocalStorage: (name: string, value: string) => void;
+	getOldValue: (name: string) => Record<string, any> | undefined | false;
+}
+export type Map = Record & {
+	keys: () => string[];
+};
+export interface UIFields {
+	className: string;
+	forms: Map<string, any>;
+	formListeners: Map<string, any>;
+	fieldListeners: Map<string, any>;
+	conditionListeners: Map<string, any>;
+	errorListeners: Map<string, any>;
+	waitedListeners: Map<string, any>;
+	getValue: (formName: string, fieldName: string) => string;
+	new: (name: string) => Form;
+	getFieldKeys: (key: string) => string[];
+	getField: (formName: string, fieldName: string) => Field | undefined;
+	getFields: (formName: string) => Map<string, Field>;
+	getForm: (formName: string) => Form;
+	getValues: (formName: string) => string[];
+	getFormattedValues: (formName: string) => any;
+	setField: (name: string, options: SetField) => void;
+	setFields: (name: string, options: SetField[]) => void;
+	setValue: (formName: string, name: string, value: string | string[], checkError: boolean = true) => void;
+	subscribe: (formName: string, listener: (...args: any[]) => void) => void;
+	_unsubscribeCustomErrors: (name: string) => void;
+	subscribeError: (name: string, fieldName: string, listener: (...args: any[]) => void) => void;
+	subscribeField: (formName: string, fieldName: string, listener: (...args: any[]) => void) => void;
+	unsubscribe: (formName: string) => void;
+	unsubscribeField: (formName: string, fieldName: string) => void;
+	unsubscribeFields: (formName: string) => void;
+	unsubscribeError: (formName: string, fieldName: string) => void;
+	unsubscribeErrors: (formName: string) => void;
+	delete: (formName: string) => void;
+	_listen: (formName: string, fieldName: string, value: string | string[]) => void;
+	checkError: (formName: string, fieldName: string, value: string | string[]) => void;
+	_setError: (formName: string, fieldName: string, errorName: string, error: string) => void;
+	setError: (formName: string, fieldName: string, error: string) => void;
+	_subscribeError: (name: string, data: any) => void;
+	removeError: (formName: string, fieldName: string, errorName: string) => void;
+	getError: (formName: string, fieldName: string) => string;
+	getErrors: (formName: string) => Map<string, string>;
+	validate: (formName: string) => void;
+	getClassName: (formName) => string;
+	removeCustomErrors: (formName: string, fieldName: string) => void;
+	setCondition: (...args: [string, string, any, string, string | string[]]) => void;
+	subscribeCondition: (name: string, listener: (...args: any[]) => void) => void;
+	unsubscribeCondition: (formName: string, fieldName: string) => void;
+}

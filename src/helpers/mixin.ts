@@ -1,38 +1,22 @@
-import Vue from 'vue';
+import { Vue, Component, Prop } from 'vue-property-decorator';
 
-export default Vue.extend({
-	props: {
-		name: {
-			type: String,
-			default: '',
-		},
-		form: {
-			type: String,
-			default: '',
-		},
-		fieldValue: {
-			type: [String, Array],
-			default: '',
-		},
-	},
-	computed: {
-		fieldData() {
-			return this.$uiFields.getField(this.form, this.name);
-		},
-		value: {
-			get() {
-				return this.$uiFields.getValue(this.form, this.name);
-			},
-			set(value) {
-				if (this.fieldData !== 'chekcbox') {
-					this.$uiFields.setValue(this.form, this.name, value, false);
-				}
-			},
-		},
-	},
-	methods: {
-		setValue($event: any) {
-			this.$uiFields.setValue(this.$props.form, this.$props.name, $event.target.value);
-		},
-	},
-});
+export class UIFieldsMixin extends Vue {
+	@Prop({ type: String, default: '' }) readonly name!: string;
+	@Prop({ type: String, default: '' }) readonly form!: string;
+	@Prop({ type: [String, Array], default: '' }) readonly fieldValue!: string | string[];
+
+	get fieldData() {
+		return this.$uiFields.getField(this.$props.form, this.name);
+	}
+
+	get value() {
+		return this.$uiFields.getValue(this.$props.form, this.name);
+	}
+	set value(value) {
+		this.$uiFields.setValue(this.$props.form, this.name, value, false);
+	}
+
+	setValue($event: any) {
+		this.$uiFields.setValue(this.$props.form, this.$props.name, $event.target.value);
+	}
+}

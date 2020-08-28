@@ -39,7 +39,8 @@ const uiFields = {
 		Vue.component('UiError', () => import('./template/Error.vue'));
 		Vue.component('UiFields', () => import('./template/Fields.vue'));
 		Vue.component('UiField', () => import('./template/Field.vue'));
-		Vue.prototype.$uiFields = prototype(options);
+		const UIFields = prototype(options);
+		Vue.prototype.$uiFields = UIFields;
 	},
 };
 

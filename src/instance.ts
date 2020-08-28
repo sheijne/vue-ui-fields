@@ -6,6 +6,8 @@ import Vue from 'vue';
 
 import type { UIFieldsOptions } from './types/options';
 import type {
+	Form,
+	FieldTypes,
 	Field,
 	SetField,
 	FormatValue,
@@ -15,16 +17,16 @@ import type {
 	ValidationOptions,
 } from './types/field';
 import type _Vue from 'vue';
-import type { Message } from './types/message';
+
 const time = new Date();
 const simpleCrypto = new SimpleCrypto('VueUIFields');
 
-export default class UIFieldsInstance {
-	public options: any;
-	public name: any;
-	public fields: any;
-	public values: any;
-	public errors: any;
+export default class UIFieldsInstance implements Form {
+	public options: UIFieldsOptions;
+	public name: string;
+	public fields: Record<string, any>;
+	public values: Record<string, any>;
+	public errors: Record<string, any>;
 	public includesFile: boolean;
 	public className: string;
 
@@ -52,14 +54,14 @@ export default class UIFieldsInstance {
 	/**
 	 * Return Formatted fields
 	 */
-	getFieldKeys() {
+	getFieldKeys(): string[] {
 		return [...this.fields.keys()];
 	}
 
 	/**
 	 * Return fields map
 	 */
-	getFields(): Field[] {
+	getFields(): Record<string, Field> {
 		return this.fields;
 	}
 
@@ -229,7 +231,7 @@ export default class UIFieldsInstance {
 	 * Returns formatted data
 	 */
 	getFormattedValues() {
-		const values = this.values;
+		const values = this.values as any;
 		let obj = Object.create(null);
 		for (let [k, v] of values) {
 			obj[k] = v;
@@ -241,7 +243,7 @@ export default class UIFieldsInstance {
 	 * Get component type
 	 * @param {String} type
 	 */
-	formatComponentType(type = 'text'): ComponentType {
+	formatComponentType(type: FieldTypes = 'text'): ComponentType {
 		switch (type) {
 			case 'text':
 			case 'phone':
@@ -273,25 +275,21 @@ export default class UIFieldsInstance {
 	/**
 	 * Subscribe form
 	 */
-	subscribe(listener: void) {
+	subscribe(listener: (...args: any) => void) {
 		Vue.prototype.$uiFields.subscribe(this.getFormName(), listener);
 	}
 
 	/**
 	 * Subscribe field
-	 * @param {String} fieldName
-	 * @param {Function} listener
 	 */
-	subscribeField(fieldName: string, listener: void) {
+	subscribeField(fieldName: string, listener: (...args: any) => void) {
 		Vue.prototype.$uiFields.subscribeField(this.getFormName(), fieldName, listener);
 	}
 
 	/**
 	 * Subscribe field
-	 * @param {String} fieldName
-	 * @param {Function} listener
 	 */
-	subscribeError(fieldName: string, listener: void) {
+	subscribeError(fieldName: string, listener: (...args: any) => void) {
 		Vue.prototype.$uiFields.subscribeError(this.getFormName(), fieldName, listener);
 	}
 
@@ -319,7 +317,7 @@ export default class UIFieldsInstance {
 	/**
 	 * get error on field
 	 */
-	getError(fieldName: string, errorName: string) {
+	getError(fieldName: string, errorName: string): string {
 		return this.errors.get(`${fieldName}_${errorName}`);
 	}
 
@@ -483,7 +481,7 @@ export default class UIFieldsInstance {
 		}
 	}
 
-	getOldValue(name: string) {
+	getOldValue(name: string): Record<string, any> | undefined | false {
 		if (typeof window !== 'undefined' && window.localStorage) {
 			const oldData = localStorage.getItem(this.options.projectName);
 			let data = null;
@@ -498,7 +496,7 @@ export default class UIFieldsInstance {
 			}
 			if (data && data.has(`${this.getFormName()}_${name}`)) {
 				const value = data.get(`${this.getFormName()}_${name}`) as string;
-				return simpleCrypto.decrypt(value);
+				return simpleCrypto.decrypt(value) as Record<string, any>;
 			}
 			return false;
 		}
