@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import App from './App.vue';
-import uiFields from '../src/index.js';
+import uiFields from '../src/index';
 
 Vue.config.productionTip = false;
 

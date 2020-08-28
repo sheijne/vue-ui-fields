@@ -1,38 +1,45 @@
 {
 	"name": "vue-ui-fields",
 	"version": "4.1.3",
+	"private": false,
 	"description": "UI Fields plugin for VueJS",
 	"author": "Dennis Dipsaus",
 	"scripts": {
-		"dev": "vue-cli-service serve dev/main.js",
-		"dokkie": "npx dokkie",
 		"lint": "eslint src",
+		"dev": "vue-cli-service serve dev/main.ts",
+		"dokkie": "npx dokkie",
 		"lint:fix": "eslint src --fix"
 	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/dipsaus9/vue-ui-fields.git"
-	},
-	"private": false,
-	"main": "./src/index.js",
+	"main": "./src/index",
 	"dependencies": {
 		"simple-crypto-js": "^2.2.0",
-		"validator": "^13.0.0"
+		"validator": "^13.0.0",
+		"vue-class-component": "^7.2.3",
+		"vue-property-decorator": "^8.4.2"
 	},
 	"devDependencies": {
-		"@vue/cli-plugin-babel": "~4.5.0",
-		"@vue/cli-plugin-eslint": "~4.5.0",
-		"@vue/cli-service": "~4.5.0",
-		"vue-template-compiler": "^2.6.11",
-		"core-js": "^3.6.5",
-		"vue": "^2.6.11",
 		"@babel/core": "*",
 		"@babel/preset-env": "*",
+		"@typescript-eslint/eslint-plugin": "^2.33.0",
+		"@typescript-eslint/parser": "^2.33.0",
+		"@vue/cli-plugin-babel": "~4.5.0",
+		"@vue/cli-plugin-eslint": "~4.5.0",
+		"@vue/cli-plugin-typescript": "^4.5.4",
+		"@vue/cli-service": "~4.5.0",
+		"@vue/eslint-config-typescript": "^5.0.2",
 		"babel-eslint": "^10.1.0",
+		"core-js": "^3.6.5",
 		"eslint": "^7.7.0",
 		"eslint-config-prettier": "^6.11.0",
 		"eslint-plugin-prettier": "^3.1.4",
 		"eslint-plugin-vue": "^6.2.2",
-		"prettier": "^2.0.5"
+		"prettier": "^2.0.5",
+		"typescript": "~3.9.3",
+		"vue": "^2.6.11",
+		"vue-template-compiler": "^2.6.11"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/dipsaus9/vue-ui-fields.git"
 	}
 }

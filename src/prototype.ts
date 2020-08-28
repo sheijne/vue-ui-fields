@@ -1,4 +1,4 @@
-import uiFieldsInstance from './instance.js';
+import uiFieldsInstance from './instance';
 
 export default function (options, Vue) {
 	const uiFieldsInstanceClass = uiFieldsInstance(options, Vue);

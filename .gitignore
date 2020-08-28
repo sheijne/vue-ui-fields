@@ -9,7 +9,6 @@ npm-debug.log
 
 # Misc
 .DS_Store
-.eslintrc.js
 
 dist
 docs

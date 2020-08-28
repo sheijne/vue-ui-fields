@@ -1,4 +1,4 @@
-import formatProperties from './helpers/formatProperties.js';
+import formatProperties from './helpers/formatProperties';
 import messagesNL from './messages/nl.json';
 import messagesEN from './messages/en.json';
 import SimpleCrypto from 'simple-crypto-js';
@@ -336,55 +336,55 @@ export default (options, Vue) => {
 			let rules;
 			switch (type) {
 				case 'required':
-					rules = await import('./rules/required.js');
+					rules = await import('./rules/required');
 					break;
 				case 'email':
-					rules = await import('./rules/email.js');
+					rules = await import('./rules/email');
 					break;
 				case 'postalcode':
-					rules = await import('./rules/postalcode.js');
+					rules = await import('./rules/postalcode');
 					break;
 				case 'number':
-					rules = await import('./rules/number.js');
+					rules = await import('./rules/number');
 					break;
 				case 'minlength':
-					rules = await import('./rules/minlength.js');
+					rules = await import('./rules/minlength');
 					break;
 				case 'maxlength':
-					rules = await import('./rules/maxlength.js');
+					rules = await import('./rules/maxlength');
 					break;
 				case 'min':
-					rules = await import('./rules/min.js');
+					rules = await import('./rules/min');
 					break;
 				case 'max':
-					rules = await import('./rules/max.js');
+					rules = await import('./rules/max');
 					break;
 				case 'creditcard':
-					rules = await import('./rules/creditcard.js');
+					rules = await import('./rules/creditcard');
 					break;
 				case 'date':
-					rules = await import('./rules/date.js');
+					rules = await import('./rules/date');
 					break;
 				case 'url':
-					rules = await import('./rules/url.js');
+					rules = await import('./rules/url');
 					break;
 				case 'equalTo':
-					rules = await import('./rules/equalto.js');
+					rules = await import('./rules/equalto');
 					break;
 				case 'notEqualTo':
-					rules = await import('./rules/notequalto.js');
+					rules = await import('./rules/notequalto');
 					break;
 				case 'vat':
-					rules = await import('./rules/vat.js');
+					rules = await import('./rules/vat');
 					break;
 				case 'phone':
-					rules = await import('./rules/phone.js');
+					rules = await import('./rules/phone');
 					break;
 				case 'text':
-					rules = await import('./rules/text.js');
+					rules = await import('./rules/text');
 					break;
 				case 'includes':
-					rules = await import('./rules/includes.js');
+					rules = await import('./rules/includes');
 					break;
 			}
 			if (rules) {

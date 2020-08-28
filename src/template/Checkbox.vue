@@ -27,15 +27,14 @@
 							: `${className}__label ${fieldData.type}__label`,
 					]"
 					v-html="option.label"
-				>
-				</span>
+				/>
 			</label>
 		</template>
 		<uiErrors :form="form" :name="name" />
 	</div>
 </template>
 <script>
-import mixinSettings from './../helpers/mixin.js';
+import mixinSettings from './../helpers/mixin';
 export default {
 	mixins: [mixinSettings],
 	data() {

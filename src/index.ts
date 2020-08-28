@@ -1,4 +1,4 @@
-import prototype from './prototype.js';
+import prototype from './prototype';
 
 const uiFields = {
 	install(Vue, options) {

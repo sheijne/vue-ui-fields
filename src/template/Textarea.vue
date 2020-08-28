@@ -30,7 +30,7 @@
 	</div>
 </template>
 <script>
-import mixinSettings from './../helpers/mixin.js';
+import mixinSettings from './../helpers/mixin';
 export default {
 	mixins: [mixinSettings],
 	data() {
