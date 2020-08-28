@@ -1,8 +1,8 @@
-const isEmptyArray = (arr) => {
+const isEmptyArray = (arr: any): boolean => {
 	return Array.isArray(arr) && arr.length === 0;
 };
 
-const isNullOrUndefined = (...values) => {
+const isNullOrUndefined = (...values: any[]) => {
 	return values.every((value) => {
 		return value === null || value === undefined;
 	});
@@ -10,9 +10,8 @@ const isNullOrUndefined = (...values) => {
 
 /**
  * Check if there's a value in de input
- * @param {String} value
  */
-export default (value) => {
+export default (value: any) => {
 	if (isNullOrUndefined(value) || isEmptyArray(value)) {
 		return false;
 	}

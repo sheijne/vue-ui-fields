@@ -1,7 +1,11 @@
 import uiFieldsInstance from './instance';
 
-export default function (options, Vue) {
-	const uiFieldsInstanceClass = uiFieldsInstance(options, Vue);
+import type { UIFieldsOptions } from './types/options';
+import type { Field } from './types/field';
+
+import type _Vue from 'vue';
+
+export default function (options: UIFieldsOptions) {
 	return {
 		/**
 		 * Current form instance
@@ -15,31 +19,28 @@ export default function (options, Vue) {
 		waitedListeners: new Map(),
 		/**
 		 * Create a new form
-		 * @param {String} name
 		 */
-		new(name, data) {
+		new(name: string) {
 			if (!name) {
 				return;
 			}
 
-			const form = new uiFieldsInstanceClass(name, data);
+			const form = new uiFieldsInstance(options);
 			this.forms.set(name, form);
 			return form;
 		},
 
 		/**
 		 * Set value to array
-		 * @param {String} formName
-		 * @param {String || Array} value
 		 */
-		getValue(formName, fieldName) {
+		getValue(formName: string, fieldName: string | string[]): string {
 			if (!formName || !fieldName) {
-				return;
+				return '';
 			}
 
 			const form = this.getForm(formName);
 			if (!form) {
-				return;
+				return '';
 			}
 
 			return form.getValue(fieldName);
@@ -47,22 +48,19 @@ export default function (options, Vue) {
 
 		/**
 		 * Get all fields of formname
-		 * @param {String} formName
 		 */
-		getFieldKeys(formName) {
+		getFieldKeys(formName: string): string[] {
 			const form = this.getForm(formName);
 			if (!form) {
-				return;
+				return [];
 			}
 			return form.getFieldKeys();
 		},
 
 		/**
 		 * Get single field
-		 * @param {String} formName
-		 * @param {String} fieldName
 		 */
-		getField(formName, fieldName) {
+		getField(formName: string, fieldName: string): Field | undefined {
 			const form = this.getForm(formName);
 			if (!form) {
 				return;
@@ -72,9 +70,8 @@ export default function (options, Vue) {
 
 		/**
 		 * Get all fields
-		 * @param {String} formName
 		 */
-		getFields(formName) {
+		getFields(formName: string) {
 			const form = this.getForm(formName);
 			if (!form) {
 				return;
@@ -84,16 +81,15 @@ export default function (options, Vue) {
 
 		/**
 		 * Get form
-		 * @param {String} name
 		 */
-		getForm(formName) {
+		getForm(formName: string) {
 			return this.forms.get(formName);
 		},
 
 		/**
 		 * Get all values mapped
 		 */
-		getValues(formName) {
+		getValues(formName: string) {
 			if (!formName) {
 				return;
 			}
@@ -108,7 +104,7 @@ export default function (options, Vue) {
 		/**
 		 * Get all values mapped
 		 */
-		getFormattedValues(formName) {
+		getFormattedValues(formName: string) {
 			if (!formName) {
 				return;
 			}
@@ -122,10 +118,9 @@ export default function (options, Vue) {
 
 		/**
 		 * Set new field
-		 * @param {String} name
 		 * @param {Object} options
 		 */
-		setField(name, options) {
+		setField(name: string, options: any) {
 			if (!name) {
 				return;
 			}
@@ -139,10 +134,9 @@ export default function (options, Vue) {
 
 		/**
 		 * Set multiple fields
-		 * @param {name} name
 		 * @param {Array} options
 		 */
-		setFields(name, options) {
+		setFields(name: string, options: any) {
 			if (!name) {
 				return;
 			}
@@ -160,7 +154,7 @@ export default function (options, Vue) {
 		 * @param {String || Array} value
 		 * @param {Boolean} checkError
 		 */
-		setValue(formName, name, value, checkError = true) {
+		setValue(formName: string, name: string, value: string | string[], checkError: boolean = true) {
 			if (!formName || !name) {
 				return;
 			}
@@ -178,10 +172,8 @@ export default function (options, Vue) {
 		},
 		/**
 		 * Subscriber
-		 * @param {String} formName
-		 * @param {Function} listener
 		 */
-		subscribe(formName, listener) {
+		subscribe(formName: string, listener: void) {
 			if (this.formListeners.has(formName)) {
 				this.formListeners.set(formName, [...this.formListeners.get(formName), listener]);
 			} else {
@@ -191,10 +183,9 @@ export default function (options, Vue) {
 
 		/**
 		 * Subscriber prototype, only used by fields
-		 * @param {String} name
 		 * @param {Object} data
 		 */
-		_subscribeError(name, data) {
+		_subscribeError(name: string, data: any) {
 			if (this.errorListeners.has(name)) {
 				const oldError = this.errorListeners.get(name);
 				this.errorListeners.set(name, {
@@ -207,7 +198,7 @@ export default function (options, Vue) {
 
 			if (this.waitedListeners.has(name)) {
 				const awaitedListeners = this.waitedListeners.get(name);
-				awaitedListeners.forEach((listener) => {
+				awaitedListeners.forEach((listener: any) => {
 					const [formName, ...rest] = name.split('_');
 					const fieldName = rest.join('_');
 					this.subscribeError(formName, fieldName, listener);
@@ -218,23 +209,20 @@ export default function (options, Vue) {
 
 		/**
 		 * Unsubscriber custom errors prototype, only used by fields
-		 * @param {String} name
-		 * @param {Object} data
 		 */
-		_unsubscribeCustomErrors(name) {
+		_unsubscribeCustomErrors(name: string) {
 			if (this.errorListeners.has(name)) {
 				const oldError = this.errorListeners.get(name);
-				const data = oldError.data.filter((error) => !error.custom);
+				const data = oldError.data.filter((error: any) => !error.custom);
 				this.errorListeners.set(name, { functions: oldError.functions, data });
 			}
 		},
 
 		/**
 		 * Subscriber
-		 * @param {String} formName
 		 * @param {Function} listener
 		 */
-		subscribeError(formName, fieldName, listener) {
+		subscribeError(formName: string, fieldName: string, listener: void) {
 			if (this.errorListeners.has(`${formName}_${fieldName}`)) {
 				const error = this.errorListeners.get(`${formName}_${fieldName}`);
 				error.functions.push(listener);
@@ -253,10 +241,8 @@ export default function (options, Vue) {
 
 		/**
 		 * Subscriber
-		 * @param {String} formName
-		 * @param {Function} listener
 		 */
-		subscribeField(formName, fieldName, listener) {
+		subscribeField(formName: string, fieldName: string, listener: any) {
 			if (this.fieldListeners.has(`${formName}_${fieldName}`)) {
 				this.fieldListeners.set(`${formName}_${fieldName}`, [
 					...this.fieldListeners.get(`${formName}_${fieldName}`),
@@ -269,9 +255,8 @@ export default function (options, Vue) {
 
 		/**
 		 * Unsubscribe
-		 * @param {String} formname
 		 */
-		unsubscribe(formname) {
+		unsubscribe(formname: string) {
 			if (this.formListeners.has(formname)) {
 				this.formListeners.delete(formname);
 			}
@@ -279,10 +264,8 @@ export default function (options, Vue) {
 
 		/**
 		 * Unsubscribe Field
-		 * @param {String} formName
-		 * @param {String} fieldName
 		 */
-		unsubscribeField(formName, fieldName) {
+		unsubscribeField(formName: string, fieldName: string) {
 			if (this.fieldListeners.has(`${formName}_${fieldName}`)) {
 				this.fieldListeners.delete(`${formName}_${fieldName}`);
 			}
@@ -290,9 +273,8 @@ export default function (options, Vue) {
 
 		/**
 		 * Unsubscribe all Fields
-		 * @param {String} formName
 		 */
-		unsubscribeFields(formName) {
+		unsubscribeFields(formName: string) {
 			this.getFieldKeys(formName).forEach((fieldName) => {
 				this.unsubscribeField(formName, fieldName);
 			});
@@ -300,10 +282,8 @@ export default function (options, Vue) {
 
 		/**
 		 * Unsubscribe single Error
-		 * @param {String} formName
-		 * @param {String} fieldname
 		 */
-		unsubscribeError(formName, fieldname) {
+		unsubscribeError(formName: string, fieldname: string) {
 			if (this.errorListeners.has(`${formName}_${fieldname}`)) {
 				this.errorListeners.delete(`${formName}_${fieldname}`);
 			}
@@ -311,9 +291,8 @@ export default function (options, Vue) {
 
 		/**
 		 * Unsubscribe all Errors
-		 * @param {String} formName
 		 */
-		unsubscribeErrors(formName) {
+		unsubscribeErrors(formName: string) {
 			this.getFieldKeys(formName).forEach((fieldName) => {
 				this.unsubscribeError(formName, fieldName);
 			});
@@ -321,9 +300,8 @@ export default function (options, Vue) {
 
 		/**
 		 * Delete listeners of a single form
-		 * @param {String} formName
 		 */
-		delete(formName) {
+		delete(formName: string) {
 			if (!this.forms.has(formName)) {
 				return;
 			}
@@ -336,22 +314,19 @@ export default function (options, Vue) {
 
 		/**
 		 * Listen to event
-		 * @param {String} formName
-		 * @param {String} fieldName
-		 * @param {String} value
 		 */
-		_listen(formName, fieldName, value) {
+		_listen(formName: string, fieldName: string, value: string | string[]) {
 			//form event
 			if (this.formListeners.has(formName)) {
 				const events = this.formListeners.get(formName);
-				events.forEach((event) => {
+				events.forEach((event: any) => {
 					event(value, fieldName);
 				});
 			}
 			//Field event
 			if (this.fieldListeners.has(`${formName}_${fieldName}`)) {
 				const fieldEvents = this.fieldListeners.get(`${formName}_${fieldName}`);
-				fieldEvents.forEach((event) => {
+				fieldEvents.forEach((event: any) => {
 					event(value, fieldName);
 				});
 			}
@@ -359,15 +334,13 @@ export default function (options, Vue) {
 
 		/**
 		 * Listen to event
-		 * @param {String} formName
-		 * @param {String} fieldName* @param {String} value
 		 */
-		checkError(formName, fieldName, value) {
+		checkError(formName: string, fieldName: string, value: string | string[]) {
 			//Field event
 			if (this.errorListeners.has(`${formName}_${fieldName}`)) {
 				const fieldEvents = this.errorListeners.get(`${formName}_${fieldName}`);
 				const result = fieldEvents.data
-					.map((event) => {
+					.map((event: any) => {
 						const validationResult = event.validation(value, event.options);
 						if (!validationResult) {
 							this._setError(formName, fieldName, event.validationType, event.message);
@@ -380,8 +353,8 @@ export default function (options, Vue) {
 							valid: validationResult,
 						};
 					})
-					.filter((err) => err);
-				fieldEvents.functions.forEach((customFunction) => {
+					.filter((err: any) => err);
+				fieldEvents.functions.forEach((customFunction: any) => {
 					customFunction(value, result);
 				});
 			}
@@ -389,12 +362,8 @@ export default function (options, Vue) {
 
 		/**
 		 * Set error
-		 * @param {String} formname
-		 * @param {String} fieldName
-		 * @param {String} errorName
-		 * @param {String} error - message
 		 */
-		_setError(formName, fieldName, errorName, error) {
+		_setError(formName: string, fieldName: string, errorName: string, error: string) {
 			if (!formName || !fieldName || !errorName) {
 				return;
 			}
@@ -408,12 +377,8 @@ export default function (options, Vue) {
 
 		/**
 		 * Set error
-		 * @param {String} formname
-		 * @param {String} fieldName
-		 * @param {String} errorName
-		 * @param {String} error - message
 		 */
-		setError(formName, fieldName, error) {
+		setError(formName: string, fieldName: string, error: string) {
 			if (!formName || !fieldName) {
 				return;
 			}
@@ -433,11 +398,8 @@ export default function (options, Vue) {
 
 		/**
 		 * Set error
-		 * @param {String} formname
-		 * @param {String} fieldName
-		 * @param {String} errorName
 		 */
-		removeError(formName, fieldName, errorName) {
+		removeError(formName: string, fieldName: string, errorName: string) {
 			if (!formName || !fieldName || !errorName) {
 				return;
 			}
@@ -451,10 +413,8 @@ export default function (options, Vue) {
 
 		/**
 		 *
-		 * @param {String} formName
-		 * @param {String} fieldName
 		 */
-		getError(formName, fieldName) {
+		getError(formName: string, fieldName: string) {
 			if (!formName || !fieldName) {
 				return;
 			}
@@ -468,9 +428,8 @@ export default function (options, Vue) {
 
 		/**
 		 * Get all errors of a form
-		 * @param {String} formName
 		 */
-		getErrors(formName) {
+		getErrors(formName: string) {
 			if (!formName) {
 				return;
 			}
@@ -484,9 +443,8 @@ export default function (options, Vue) {
 
 		/**
 		 * Validate form
-		 * @param {String} formName
 		 */
-		validate(formName) {
+		validate(formName: string) {
 			this.errorListeners.forEach((data, key) => {
 				if (key.includes(formName)) {
 					const [newFormName, ...rest] = key.split('_');
@@ -514,9 +472,8 @@ export default function (options, Vue) {
 
 		/**
 		 * Get classname of the form
-		 * @param {String} formName
 		 */
-		getClassName(formName) {
+		getClassName(formName: string) {
 			if (!formName) {
 				return;
 			}
@@ -530,15 +487,13 @@ export default function (options, Vue) {
 
 		/**
 		 * Remove all custom errors
-		 * @param {String} formName
-		 * @param {String} fieldName
 		 */
-		removeCustomErrors(formName, fieldName) {
+		removeCustomErrors(formName: string, fieldName: string) {
 			this._unsubscribeCustomErrors(`${formName}_${fieldName}`);
 			if (this.errorListeners.has(`${formName}_${fieldName}`)) {
 				const fieldEvents = this.errorListeners.get(`${formName}_${fieldName}`);
 				const value = this.getValue(formName, fieldName);
-				const result = fieldEvents.data.map((event) => {
+				const result = fieldEvents.data.map((event: any) => {
 					let validationResult = false;
 					if (event.custom) {
 						this.removeError(formName, fieldName, event.validationType);
@@ -550,21 +505,15 @@ export default function (options, Vue) {
 						valid: validationResult,
 					};
 				});
-				fieldEvents.functions.forEach((customFunction) => {
+				fieldEvents.functions.forEach((customFunction: any) => {
 					customFunction(value, result);
 				});
 			}
 		},
 		/**
 		 * Set new condition used in any page
-		 * @param {...any} args
-		 * @param required {String} depFormName
-		 * @param required {String} depFieldName
-		 * @param required {String} formName
-		 * @param required {String, Function} valueFunction
-		 * @param optional {String, Array} fields
 		 */
-		setCondition(...args) {
+		setCondition(...args: [string, string, any, string, string | string[]]) {
 			let [
 				depFormName, //required
 				depFieldName, //required
@@ -581,7 +530,7 @@ export default function (options, Vue) {
 			// If the type of variable valuefunction is a string then make a function of this string
 			if (typeof valueFunction === 'string') {
 				const val = valueFunction;
-				valueFunction = (value) => val === value;
+				valueFunction = (value: string) => val === value;
 			}
 
 			if (!Array.isArray(fieldName)) {
@@ -601,12 +550,12 @@ export default function (options, Vue) {
 
 			// Subscribe to this field when page is loaded, if it's not the subscribe will work when field value changed
 			fieldName.forEach((name) => {
-				this.subscribeField(depFormName, depFieldName, (value) => {
+				this.subscribeField(depFormName, depFieldName, (value: string) => {
 					const result = valueFunction(value);
 					const events = this.conditionListeners.get(`${formName}_${name}`);
 					if (events) {
 						if (Array.isArray(events.functions)) {
-							events.functions.forEach((event) => {
+							events.functions.forEach((event: any) => {
 								event(result);
 							});
 						}
@@ -617,10 +566,8 @@ export default function (options, Vue) {
 
 		/**
 		 * Subscribe to a condition, used in ui-fields
-		 * @param  {String} name - Name of the listener
-		 * @param  {Function} listener - Function that has to be evoked
 		 */
-		subscribeCondition(name, listener) {
+		subscribeCondition(name: string, listener: void) {
 			// if condition already exists in conditionListeners, get condition and push listener to this condition
 			if (this.conditionListeners.has(name)) {
 				const conditions = this.conditionListeners.get(name);
@@ -628,7 +575,11 @@ export default function (options, Vue) {
 				this.conditionListeners.set(name, conditions);
 
 				// makes a listener for a specific field
-				this._listen(conditions.depFormName, conditions.depFieldName, this.getValue(conditions.depFormName));
+				this._listen(
+					conditions.depFormName,
+					conditions.depFieldName,
+					this.getValue(conditions.depFormName, conditions.depFieldName)
+				);
 			}
 		},
 
@@ -637,7 +588,7 @@ export default function (options, Vue) {
 		 * @param required {String} formName - name of form from condition
 		 * @param optional {Array, String} fieldName - name of field from condition
 		 */
-		unsubscribeCondition(formName, fieldName) {
+		unsubscribeCondition(formName: string, fieldName: string) {
 			// Check if fieldName is empty, if it is empty make an empty string
 			if (!fieldName) {
 				fieldName = '';

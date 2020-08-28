@@ -2,8 +2,7 @@ import isCreditCard from 'validator/lib/isCreditCard';
 
 /**
  * Check if value is a valid creditcard number
- * @param {String} value
  */
-export default (value) => {
+export default (value: string) => {
 	return isCreditCard(value);
 };

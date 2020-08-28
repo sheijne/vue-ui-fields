@@ -2,8 +2,7 @@ import toDate from 'validator/lib/toDate';
 
 /**
  * Check if value is a valid date
- * @param {String} value
  */
-export default (value) => {
+export default (value: string) => {
 	return toDate(value);
 };

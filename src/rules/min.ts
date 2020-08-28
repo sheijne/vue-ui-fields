@@ -1,9 +1,7 @@
 /**
  * Check if value is bigger than min
- * @param {String} val
- * @param {Number} min
  */
-export default (val, min) => {
+export default (val: string, min: number) => {
 	const length = Number(val);
 	return length >= min;
 };

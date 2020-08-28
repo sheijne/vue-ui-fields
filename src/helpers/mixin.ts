@@ -1,4 +1,6 @@
-export default {
+import Vue from 'vue';
+
+export default Vue.extend({
 	props: {
 		name: {
 			type: String,
@@ -29,8 +31,8 @@ export default {
 		},
 	},
 	methods: {
-		setValue($event) {
-			this.$uiFields.setValue(this.form, this.name, $event.target.value);
+		setValue($event: any) {
+			this.$uiFields.setValue(this.$props.form, this.$props.name, $event.target.value);
 		},
 	},
-};
+});

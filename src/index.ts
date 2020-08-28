@@ -1,7 +1,9 @@
 import prototype from './prototype';
+import type { UIFieldsOptions } from './types/options';
+import type _Vue from 'vue';
 
 const uiFields = {
-	install(Vue, options) {
+	install(Vue: typeof _Vue, options: UIFieldsOptions) {
 		if (!options) {
 			options = {
 				projectName: 'VueUiFields',
@@ -37,7 +39,7 @@ const uiFields = {
 		Vue.component('UiError', () => import('./template/Error.vue'));
 		Vue.component('UiFields', () => import('./template/Fields.vue'));
 		Vue.component('UiField', () => import('./template/Field.vue'));
-		Vue.prototype.$uiFields = prototype(options, Vue);
+		Vue.prototype.$uiFields = prototype(options);
 	},
 };
 

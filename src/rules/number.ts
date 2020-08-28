@@ -1,8 +1,7 @@
 /**
  * Check if value is a number
- * @param {String} val
  */
-export default (value) => {
+export default (value: string) => {
 	const strVal = String(value);
 	return /^[0-9]*$/.test(strVal);
 };

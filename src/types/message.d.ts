@@ -1,0 +1,20 @@
+export type Message = {
+	creditcard: string;
+	date: string;
+	email: string;
+	equalTo: string;
+	notEqualTo: string;
+	max: string;
+	maxlength: string;
+	min: string;
+	minlength: string;
+	number: string;
+	postalcode: string;
+	required: string;
+	url: string;
+	vat: string;
+	phone: string;
+	text: string;
+	includes: string;
+	custom?: string;
+};

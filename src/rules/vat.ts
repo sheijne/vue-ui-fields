@@ -28,12 +28,11 @@ const vatRegex = {
 	SK: '^(SK)?[0-9]{10}$',
 };
 
+import type { VatLocale } from '../types/locale';
 /**
  * Check if value is a valid VAT number
- * @param {String} value
- * @param {Array, String} locale
  */
-export default (value, locale) => {
+export default (value: string, locale: VatLocale | VatLocale[]) => {
 	if (!value) {
 		return true;
 	}
@@ -44,7 +43,7 @@ export default (value, locale) => {
 	}
 };
 
-const regEx = (value, locale) => {
+const regEx = (value: string, locale: VatLocale) => {
 	const regex = new RegExp(vatRegex[locale]);
 
 	if (regex) {
