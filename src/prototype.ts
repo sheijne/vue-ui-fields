@@ -1,7 +1,7 @@
 import uiFieldsInstance from './instance';
 
 import type { UIFieldsOptions } from './types/options';
-import type { Field, UIFields } from './types/field';
+import type { FieldError, UIFields } from './types/field';
 
 import type _Vue from 'vue';
 
@@ -21,7 +21,7 @@ export default function (options: UIFieldsOptions): UIFields {
 		 * Create a new form
 		 */
 		new(name) {
-			const form = new uiFieldsInstance(options);
+			const form = new uiFieldsInstance(name, options);
 			this.forms.set(name, form);
 			return form;
 		},
@@ -31,12 +31,12 @@ export default function (options: UIFieldsOptions): UIFields {
 		 */
 		getValue(formName, fieldName) {
 			if (!formName || !fieldName) {
-				return;
+				return '';
 			}
 
 			const form = this.getForm(formName);
 			if (!form) {
-				return;
+				return '';
 			}
 
 			return form.getValue(fieldName);
@@ -178,10 +178,9 @@ export default function (options: UIFieldsOptions): UIFields {
 			} else {
 				this.errorListeners.set(name, { functions: [], data: [data] });
 			}
-
 			if (this.waitedListeners.has(name)) {
 				const awaitedListeners = this.waitedListeners.get(name);
-				awaitedListeners.forEach((listener: any) => {
+				awaitedListeners.forEach((listener: (...args: any) => void) => {
 					const [formName, ...rest] = name.split('_');
 					const fieldName = rest.join('_');
 					this.subscribeError(formName, fieldName, listener);
@@ -333,7 +332,7 @@ export default function (options: UIFieldsOptions): UIFields {
 							name: event.validationType,
 							message: event.message(value, fieldName),
 							valid: validationResult,
-						};
+						} as FieldError;
 					})
 					.filter((err: any) => err);
 				fieldEvents.functions.forEach((customFunction: any) => {
@@ -396,7 +395,7 @@ export default function (options: UIFieldsOptions): UIFields {
 		/**
 		 *
 		 */
-		getError(formName, fieldName) {
+		getError(formName, fieldName, errorName) {
 			if (!formName || !fieldName) {
 				return;
 			}
@@ -405,7 +404,7 @@ export default function (options: UIFieldsOptions): UIFields {
 			if (!form) {
 				return;
 			}
-			return form.getError(fieldName);
+			return form.getError(fieldName, errorName);
 		},
 
 		/**
@@ -457,12 +456,12 @@ export default function (options: UIFieldsOptions): UIFields {
 		 */
 		getClassName(formName) {
 			if (!formName) {
-				return;
+				return '';
 			}
 
 			const form = this.getForm(formName);
 			if (!form) {
-				return;
+				return '';
 			}
 			return form.className;
 		},

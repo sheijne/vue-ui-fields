@@ -99,7 +99,11 @@ export type SetField = {
 	componentType: ComponentType;
 	datalist: string[];
 };
-
+export type FieldError = {
+	name: string;
+	message: string;
+	valid: boolean;
+};
 export type FormatValue = {
 	key:
 		| 'name'
@@ -184,9 +188,9 @@ export interface Form {
 	subscribeError: (fieldName: string, listener: (...args: any) => void) => void;
 	unsubscribe: () => void;
 	unsubscribeField: (fieldName: string) => void;
-	_setError: (fieldName: string, errorName: string, error: string) => void;
-	getError: (fieldName: string, errorName: string) => string;
-	getErrors: () => Record<string, any>;
+	_setError: (fieldName: string, errorName: string, error: FieldError) => void;
+	getError: (fieldName: string, errorName: string) => FieldError | undefined;
+	getErrors: () => Record<string, FieldError>;
 	getErrorKeys: () => string[];
 	removeError: (fieldName: string, errorName: string) => void;
 	validator: (type: ValidationOptions) => void;
@@ -228,14 +232,14 @@ export interface UIFields {
 	delete: (formName: string) => void;
 	_listen: (formName: string, fieldName: string, value: string | string[]) => void;
 	checkError: (formName: string, fieldName: string, value: string | string[]) => void;
-	_setError: (formName: string, fieldName: string, errorName: string, error: string) => void;
+	_setError: (formName: string, fieldName: string, errorName: string, error: FieldError) => void;
 	setError: (formName: string, fieldName: string, error: string) => void;
 	_subscribeError: (name: string, data: any) => void;
 	removeError: (formName: string, fieldName: string, errorName: string) => void;
-	getError: (formName: string, fieldName: string) => string;
-	getErrors: (formName: string) => Map<string, string>;
+	getError: (formName: string, fieldName: string, errorName: string) => FieldError | undefined;
+	getErrors: (formName: string) => Map<string, FieldError>;
 	validate: (formName: string) => void;
-	getClassName: (formName) => string;
+	getClassName: (formName: string) => string;
 	removeCustomErrors: (formName: string, fieldName: string) => void;
 	setCondition: (...args: [string, string, any, string, string | string[]]) => void;
 	subscribeCondition: (name: string, listener: (...args: any[]) => void) => void;

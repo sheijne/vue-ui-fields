@@ -23,6 +23,11 @@ export default {
 			{
 				name: 'shipping_address',
 				label: 'Address',
+				validation: [
+					{
+						name: 'required',
+					},
+				],
 			},
 		]);
 

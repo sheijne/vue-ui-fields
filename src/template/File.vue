@@ -37,30 +37,25 @@
 		<uiErrors :form="form" :name="name" />
 	</div>
 </template>
-<script>
-import mixinSettings from '../helpers/mixin';
-export default {
-	mixins: [mixinSettings],
-	data() {
-		return {
-			component: 'ui-file',
-			pristine: true,
-			fileName: '',
-			size: 0,
-		};
-	},
-	computed: {
-		className() {
-			return this.$uiFields.className;
-		},
-	},
-	methods: {
-		onFileChange(event) {
+<script lang="ts">
+import { mixins } from 'vue-class-component';
+import { Vue, Component } from 'vue-property-decorator';
+import UIFieldsMixin from '../helpers/mixin';
+
+@Component
+export default class UiFile extends mixins(UIFieldsMixin) {
+	public component: string = 'ui-file';
+public pristine: boolean = true;
+			public fileName: string = '',
+			public size: number = 0;
+	get className() {
+		return this.$uiFields.getClassName(this.form);
+	}
+	onFileChange(event: any) {
 			this.size = Math.round(event.target.files[0].size / 1000);
 			this.pristine = false;
 			this.fileName = event.target.files[0].name;
 			this.$uiFields.setValue(this.form, this.name, event.target.files[0]);
-		},
-	},
-};
+		}
+}
 </script>

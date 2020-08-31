@@ -1,6 +1,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator';
 
-export class UIFieldsMixin extends Vue {
+@Component
+export default class UIFieldsMixin extends Vue {
 	@Prop({ type: String, default: '' }) readonly name!: string;
 	@Prop({ type: String, default: '' }) readonly form!: string;
 	@Prop({ type: [String, Array], default: '' }) readonly fieldValue!: string | string[];

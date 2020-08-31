@@ -6,6 +6,7 @@ import Vue from 'vue';
 
 import type { UIFieldsOptions } from './types/options';
 import type {
+	FieldError,
 	Form,
 	FieldTypes,
 	Field,
@@ -30,7 +31,7 @@ export default class UIFieldsInstance implements Form {
 	public includesFile: boolean;
 	public className: string;
 
-	constructor(options: UIFieldsOptions) {
+	constructor(name: string, options: UIFieldsOptions) {
 		this.options = options;
 		this.name = name;
 		this.fields = new Map();
@@ -310,14 +311,14 @@ export default class UIFieldsInstance implements Form {
 	/**
 	 * Set error on field
 	 */
-	_setError(fieldName: string, errorName: string, error: string) {
+	_setError(fieldName: string, errorName: string, error: FieldError) {
 		this.errors.set(`${fieldName}_${errorName}`, error);
 	}
 
 	/**
 	 * get error on field
 	 */
-	getError(fieldName: string, errorName: string): string {
+	getError(fieldName: string, errorName: string): FieldError {
 		return this.errors.get(`${fieldName}_${errorName}`);
 	}
 
