@@ -10,7 +10,7 @@
 		"dokkie": "npx dokkie",
 		"lint:fix": "eslint src --fix"
 	},
-	"main": "./src/index",
+	"main": "./src/index.ts",
 	"dependencies": {
 		"simple-crypto-js": "^2.2.0",
 		"validator": "^13.0.0",
