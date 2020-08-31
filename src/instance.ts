@@ -4,7 +4,7 @@ import messagesEN from './messages/en';
 import SimpleCrypto from 'simple-crypto-js';
 import Vue from 'vue';
 
-import type { UIFieldsOptions } from './types/options';
+import type { UIFieldsOptions } from '../types/options';
 import type {
 	FieldError,
 	Form,
@@ -16,7 +16,7 @@ import type {
 	FieldOptions,
 	ValidationSettings,
 	ValidationOptions,
-} from './types/field';
+} from '../types/field';
 import type _Vue from 'vue';
 
 const time = new Date();

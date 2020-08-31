@@ -28,7 +28,7 @@ const vatRegex = {
 	SK: '^(SK)?[0-9]{10}$',
 };
 
-import type { VatLocale } from '../types/locale';
+import type { VatLocale } from '../../types/locale';
 /**
  * Check if value is a valid VAT number
  */

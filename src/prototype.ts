@@ -1,7 +1,7 @@
 import uiFieldsInstance from './instance';
 
-import type { UIFieldsOptions } from './types/options';
-import type { FieldError, UIFields } from './types/field';
+import type { UIFieldsOptions } from '../types/options';
+import type { FieldError, UIFields } from '../types/field';
 
 import type _Vue from 'vue';
 

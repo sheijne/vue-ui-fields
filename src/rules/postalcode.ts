@@ -1,6 +1,6 @@
 import isPostalCode from 'validator/lib/isPostalCode';
 
-import type { PostalCodeLocale } from '../types/locale';
+import type { PostalCodeLocale } from '../../types/locale';
 /**
  * Check if value is a valid postalcode
  * @param {String} value

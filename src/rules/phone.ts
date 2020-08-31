@@ -1,6 +1,6 @@
 import isMobilePhone from 'validator/lib/isMobilePhone';
 
-import type { MobilePhoneLocale } from '../types/locale';
+import type { MobilePhoneLocale } from '../../types/locale';
 
 /**
  * Check if value is a valid phonenumber
