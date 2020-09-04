@@ -97,7 +97,6 @@ export type SetField = {
 	dependentSettings: FieldDependentSettings;
 	customData: any;
 	componentType: ComponentType;
-	datalist: string[];
 };
 export type FieldError = {
 	name: string;
@@ -168,21 +167,21 @@ export type ValidationSettings = {
 export interface Form {
 	options: UIFieldsOptions;
 	name: string;
-	fields: Map;
-	values: Map;
-	errors: Map;
+	fields: Record<string, Field>;
+	values: Record<string, any>;
+	errors: Record<string, any>;
 	includesFile: boolean;
 	className: string;
 	getFormName: () => string;
 	getFieldKeys: () => string[];
-	getFields: () => Map<string, Field>;
+	getFields: () => Record<string, Field>;
 	getField: (name: string) => Field;
 	setFields: (fields: SetField[]) => void;
 	setField: (field: SetField) => void;
-	setValue: (fieldName: string, value: any, addToStorage = true) => void;
+	setValue: (fieldName: string, value: any, addToStorage: boolean) => void;
 	getValue: (fieldName: string) => string;
 	getFormattedValues: () => any;
-	formatComponentType: (type: FieldTypes = 'text') => ComponentType;
+	formatComponentType: (type: FieldTypes) => ComponentType;
 	subscribe: (listener: (...args: any) => void) => void;
 	subscribeField: (fieldName: string, listener: (...args: any) => void) => void;
 	subscribeError: (fieldName: string, listener: (...args: any) => void) => void;
@@ -198,28 +197,26 @@ export interface Form {
 	addToLocalStorage: (name: string, value: string) => void;
 	getOldValue: (name: string) => Record<string, any> | undefined | false;
 }
-export type Map = Record & {
-	keys: () => string[];
-};
+
 export interface UIFields {
 	className: string;
-	forms: Map<string, any>;
-	formListeners: Map<string, any>;
-	fieldListeners: Map<string, any>;
-	conditionListeners: Map<string, any>;
-	errorListeners: Map<string, any>;
-	waitedListeners: Map<string, any>;
+	forms: Record<string, any>;
+	formListeners: Record<string, any>;
+	fieldListeners: Record<string, any>;
+	conditionListeners: Record<string, any>;
+	errorListeners: Record<string, any>;
+	waitedListeners: Record<string, any>;
 	getValue: (formName: string, fieldName: string) => string;
 	new: (name: string) => Form;
 	getFieldKeys: (key: string) => string[];
 	getField: (formName: string, fieldName: string) => Field | undefined;
-	getFields: (formName: string) => Map<string, Field>;
+	getFields: (formName: string) => Record<string, Field>;
 	getForm: (formName: string) => Form;
 	getValues: (formName: string) => string[];
 	getFormattedValues: (formName: string) => any;
 	setField: (name: string, options: SetField) => void;
 	setFields: (name: string, options: SetField[]) => void;
-	setValue: (formName: string, name: string, value: string | string[], checkError: boolean = true) => void;
+	setValue: (formName: string, name: string, value: string | string[], checkError?: boolean) => void;
 	subscribe: (formName: string, listener: (...args: any[]) => void) => void;
 	_unsubscribeCustomErrors: (name: string) => void;
 	subscribeError: (name: string, fieldName: string, listener: (...args: any[]) => void) => void;
@@ -237,7 +234,7 @@ export interface UIFields {
 	_subscribeError: (name: string, data: any) => void;
 	removeError: (formName: string, fieldName: string, errorName: string) => void;
 	getError: (formName: string, fieldName: string, errorName: string) => FieldError | undefined;
-	getErrors: (formName: string) => Map<string, FieldError>;
+	getErrors: (formName: string) => Record<string, FieldError>;
 	validate: (formName: string) => void;
 	getClassName: (formName: string) => string;
 	removeCustomErrors: (formName: string, fieldName: string) => void;

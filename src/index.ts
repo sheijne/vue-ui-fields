@@ -2,6 +2,11 @@ import prototype from './prototype';
 import type { UIFieldsOptions } from './types/options';
 import type _Vue from 'vue';
 
+import UiErrors from './template/Errors.vue';
+import Error from './template/Error.vue';
+import Fields from './template/Fields.vue';
+import Field from './template/Field.vue';
+
 const uiFields = {
 	install(Vue: typeof _Vue, options: UIFieldsOptions) {
 		if (!options) {
@@ -35,10 +40,10 @@ const uiFields = {
 		}
 
 		//Global mixin functions
-		Vue.component('UiErrors', () => import('./template/Errors.vue'));
-		Vue.component('UiError', () => import('./template/Error.vue'));
-		Vue.component('UiFields', () => import('./template/Fields.vue'));
-		Vue.component('UiField', () => import('./template/Field.vue'));
+		Vue.component('UiErrors', UiErrors);
+		Vue.component('UiError', Error);
+		Vue.component('UiFields', Fields);
+		Vue.component('UiField', Field);
 		const UIFields = prototype(options);
 		Vue.prototype.$uiFields = UIFields;
 	},
