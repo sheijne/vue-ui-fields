@@ -1,4 +1,4 @@
-import type { SetField, FormatOptions, FormatValue } from '../types/field';
+import type { SetField, FormatOptions, FormatValue } from '../types';
 
 const formatProperties = (object: SetField, ...args: FormatOptions[]): any => {
 	if (!Array.isArray(args)) {

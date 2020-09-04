@@ -210,7 +210,7 @@ export interface UIFields {
 	new: (name: string) => Form;
 	getFieldKeys: (key: string) => string[];
 	getField: (formName: string, fieldName: string) => Field | undefined;
-	getFields: (formName: string) => Record<string, Field>;
+	getFields: (formName: string) => Record<string, Field> | undefined;
 	getForm: (formName: string) => Form;
 	getValues: (formName: string) => string[];
 	getFormattedValues: (formName: string) => any;
@@ -234,7 +234,7 @@ export interface UIFields {
 	_subscribeError: (name: string, data: any) => void;
 	removeError: (formName: string, fieldName: string, errorName: string) => void;
 	getError: (formName: string, fieldName: string, errorName: string) => FieldError | undefined;
-	getErrors: (formName: string) => Record<string, FieldError>;
+	getErrors: (formName: string) => Record<string, FieldError | any>;
 	validate: (formName: string) => void;
 	getClassName: (formName: string) => string;
 	removeCustomErrors: (formName: string, fieldName: string) => void;

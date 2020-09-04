@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import type { FieldError } from '../types/field';
+import type { FieldError } from '../types';
 import { mixins } from 'vue-class-component';
 import { Vue, Component, Prop } from 'vue-property-decorator';
 import UIFieldsMixin from '../helpers/mixin';

@@ -1,7 +1,7 @@
 import uiFieldsInstance from './instance';
 
 import type { UIFieldsOptions } from './types/options';
-import type { FieldError, UIFields } from './types/field';
+import type { FieldError, UIFields } from './types';
 
 import type _Vue from 'vue';
 
@@ -412,12 +412,12 @@ export default function (options: UIFieldsOptions): UIFields {
 		 */
 		getErrors(formName) {
 			if (!formName) {
-				return;
+				return new Map();
 			}
 
 			const form = this.getForm(formName);
 			if (!form) {
-				return;
+				return new Map();
 			}
 			return form.getErrors();
 		},

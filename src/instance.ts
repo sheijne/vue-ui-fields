@@ -16,7 +16,7 @@ import type {
 	FieldOptions,
 	ValidationSettings,
 	ValidationOptions,
-} from './types/field';
+} from './types';
 import type _Vue from 'vue';
 
 const time = new Date();
