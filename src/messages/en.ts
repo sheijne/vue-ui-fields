@@ -1,4 +1,4 @@
-import { Message } from '../../types/message';
+import { Message } from '../types/message';
 
 export default {
 	creditcard: 'Creditcard is not valid',

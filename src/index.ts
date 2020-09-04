@@ -1,5 +1,5 @@
 import prototype from './prototype';
-import type { UIFieldsOptions } from '../types/options';
+import type { UIFieldsOptions } from './types/options';
 import type _Vue from 'vue';
 
 const uiFields = {

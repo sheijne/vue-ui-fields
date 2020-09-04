@@ -8,7 +8,8 @@
 		"lint": "eslint src",
 		"dev": "vue-cli-service serve dev/main.ts",
 		"dokkie": "npx dokkie",
-		"lint:fix": "eslint src --fix"
+		"lint:fix": "eslint src --fix",
+		"build": "tsc -p ./src"
 	},
 	"main": "./src/index.ts",
 	"dependencies": {
